@@ -19,14 +19,16 @@ const styles = {
 };
 
 function OverviewCard(props) {
-	const { classes, count, title } = props;
+	const { classes, count, title, bgColor } = props;
 	return (
-		<Card className={classes.card}>
+		<Card style={{ backgroundColor: bgColor }} className={classes.card}>
 			<CardContent>
-				<Typography variant="h2" align="right" component="h2">
+				<Typography className="white-text" variant="h2" align="right" component="h2">
 					{count}
 				</Typography>
-				<Typography component="h3" variant="h5" color="textSecondary" align="right">{title}</Typography>
+				<Typography component="h3" variant="h5" className="white-text" align="right">
+					{title}
+				</Typography>
 			</CardContent>
 		</Card>
 	);
@@ -35,7 +37,8 @@ function OverviewCard(props) {
 OverviewCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	count: PropTypes.number.isRequired,
-	title: PropTypes.string.isRequired
+	title: PropTypes.string.isRequired,
+	bgColor: PropTypes.string
 };
 
 export default withStyles(styles)(OverviewCard);

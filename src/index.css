@@ -71,6 +71,10 @@ body {
 	color: #2196F3;
 }
 
+.white-text {
+	color: white !important;
+}
+
 .card-btn {
 	margin-bottom: 7px !important;
 	display: flex !important;

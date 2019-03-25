@@ -179,7 +179,7 @@ class Dashboard extends Component {
 							<MenuIcon />
 						</IconButton>
 						<Typography variant="h6" color="inherit" className={classes.grow} noWrap>
-							Mwema Advocates KYC
+							Mwema Advocates KYE
 						</Typography>
 						<IconButton
 							aria-owns={"menu-appbar"}
@@ -248,21 +248,21 @@ class Dashboard extends Component {
 	}
 }
 
-function ClientDashboard() {
+function ClientDashboard(props) {
 	return (
 		<div>
 			<Grid container style={{ marginBottom: "1em" }}>
 				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard title="Candidates" count={43} />
+					<OverviewCard bgColor="#311b92" title="Candidates" count={43} />
 				</Grid>
 				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard title="Pending" count={3} />
+					<OverviewCard bgColor="#ffc400" title="Pending" count={3} />
 				</Grid>
 				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard title="Completed" count={12} />
+					<OverviewCard bgColor="#2e7d32" title="Completed" count={12} />
 				</Grid>
 				<Grid item sm={6} md={3}>
-					<OverviewCard title="Declined" count={4} />
+					<OverviewCard bgColor="#d84315" title="Declined" count={4} />
 				</Grid>
 			</Grid>
 			<Grid container style={{ marginBottom: "1em" }}>
@@ -270,7 +270,7 @@ function ClientDashboard() {
 					<NotificationsCard />
 				</Grid>
 				<Grid item sm md={6}>
-					<QuickOrderCard />
+					<QuickOrderCard history={props.history} />
 				</Grid>
 			</Grid>
 			<Grid container style={{ marginBottom: "1em" }}>
@@ -279,38 +279,6 @@ function ClientDashboard() {
 				</Grid>
 			</Grid>
 		</div>
-	);
-}
-
-function MyOrdersView() {
-	return (
-		<>
-			<Typography paragraph>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-				incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent
-				elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in
-				hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id interdum
-				velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing.
-				Amet nisl suscipit adipiscing bibendum est ultricies integer quis. Cursus euismod
-				quis viverra nibh cras. Metus vulputate eu scelerisque felis imperdiet proin
-				fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt
-				lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-				consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-				faucibus et molestie ac.
-			</Typography>
-			<Typography paragraph>
-				Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget
-				nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat
-				ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet
-				volutpat consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at
-				quis risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas purus
-				viverra accumsan in. In hendrerit gravida rutrum quisque non tellus orci ac.
-				Pellentesque nec nam aliquam sem et tortor. Habitant morbi tristique senectus et.
-				Adipiscing elit duis tristique sollicitudin nibh sit. Ornare aenean euismod
-				elementum nisi quis eleifend. Commodo viverra maecenas accumsan lacus vel facilisis.
-				Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-			</Typography>
-		</>
 	);
 }
 

@@ -23,8 +23,8 @@ export default class Login extends Component {
 		this.setState(updates);
 	}
 	signIn() {
-        this.props.history.push("/dashboard");
-    }
+		this.props.history.push("/dashboard");
+	}
 	render() {
 		const { email, password, loading } = this.state;
 		return (

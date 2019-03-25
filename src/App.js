@@ -8,9 +8,21 @@ import "./App.css";
 import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 
-const theme = createMuiTheme({
-	
-});
+const theme = createMuiTheme({});
+
+class ScrollToTop extends React.Component {
+	componentDidUpdate(prevProps) {
+		const { location } = this.props;
+		if (location.pathname !== prevProps.location.pathname) {
+			window.scrollTo(0, 0);
+		}
+	}
+
+	render() {
+		// eslint-disable-next-line
+		return this.props.children;
+	}
+}
 
 class App extends Component {
 	render() {
@@ -18,10 +30,12 @@ class App extends Component {
 			<MuiThemeProvider theme={theme}>
 				<div className="App">
 					<BrowserRouter>
-						<Switch>
-							<Route path="/login" component={Login} />
-							<Route path="/dashboard/" component={Dashboard} />
-						</Switch>
+						<ScrollToTop>
+							<Switch>
+								<Route path="/" exact component={Login} />
+								<Route path="/dashboard/" component={Dashboard} />
+							</Switch>
+						</ScrollToTop>
 					</BrowserRouter>
 				</div>
 			</MuiThemeProvider>
