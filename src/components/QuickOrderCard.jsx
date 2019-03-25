@@ -16,7 +16,9 @@ import {
 	ListItemIcon,
 	Grid
 } from "@material-ui/core";
-import { FolderIcon, MailOutline, ArrowRight } from "@material-ui/icons";
+import { ArrowRight } from "@material-ui/icons";
+import DateFnsUtils from "@date-io/date-fns";
+import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
 
 const styles = theme => ({
 	container: {
@@ -30,7 +32,7 @@ const styles = theme => ({
 		width: "100%"
 	},
 	card: {
-		paddingRight: theme.spacing.unit,
+		paddingRight: theme.spacing.unit
 	},
 	bullet: {
 		display: "inline-block",
@@ -50,9 +52,24 @@ const styles = theme => ({
 	}
 });
 
+function getElVal(elementId) {
+	return document.getElementById(elementId).value || "";
+}
+
 function QuickOrderCard(props) {
-	const { classes } = props;
+	const { classes, history } = props;
 	const [open, toggleGenderDropDown] = useState(false);
+	const [dateOfBirth, setDOB] = useState(new Date("1990-08-18"));
+	function goToCompleteOrder() {
+		return history.push("/dashboard/new-order", {
+			firstName: getElVal("first-name"),
+			lastName: getElVal("last-name"),
+			middleName: "",
+			dateOfBirth: dateOfBirth,
+			address: getElVal("address"),
+			gender: "male"
+		});
+	}
 	return (
 		<Card className={classes.card}>
 			<CardContent>
@@ -70,8 +87,6 @@ function QuickOrderCard(props) {
 								id="first-name"
 								label="First Name"
 								className={classes.textField}
-								// value={this.state.name}
-								// onChange={this.handleChange("name")}
 								margin="normal"
 							/>
 						</Grid>
@@ -80,28 +95,28 @@ function QuickOrderCard(props) {
 								id="last-name"
 								label="Last Name"
 								className={classes.textField}
-								// value={this.state.name}
-								// onChange={this.handleChange("name")}
 								margin="normal"
 							/>
 						</Grid>
 						<Grid item style={{ padding: "0 0.5em 0 0" }} xs={12} md={6}>
-							<TextField
-								id="first-name"
-								label="Date of Birth"
-								className={classes.textField}
-								// value={this.state.name}
-								// onChange={this.handleChange("name")}
-								margin="normal"
-							/>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<DatePicker
+									format="MMMM do yyyy"
+									margin="normal"
+									id="dob"
+									label="Date of Birth"
+									className={classes.textField}
+									value={dateOfBirth}
+									onChange={value => setDOB(value)}
+								/>
+							</MuiPickersUtilsProvider>
 						</Grid>
+
 						<Grid item style={{ padding: "0 0 0.5em 0" }} xs={12} md={6}>
 							<TextField
-								id="last-name"
+								id="address"
 								label="Address"
 								className={classes.textField}
-								// value={this.state.name}
-								// onChange={this.handleChange("name")}
 								margin="normal"
 							/>
 						</Grid>
@@ -130,7 +145,7 @@ function QuickOrderCard(props) {
 				</form>
 			</CardContent>
 			<CardActions style={{ justifyContent: "flex-end" }}>
-				<Button size="small">
+				<Button onClick={goToCompleteOrder} size="small">
 					Continue <ArrowRight />{" "}
 				</Button>
 			</CardActions>

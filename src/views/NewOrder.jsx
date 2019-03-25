@@ -16,6 +16,8 @@ import {
 	Select,
 	MenuItem
 } from "@material-ui/core";
+import DateFnsUtils from "@date-io/date-fns";
+import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
 
 const styles = theme => ({
 	container: {
@@ -56,20 +58,42 @@ class NewOrder extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			open: false
+			open: false,
+			firstName: "",
+			lastName: "",
+			middleName: "",
+			dateOfBirth: new Date("1990-08-18"),
+			address: "",
+			gender: "male"
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.toggleGenderDropDown = this.toggleGenderDropDown.bind(this);
 	}
-	handleChange() {
-		//
+	componentDidMount() {
+		const { location } = this.props;
+		const routeState = !!location.state ? location.state : {};
+
+		this.setState({
+			firstName: routeState.firstName || "",
+			lastName: routeState.lastName || "",
+			middleName: routeState.middleName || "",
+			dateOfBirth: routeState.dateOfBirth || new Date("1990-08-18"),
+			address: routeState.address || "",
+			gender: routeState.gender || ""
+		});
+	}
+	handleChange(field, evt) {
+		if (field === "dateOfBirth") {
+			return this.setState(prevState => (prevState[field] = evt));
+		}
+		this.setState(prevState => (prevState[field] = evt.target.value));
 	}
 	toggleGenderDropDown() {
 		this.setState(prevState => ({ open: !prevState.open }));
 	}
 	render() {
-		const { classes } = this.props;
-		const { open } = this.state;
+		const { classes, history } = this.props;
+		const { open, firstName, lastName, middleName, dateOfBirth, address, gender } = this.state;
 		return (
 			<div>
 				<Grid container style={{ marginBottom: 15 }}>
@@ -90,7 +114,7 @@ class NewOrder extends Component {
 										id="first-name"
 										label="First Name"
 										className={classes.textField}
-										// value={this.state.name}
+										value={firstName}
 										// onChange={this.handleChange("name")}
 										margin="normal"
 									/>
@@ -100,7 +124,7 @@ class NewOrder extends Component {
 										id="middle-name"
 										label="Middle Name"
 										className={classes.textField}
-										// value={this.state.name}
+										value={middleName}
 										// onChange={this.handleChange("name")}
 										margin="normal"
 									/>
@@ -110,27 +134,40 @@ class NewOrder extends Component {
 										id="last-name"
 										label="Last Name"
 										className={classes.textField}
-										// value={this.state.name}
+										value={lastName}
 										// onChange={this.handleChange("name")}
 										margin="normal"
 									/>
 								</Grid>
-								<Grid item xs={12} md={6}>
+								{/* <Grid item xs={12} md={6}>
 									<TextField
 										id="first-name"
 										label="Date of Birth"
 										className={classes.textField}
-										// value={this.state.name}
+										value={dateOfBirth}
 										// onChange={this.handleChange("name")}
 										margin="normal"
 									/>
-								</Grid>
+								</Grid> */}
+								<MuiPickersUtilsProvider utils={DateFnsUtils}>
+									<Grid item xs={12} md={6}>
+										<DatePicker
+											format="MMMM do yyyy"
+											margin="normal"
+											id="dob"
+											label="Date of Birth"
+											className={classes.textField}
+											value={dateOfBirth}
+											onChange={evt => this.handleChange("dateOfBirth", evt)}
+										/>
+									</Grid>
+								</MuiPickersUtilsProvider>
 								<Grid item xs={12} md={6}>
 									<TextField
 										id="last-name"
 										label="Address"
 										className={classes.textField}
-										// value={this.state.name}
+										value={address}
 										// onChange={this.handleChange("name")}
 										margin="normal"
 									/>
@@ -144,8 +181,8 @@ class NewOrder extends Component {
 											open={open}
 											onClose={this.toggleGenderDropDown}
 											onOpen={this.toggleGenderDropDown}
-											value="female"
-											onChange={() => {}}
+											value={gender}
+											onChange={evt => this.handleChange("gender", evt)}
 											inputProps={{
 												name: "gender",
 												id: "demo-controlled-open-select"
