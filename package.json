@@ -6,6 +6,7 @@
     "@date-io/date-fns": "^1.1.0",
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
+    "@rematch/core": "^1.2.0",
     "date-fns": "^2.0.0-alpha.27",
     "firebase": "^5.9.0",
     "lodash": "^4.17.11",
@@ -13,6 +14,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-redux": "^7.1.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8"
   },
@@ -31,5 +33,6 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "homepage": "http://ben.abcltz.com/"
+  "homepage": "http://ben.abcltz.com/",
+  "devDependencies": {}
 }

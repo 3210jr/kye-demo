@@ -1,6 +1,8 @@
 // @ts-check
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { omit } from "lodash";
 import PropTypes from "prop-types";
 import {
 	Grid,
@@ -18,6 +20,7 @@ import {
 } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
+import { uploadFile, createOrder } from "../utils";
 
 const styles = theme => ({
 	container: {
@@ -64,10 +67,15 @@ class NewOrder extends Component {
 			middleName: "",
 			dateOfBirth: new Date("1990-08-18"),
 			address: "",
-			gender: "male"
+			gender: "male",
+			screeningTypes: [],
+			assetsURL: "",
+			uploadingAssets: false,
+			loading: false
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.toggleGenderDropDown = this.toggleGenderDropDown.bind(this);
+		this.fileUploaderRef = React.createRef();
 	}
 	componentDidMount() {
 		const { location } = this.props;
@@ -82,18 +90,101 @@ class NewOrder extends Component {
 			gender: routeState.gender || ""
 		});
 	}
+	uploadZippedFolder = evt => {
+		const file = evt.target.files[0];
+		this.setState({ uploadingAssets: true });
+		uploadFile(file, "order-assets")
+			.then(res => {
+				res.ref
+					.getDownloadURL()
+					.then(url => this.setState({ uploadingAssets: false, assetsURL: url }));
+			})
+			.catch(error => {
+				alert("There was an error uploading your assets, please try again");
+				console.log(error);
+				this.setState({ uploadingAssets: false });
+			});
+	};
+	toggleScreeningType = type => {
+		const { screeningTypes } = this.state;
+		if (screeningTypes.includes(type)) {
+			screeningTypes.splice(screeningTypes.indexOf(type), 1);
+		} else {
+			screeningTypes.push(type);
+		}
+		this.setState({ screeningTypes });
+	};
 	handleChange(field, evt) {
 		if (field === "dateOfBirth") {
 			return this.setState(prevState => (prevState[field] = evt));
 		}
-		this.setState(prevState => (prevState[field] = evt.target.value));
+		const update = evt.target.value;
+		this.setState(prevState => (prevState[field] = update));
 	}
 	toggleGenderDropDown() {
 		this.setState(prevState => ({ open: !prevState.open }));
 	}
+	createOrder = () => {
+		const {
+			firstName,
+			lastName,
+			middleName,
+			dateOfBirth,
+			address,
+			gender,
+			screeningTypes,
+			assetsURL,
+			loading,
+			uploadingAssets
+		} = this.state;
+		const { profile } = this.props;
+		console.log(this.state);
+		if (loading || uploadingAssets) {
+			alert("Please wait while loading");
+			return;
+		}
+
+		if (assetsURL.length < 5) {
+			alert("Please upload the zipped folder with all required documents");
+			return;
+		}
+
+		this.setState({ loading: true });
+		createOrder({
+			firstName,
+			lastName,
+			middleName,
+			dateOfBirth,
+			address,
+			gender,
+			screeningTypes,
+			assetsURL,
+			organizationId: profile.organizationId,
+			organizationName: profile.organizationName
+		})
+			.then(res => {
+				this.setState({ loading: false });
+			})
+			.catch(error => {
+				alert("There was an error creating a new order!");
+				console.log("Error: ", error);
+				this.setState({ loading: false });
+			});
+	};
 	render() {
 		const { classes, history } = this.props;
-		const { open, firstName, lastName, middleName, dateOfBirth, address, gender } = this.state;
+		const {
+			open,
+			firstName,
+			lastName,
+			middleName,
+			dateOfBirth,
+			address,
+			gender,
+			screeningTypes,
+			uploadingAssets,
+			loading
+		} = this.state;
 		return (
 			<div>
 				<Grid container style={{ marginBottom: 15 }}>
@@ -115,7 +206,7 @@ class NewOrder extends Component {
 										label="First Name"
 										className={classes.textField}
 										value={firstName}
-										// onChange={this.handleChange("name")}
+										onChange={evt => this.handleChange("firstName", evt)}
 										margin="normal"
 									/>
 								</Grid>
@@ -125,7 +216,7 @@ class NewOrder extends Component {
 										label="Middle Name"
 										className={classes.textField}
 										value={middleName}
-										// onChange={this.handleChange("name")}
+										onChange={evt => this.handleChange("middleName", evt)}
 										margin="normal"
 									/>
 								</Grid>
@@ -135,7 +226,7 @@ class NewOrder extends Component {
 										label="Last Name"
 										className={classes.textField}
 										value={lastName}
-										// onChange={this.handleChange("name")}
+										onChange={evt => this.handleChange("lastName", evt)}
 										margin="normal"
 									/>
 								</Grid>
@@ -168,7 +259,7 @@ class NewOrder extends Component {
 										label="Address"
 										className={classes.textField}
 										value={address}
-										// onChange={this.handleChange("name")}
+										onChange={evt => this.handleChange("address", evt)}
 										margin="normal"
 									/>
 								</Grid>
@@ -208,8 +299,10 @@ class NewOrder extends Component {
 								<FormControlLabel
 									control={
 										<Checkbox
-											checked={this.state.checkedB}
-											onChange={() => this.handleChange()}
+											checked={screeningTypes.includes("identification")}
+											onChange={() =>
+												this.toggleScreeningType("identification")
+											}
 											value="checkedB"
 											color="primary"
 										/>
@@ -221,8 +314,10 @@ class NewOrder extends Component {
 								<FormControlLabel
 									control={
 										<Checkbox
-											checked={this.state.checkedB}
-											onChange={() => this.handleChange()}
+											checked={screeningTypes.includes("employment-history")}
+											onChange={() =>
+												this.toggleScreeningType("employment-history")
+											}
 											value="checkedB"
 											color="primary"
 										/>
@@ -234,8 +329,12 @@ class NewOrder extends Component {
 								<FormControlLabel
 									control={
 										<Checkbox
-											checked={this.state.checkedB}
-											onChange={() => this.handleChange()}
+											checked={screeningTypes.includes(
+												"academic-qualifications"
+											)}
+											onChange={evt =>
+												this.toggleScreeningType("academic-qualifications")
+											}
 											value="checkedB"
 											color="primary"
 										/>
@@ -247,8 +346,10 @@ class NewOrder extends Component {
 								<FormControlLabel
 									control={
 										<Checkbox
-											checked={this.state.checkedB}
-											onChange={() => this.handleChange()}
+											checked={screeningTypes.includes("police-reports")}
+											onChange={evt =>
+												this.toggleScreeningType("police-reports")
+											}
 											value="checkedB"
 											color="primary"
 										/>
@@ -293,8 +394,14 @@ class NewOrder extends Component {
 						</ol>
 
 						<div>
-							<Button variant="contained" color="primary" className={classes.button}>
-								Upload a zip folder
+							<Button
+								variant="contained"
+								color="primary"
+								onClick={() => this.fileUploaderRef.current.click()}
+								disabled={uploadingAssets}
+								className={classes.button}
+							>
+								{uploadingAssets ? "Uploading Assets ..." : "Upload a zip folder"}
 							</Button>
 						</div>
 					</CardContent>
@@ -308,10 +415,23 @@ class NewOrder extends Component {
 						justifyContent: "flex-end"
 					}}
 				>
-					<Button variant="contained" color="primary" className={classes.button}>
-						Confirm Order
+					<Button
+						variant="contained"
+						disabled={uploadingAssets || loading}
+						color="primary"
+						onClick={this.createOrder}
+						className={classes.button}
+					>
+						{uploadingAssets || loading ? "Uploading files ... " : "Confirm Order"}
 					</Button>
 				</div>
+
+				<input
+					ref={this.fileUploaderRef}
+					className="hidden"
+					type="file"
+					onChange={this.uploadZippedFolder}
+				/>
 			</div>
 		);
 	}
@@ -321,4 +441,10 @@ NewOrder.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(NewOrder);
+// export const AppRoute = withStyles(styles)connect(mapState)(({ ...rest }) => <NewOrder {...rest} />);
+
+const mapState = state => ({
+	profile: state.profile
+});
+
+export default connect(mapState)(withStyles(styles)(NewOrder));

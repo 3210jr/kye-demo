@@ -7,7 +7,7 @@ const styles = {
 	card: {},
 	bullet: {
 		display: "inline-block",
-		margin: "0 2px",
+		margin: "0 2px 10px 2px",
 		transform: "scale(0.8)"
 	},
 	title: {
@@ -19,14 +19,24 @@ const styles = {
 };
 
 function OverviewCard(props) {
-	const { classes, count, title, bgColor } = props;
+	const { classes, count, title, bgColor, whiteText = true } = props;
 	return (
 		<Card style={{ backgroundColor: bgColor }} className={classes.card}>
 			<CardContent>
-				<Typography className="white-text" variant="h2" align="right" component="h2">
+				<Typography
+					className={whiteText && "white-text"}
+					variant="h2"
+					align="right"
+					component="h2"
+				>
 					{count}
 				</Typography>
-				<Typography component="h3" variant="h5" className="white-text" align="right">
+				<Typography
+					component="h3"
+					variant="h5"
+					className={whiteText && "white-text"}
+					align="right"
+				>
 					{title}
 				</Typography>
 			</CardContent>
@@ -38,7 +48,8 @@ OverviewCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	count: PropTypes.number.isRequired,
 	title: PropTypes.string.isRequired,
-	bgColor: PropTypes.string
+	bgColor: PropTypes.string,
+	whiteText: PropTypes.bool
 };
 
 export default withStyles(styles)(OverviewCard);

@@ -3,9 +3,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import MenuIcon from "@material-ui/icons/Menu";
-import firebase from "firebase";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {
 	ListItem,
 	List,
@@ -23,27 +20,14 @@ import {
 	Mail as MailIcon,
 	MoveToInbox,
 	ChevronRight,
-	AccountCircle,
-	ExitToApp,
-	Dashboard as DashboardIcon,
-	Create,
-	ImportExport,
-	ViewCarousel,
+	Menu,
+	ChevronLeft,
 	SupervisedUserCircle,
 	HowToReg,
 	HelpOutline
 } from "@material-ui/icons";
 import { Route, Switch } from "react-router-dom";
 import { Grid } from "@material-ui/core";
-import OverviewCard from "../components/OverviewCard";
-import NotificationsCard from "../components/NotificationsCard";
-import OrdersTable from "../components/OrdersTable";
-import QuickOrderCard from "../components/QuickOrderCard";
-
-import NewOrder from "./NewOrder";
-import ViewOrders from "./ViewOrders";
-import CompanyStaff from "./CompanyStaff";
-import Help from "./Help";
 
 const drawerWidth = 240;
 
@@ -112,40 +96,7 @@ const styles = theme => ({
 	}
 });
 
-const drawerItems = [
-	{
-		text: "Dashboard",
-		icons: <DashboardIcon />,
-		path: "/dashboard/"
-	},
-	{
-		text: "New Order",
-		icons: <Create />,
-		path: "/dashboard/new-order"
-	},
-	{
-		text: "Import Orders",
-		icons: <ImportExport />,
-		path: "/dashboard/"
-	},
-	{
-		text: "View Orders",
-		icons: <ViewCarousel />,
-		path: "/dashboard/my-orders"
-	},
-	{
-		text: "Company Users",
-		icons: <SupervisedUserCircle />,
-		path: "/dashboard/company-users"
-	},
-	{
-		text: "References",
-		icons: <HowToReg />,
-		path: "/dashboard/"
-	}
-];
-
-class Dashboard extends Component {
+class Layout extends Component {
 	state = {
 		open: false
 	};
@@ -154,18 +105,12 @@ class Dashboard extends Component {
 		this.setState({ open: true });
 	};
 
-	signOut = () => {
-		if (window.confirm("Are you sure you want to sign out?")) {
-			firebase.auth().signOut();
-		}
-	};
-
 	handleDrawerClose = () => {
 		this.setState({ open: false });
 	};
 
 	render() {
-		const { classes, theme, match, history } = this.props;
+		const { classes, theme, drawerItems, history, children, title } = this.props;
 		return (
 			<div className={classes.root}>
 				<CssBaseline />
@@ -184,12 +129,12 @@ class Dashboard extends Component {
 								[classes.hide]: this.state.open
 							})}
 						>
-							<MenuIcon />
+							<Menu />
 						</IconButton>
 						<Typography variant="h6" color="inherit" className={classes.grow} noWrap>
-							Mwema Advocates KYE
+							{title}
 						</Typography>
-						<IconButton
+						{/* <IconButton
 							aria-owns={"menu-appbar"}
 							aria-haspopup="true"
 							onClick={() => this.signOut}
@@ -204,7 +149,7 @@ class Dashboard extends Component {
 							color="inherit"
 						>
 							<ExitToApp />
-						</IconButton>
+						</IconButton> */}
 					</Toolbar>
 				</AppBar>
 				<Drawer
@@ -223,7 +168,7 @@ class Dashboard extends Component {
 				>
 					<div className={classes.toolbar}>
 						<IconButton onClick={this.handleDrawerClose}>
-							{theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeftIcon />}
+							{theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
 						</IconButton>
 					</div>
 					<Divider />
@@ -251,56 +196,17 @@ class Dashboard extends Component {
 				</Drawer>
 				<main className={classes.content}>
 					<div className={classes.toolbar} />
-					<Switch>
-						<Route path={match.url} exact component={ClientDashboard} />
-						<Route path={`${match.url}/new-order`} component={NewOrder} />
-						<Route path={`${match.url}/my-orders`} component={ViewOrders} />
-						<Route path={`${match.url}/company-users`} component={CompanyStaff} />
-						<Route path={`${match.url}/help`} component={Help} />
-					</Switch>
+					{children}
 				</main>
 			</div>
 		);
 	}
 }
 
-function ClientDashboard(props) {
-	return (
-		<div>
-			<Grid container style={{ marginBottom: "1em" }}>
-				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard bgColor="#311b92" title="Candidates" count={43} />
-				</Grid>
-				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard bgColor="#ffc400" title="Pending" count={3} />
-				</Grid>
-				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard bgColor="#2e7d32" title="Completed" count={12} />
-				</Grid>
-				<Grid item sm={6} md={3}>
-					<OverviewCard bgColor="#d84315" title="Declined" count={4} />
-				</Grid>
-			</Grid>
-			<Grid container style={{ marginBottom: "1em" }}>
-				<Grid style={{ paddingRight: "1em" }} item sm md={6}>
-					<NotificationsCard />
-				</Grid>
-				<Grid item sm md={6}>
-					<QuickOrderCard history={props.history} />
-				</Grid>
-			</Grid>
-			<Grid container style={{ marginBottom: "1em" }}>
-				<Grid item sm>
-					<OrdersTable />
-				</Grid>
-			</Grid>
-		</div>
-	);
-}
-
-Dashboard.propTypes = {
+Layout.propTypes = {
 	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired
+	theme: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(Dashboard);
+export default withStyles(styles, { withTheme: true })(Layout);

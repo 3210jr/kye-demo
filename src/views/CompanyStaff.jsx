@@ -26,7 +26,7 @@ export default class CompanyStaff extends Component {
 		return (
 			<div>
 				<Grid container>
-					<Grid item xs={12} md={10}>
+					<Grid item xs={12} md={12}>
 						<Typography variant="h4" component="h5">
 							Company Staff
 						</Typography>
@@ -37,7 +37,7 @@ export default class CompanyStaff extends Component {
 					</Grid>
 
 					{addStaffForm && (
-						<Grid item xs={12} md={10} style={{ marginTop: "2em" }}>
+						<Grid item xs={12} md={12} style={{ marginTop: "2em" }}>
 							<Paper style={{ padding: 15 }}>
 								<Typography variant="h6" component="h6">
 									New user registration
@@ -50,6 +50,7 @@ export default class CompanyStaff extends Component {
 											className="wide"
 											variant="outlined"
 											value={fullName}
+											autoFocus
 											// onChange={this.handleChange("name")}
 											margin="normal"
 										/>

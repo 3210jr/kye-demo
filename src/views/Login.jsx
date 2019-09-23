@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Grid, TextField, Button } from "@material-ui/core";
 
 import * as logoImg from "../assets/mwema_logo.png";
+import firebase from "firebase";
 
 export default class Login extends Component {
 	constructor(props) {
@@ -11,7 +12,7 @@ export default class Login extends Component {
 		this.state = {
 			email: "",
 			password: "",
-			loading: false
+			loading: true
 		};
 
 		this.updateForm = this.updateForm.bind(this);
@@ -22,8 +23,40 @@ export default class Login extends Component {
 		updates[field] = value;
 		this.setState(updates);
 	}
+	componentDidMount() {
+		this.authListener = firebase.auth().onAuthStateChanged(user => {
+			if (user) {
+				// User exists
+				firebase
+					.firestore()
+					.collection("profiles")
+					.doc(user.uid)
+					.get()
+					.then(profile => {
+						if (profile.exists) {
+							// const prof = profile.data()
+							this.props.history.push("/dashboard");
+						}
+					})
+					.catch(error => {
+						alert("error signing in");
+						firebase.auth().signOut();
+					});
+			}
+			this.setState({ loading: false });
+		});
+	}
 	signIn() {
-		this.props.history.push("/dashboard");
+		const { email, password } = this.state;
+		this.setState({ loading: true });
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(email, password)
+			.catch(error => {
+				console.log(error);
+				this.setState({ loading: false });
+				alert("Error signing in.");
+			});
 	}
 	render() {
 		const { email, password, loading } = this.state;
@@ -71,3 +104,5 @@ export default class Login extends Component {
 		);
 	}
 }
+
+// FIXME: Fix correct routing, wait for profile respose & information before routing user
