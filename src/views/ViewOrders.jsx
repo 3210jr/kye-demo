@@ -17,18 +17,15 @@ import {
 	TableBody,
 	TableRow
 } from "@material-ui/core";
+import { upperFirst } from "lodash";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
+import { connect } from "react-redux";
+import { fullFormatDate } from "../utils";
 import {
 	CloudDownload,
 	Delete as DeleteIcon,
 	FilterList as FilterListIcon
 } from "@material-ui/icons";
-
-let counter = 0;
-function createData(name, order, deliveryDate, placementDate, status, actions) {
-	counter += 1;
-	return { id: counter, name, order, deliveryDate, placementDate, status, actions };
-}
 
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -55,8 +52,8 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
+	{ id: "order", numeric: true, disablePadding: false, label: "Reference ID" },
 	{ id: "name", numeric: false, disablePadding: true, label: "Full Name" },
-	{ id: "order", numeric: true, disablePadding: false, label: "Order Num" },
 	{ id: "deliveryDate", numeric: true, disablePadding: false, label: "Delivery Date" },
 	{ id: "placementDate", numeric: true, disablePadding: false, label: "Placement Date" },
 	{ id: "status", numeric: true, disablePadding: false, label: "Status" },
@@ -78,7 +75,7 @@ class EnhancedTableHead extends React.Component {
 						row => (
 							<TableCell
 								key={row.id}
-								align={row.numeric ? "right" : "left"}
+								align="left" //{row.numeric ? "right" : "left"}
 								padding="default"
 								sortDirection={orderBy === row.id ? order : false}
 							>
@@ -113,77 +110,6 @@ EnhancedTableHead.propTypes = {
 	rowCount: PropTypes.number.isRequired
 };
 
-const toolbarStyles = theme => ({
-	root: {
-		paddingRight: theme.spacing.unit
-	},
-	highlight:
-		theme.palette.type === "light"
-			? {
-					color: theme.palette.secondary.main,
-					backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-			  }
-			: {
-					color: theme.palette.text.primary,
-					backgroundColor: theme.palette.secondary.dark
-			  },
-	spacer: {
-		flex: "1 1 100%"
-	},
-	actions: {
-		color: theme.palette.text.secondary
-	},
-	title: {
-		flex: "0 0 auto"
-	}
-});
-
-let EnhancedTableToolbar = props => {
-	const { numSelected, classes } = props;
-	return (
-		<Toolbar
-			className={classNames(classes.root, {
-				[classes.highlight]: numSelected > 0
-			})}
-		>
-			<div className={classes.title}>
-				{numSelected > 0 ? (
-					<Typography color="inherit" variant="subtitle1">
-						{numSelected} selected
-					</Typography>
-				) : (
-					<Typography variant="h6" id="tableTitle">
-						Nutrition
-					</Typography>
-				)}
-			</div>
-			<div className={classes.spacer} />
-			<div className={classes.actions}>
-				{numSelected > 0 ? (
-					<Tooltip title="Delete">
-						<IconButton aria-label="Delete">
-							<DeleteIcon />
-						</IconButton>
-					</Tooltip>
-				) : (
-					<Tooltip title="Filter list">
-						<IconButton aria-label="Filter list">
-							<FilterListIcon />
-						</IconButton>
-					</Tooltip>
-				)}
-			</div>
-		</Toolbar>
-	);
-};
-
-EnhancedTableToolbar.propTypes = {
-	classes: PropTypes.object.isRequired,
-	numSelected: PropTypes.number.isRequired
-};
-
-EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
-
 const styles = theme => ({
 	root: {
 		width: "100%",
@@ -200,24 +126,10 @@ const styles = theme => ({
 class ViewOrders extends React.Component {
 	state = {
 		order: "asc",
-		orderBy: "calories",
+		orderBy: "name",
 		selected: [],
-		data: [
-			createData("Ally Salim", 305, 3.7, 67, "Pending"),
-			createData("Edgar Mboki", 452, 25.0, 51, "Pending"),
-			createData("Faustine Mguma", 262, 16.0, 24, "Delivered"),
-			createData("James Sati", 159, 6.0, 24, "Pending"),
-			createData("Gary Muro", 356, 16.0, 49, "Pending"),
-			createData("Happiness Mtasha", 408, 3.2, 87, "Pending"),
-			createData("Ideed Ally", 237, 9.0, 37, "Delivered"),
-			createData("Lumumba Nasoro", 375, 0.0, 94, "Pending"),
-			createData("Ojukwu Mzee", 518, 26.0, 65, "Pending"),
-			createData("Sadaam Ally", 392, 0.2, 98, "Delivered"),
-			createData("Shamsa Aziz", 318, 0, 81, "Pending"),
-			createData("Peter Parker", 360, 19.0, 9, "Pending")
-		],
 		page: 0,
-		rowsPerPage: 10
+		rowsPerPage: 5
 	};
 
 	handleRequestSort = (event, property) => {
@@ -263,13 +175,11 @@ class ViewOrders extends React.Component {
 	isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 	render() {
-		const { classes } = this.props;
-		const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
-		const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+		const { classes, myOrders } = this.props;
+		const { order, orderBy, selected, rowsPerPage, page } = this.state;
+		const emptyRows = rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
 		return (
 			<Paper className={classes.root}>
-				{/* <EnhancedTableToolbar numSelected={selected.length} /> */}
 				<div className={classes.tableWrapper}>
 					<Table className={classes.table} aria-labelledby="tableTitle">
 						<EnhancedTableHead
@@ -277,10 +187,10 @@ class ViewOrders extends React.Component {
 							order={order}
 							orderBy={orderBy}
 							onRequestSort={this.handleRequestSort}
-							rowCount={data.length}
+							rowCount={myOrders.length}
 						/>
 						<TableBody>
-							{stableSort(data, getSorting(order, orderBy))
+							{stableSort(myOrders, getSorting(order, orderBy))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map(n => {
 									const isSelected = this.isSelected(n.id);
@@ -294,17 +204,21 @@ class ViewOrders extends React.Component {
 											key={n.id}
 											// selected={isSelected}
 										>
+											<TableCell align="left">{n.referenceNumber}</TableCell>
 											<TableCell component="th" scope="row" padding="default">
-												{n.name}
+												{`${n.firstName} ${n.middleName} ${n.lastName}`}
 											</TableCell>
-											<TableCell align="right">{n.order}</TableCell>
-											<TableCell align="right">{n.deliveryDate}</TableCell>
-											<TableCell align="right">{n.placementDate}</TableCell>
-											<TableCell align="right">{n.status}</TableCell>
+											<TableCell align="left"></TableCell>
+											<TableCell align="left">
+												{fullFormatDate(n.createdAt.toDate())}
+											</TableCell>
+											<TableCell align="left">
+												{upperFirst(n.status)}
+											</TableCell>
 											<TableCell align="center">
 												<CloudDownload
 													color={
-														n.status === "Delivered"
+														n.status === "completed"
 															? "default"
 															: "disabled"
 													}
@@ -325,7 +239,7 @@ class ViewOrders extends React.Component {
 				<TablePagination
 					rowsPerPageOptions={[5, 10, 25]}
 					component="div"
-					count={data.length}
+					count={myOrders.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					backIconButtonProps={{
@@ -346,4 +260,9 @@ ViewOrders.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ViewOrders);
+const mapState = state => ({
+	profile: state.profile,
+	myOrders: state.orders.myOrders
+});
+
+export default connect(mapState)(withStyles(styles)(ViewOrders));

@@ -9,9 +9,6 @@ const store = init({
 
 export default store;
 
-
-
-
 // Listen to profile changes!
 let profileListener;
 function resetProfileListener() {
@@ -28,14 +25,18 @@ firebase.auth().onAuthStateChanged(user => {
 			.doc(user.uid)
 			.onSnapshot(snap => {
 				if (snap.exists) {
-                    store.dispatch.profile.setProfile(snap.data());
-                } else {
-                    store.dispatch.profile.clearProfile();
-                }
+					const profile = { ...snap.data(), id: snap.id };
+					store.dispatch.profile.setProfile(profile);
+					store.dispatch.orders.loadMyOrders(profile.organizationId);
+					if (profile.admin === true) {
+						store.dispatch.orders.loadRecentOrders();
+					}
+				} else {
+					store.dispatch.profile.clearProfile();
+				}
 				// snap.docs
 			});
 	} else {
-        store.dispatch.profile.clearProfile();
+		store.dispatch.profile.clearProfile();
 	}
 });
-

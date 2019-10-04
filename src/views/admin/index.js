@@ -27,6 +27,7 @@ import {
 import { AdminRoute } from "../../ExtendedRoutes";
 import Layout from "../Layout";
 import CompanyView from "./CompanyView";
+import OrderView from "./OrderView";
 
 import {
 	Mail as MailIcon,
@@ -88,7 +89,7 @@ class Admin extends Component {
 				<Layout
 					history={history}
 					drawerItems={drawerItems}
-					title={"Mwema Advocates KYE Admin"}
+					title={"MA Verification System Admin"}
 				>
 					<Switch>
 						<AdminRoute path={`${match.path}`} exact component={Dashboard} />
@@ -105,6 +106,11 @@ class Admin extends Component {
 						/>
 						<AdminRoute path={`${match.path}reports`} exact component={Reports} />
 						<AdminRoute path={`${match.path}orders`} exact component={OrdersView} />
+						<AdminRoute
+							path={`${match.path}orders/:orderId`}
+							exact
+							component={OrderView}
+						/>
 					</Switch>
 				</Layout>
 			</div>
@@ -112,17 +118,17 @@ class Admin extends Component {
 	}
 }
 
-const OrdersView = () => {
+const OrdersView = ({ history }) => {
 	return (
 		<div>
 			<Grid container>
-				<AdminOrdersTable />
+				<AdminOrdersTable history={history} />
 			</Grid>
 		</div>
 	);
 };
 
-const Dashboard = () => {
+const Dashboard = ({ history }) => {
 	return (
 		<div>
 			<Grid container style={{ marginBottom: "1em" }}>
@@ -141,7 +147,7 @@ const Dashboard = () => {
 			</Grid>
 
 			<Grid container>
-				<AdminOrdersTable />
+				<AdminOrdersTable history={history} />
 			</Grid>
 		</div>
 	);
@@ -160,6 +166,7 @@ const Companies = ({ history }) => {
 				aria-label="Register Company"
 				style={{ position: "fixed", right: 20, bottom: 20 }}
 				color="primary"
+				className="primary"
 				onClick={() => toggleRegisterCompany(!registerCompany)}
 			>
 				{registerCompany ? <Close /> : <Create />}

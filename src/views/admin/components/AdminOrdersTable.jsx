@@ -1,5 +1,7 @@
 // @ts-check
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import {
 	TableHead,
 	TableRow,
@@ -10,9 +12,11 @@ import {
 	Paper,
 	TablePagination
 } from "@material-ui/core";
+import { upperFirst } from "lodash";
+import { fullFormatDate } from "../../../utils";
 
 const columns = [
-	{ id: "ref", label: "Ref#", minWidth: 100 },
+	{ id: "referenceNumber", label: "Reference #", minWidth: 100 },
 	{ id: "fullName", label: "Full Name", minWidth: 100 },
 	{
 		id: "company",
@@ -30,12 +34,12 @@ const columns = [
 		minWidth: 120
 		// align: "right",
 		// format: value => value.toFixed(2)
+	},
+	{
+		id: "status",
+		label: "Status",
+		minWidth: 120
 	}
-	// {
-	// 	id: "actions",
-	// 	label: "Actions",
-	// 	minWidth: 120
-	// }
 ];
 
 const rows = [
@@ -86,7 +90,8 @@ const rows = [
 	}
 ];
 
-export default function AdminOrdersTable() {
+function AdminOrdersTable({ orders, history }) {
+	console.log(orders, history);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -99,8 +104,9 @@ export default function AdminOrdersTable() {
 		setPage(0);
 	}
 
-	function openOrder() {
+	function openOrder(orderId) {
 		// alert("");
+		history.push(`/admin/orders/${orderId}`);
 	}
 
 	return (
@@ -126,25 +132,36 @@ export default function AdminOrdersTable() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{rows
+						{orders
+							// .sort((prev, cur) => prev.ref - cur.ref)
 							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 							.map(row => (
 								<TableRow
 									hover
-									onClick={openOrder}
+									onClick={() => openOrder(row.id)}
 									role="checkbox"
 									className="pointer"
 									tabIndex={-1}
-									key={row._id}
+									key={row.id}
 								>
-									{columns.map(column => {
+									<TableCell align="left">{row.referenceNumber}</TableCell>
+									<TableCell component="th" scope="row" padding="default">
+										{`${row.firstName} ${row.middleName} ${row.lastName}`}
+									</TableCell>
+									<TableCell align="left">{row.organizationName}</TableCell>
+									<TableCell align="left">
+										{fullFormatDate(row.createdAt.toDate())}
+									</TableCell>
+									<TableCell align="left"></TableCell>
+									<TableCell align="left">{upperFirst(row.status)}</TableCell>
+									{/* {columns.map(column => {
 										const value = row[column.id];
 										return (
 											<TableCell key={column.id} align={column.align}>
 												{value}
 											</TableCell>
 										);
-									})}
+									})} */}
 								</TableRow>
 							))}
 					</TableBody>
@@ -168,3 +185,14 @@ export default function AdminOrdersTable() {
 		</Paper>
 	);
 }
+
+AdminOrdersTable.propTypes = {
+	orders: PropTypes.object.isRequired
+};
+
+const mapState = state => ({
+	profile: state.profile,
+	orders: state.orders.orders
+});
+
+export default connect(mapState)(AdminOrdersTable);

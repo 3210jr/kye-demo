@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { omit } from "lodash";
+import { upperFirst } from "lodash";
 import PropTypes from "prop-types";
 import {
 	Grid,
@@ -21,6 +21,21 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
 import { uploadFile, createOrder } from "../utils";
+
+const months = [
+	"january",
+	"febuary",
+	"march",
+	"april",
+	"may",
+	"june",
+	"july",
+	"august",
+	"september",
+	"october",
+	"november",
+	"december"
+];
 
 const styles = theme => ({
 	container: {
@@ -62,10 +77,13 @@ class NewOrder extends Component {
 		super(props);
 		this.state = {
 			open: false,
+			openMonthPicker: false,
 			firstName: "",
 			lastName: "",
 			middleName: "",
-			dateOfBirth: new Date("1990-08-18"),
+			dateOfBirth: 1,
+			monthOfBirth: "january",
+			yearOfBirth: 1990,
 			address: "",
 			gender: "male",
 			screeningTypes: [],
@@ -80,12 +98,13 @@ class NewOrder extends Component {
 	componentDidMount() {
 		const { location } = this.props;
 		const routeState = !!location.state ? location.state : {};
+		console.log("Route State: ", routeState);
 
 		this.setState({
 			firstName: routeState.firstName || "",
 			lastName: routeState.lastName || "",
 			middleName: routeState.middleName || "",
-			dateOfBirth: routeState.dateOfBirth || new Date("1990-08-18"),
+			dateOfBirth: routeState.dateOfBirth || 1,
 			address: routeState.address || "",
 			gender: routeState.gender || ""
 		});
@@ -115,21 +134,27 @@ class NewOrder extends Component {
 		this.setState({ screeningTypes });
 	};
 	handleChange(field, evt) {
-		if (field === "dateOfBirth") {
-			return this.setState(prevState => (prevState[field] = evt));
-		}
+		// if (field === "dateOfBirth") {
+		// 	return this.setState(prevState => (prevState[field] = evt));
+		// }
+		console.log(field, evt.target.value);
 		const update = evt.target.value;
 		this.setState(prevState => (prevState[field] = update));
 	}
 	toggleGenderDropDown() {
 		this.setState(prevState => ({ open: !prevState.open }));
 	}
+	toggleMonthDropDown = () => {
+		this.setState(prevState => ({ openMonthPicker: !prevState.openMonthPicker }));
+	};
 	createOrder = () => {
 		const {
 			firstName,
 			lastName,
 			middleName,
 			dateOfBirth,
+			monthOfBirth,
+			yearOfBirth,
 			address,
 			gender,
 			screeningTypes,
@@ -137,7 +162,7 @@ class NewOrder extends Component {
 			loading,
 			uploadingAssets
 		} = this.state;
-		const { profile } = this.props;
+		const { profile, history } = this.props;
 		console.log(this.state);
 		if (loading || uploadingAssets) {
 			alert("Please wait while loading");
@@ -154,7 +179,7 @@ class NewOrder extends Component {
 			firstName,
 			lastName,
 			middleName,
-			dateOfBirth,
+			dateOfBirth: new Date(`${dateOfBirth}/${monthOfBirth}/${yearOfBirth}`),
 			address,
 			gender,
 			screeningTypes,
@@ -164,6 +189,7 @@ class NewOrder extends Component {
 		})
 			.then(res => {
 				this.setState({ loading: false });
+				history.push("/dashboard/my-orders");
 			})
 			.catch(error => {
 				alert("There was an error creating a new order!");
@@ -175,10 +201,13 @@ class NewOrder extends Component {
 		const { classes, history } = this.props;
 		const {
 			open,
+			openMonthPicker,
 			firstName,
 			lastName,
 			middleName,
 			dateOfBirth,
+			monthOfBirth,
+			yearOfBirth,
 			address,
 			gender,
 			screeningTypes,
@@ -230,17 +259,69 @@ class NewOrder extends Component {
 										margin="normal"
 									/>
 								</Grid>
-								{/* <Grid item xs={12} md={6}>
-									<TextField
-										id="first-name"
-										label="Date of Birth"
-										className={classes.textField}
-										value={dateOfBirth}
-										// onChange={this.handleChange("name")}
-										margin="normal"
-									/>
-								</Grid> */}
-								<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<Grid item xs={12} md={6}>
+									<Grid container spacing={24}>
+										<Grid item xs={12} md={4}>
+											<TextField
+												id="dateOfBirth"
+												label="Date of Birth"
+												className={classes.textField}
+												value={dateOfBirth}
+												onChange={evt =>
+													this.handleChange("dateOfBirth", evt)
+												}
+												margin="normal"
+											/>
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<FormControl className={classes.formControl}>
+												<InputLabel htmlFor="month-of-year-selector">
+													Month
+												</InputLabel>
+												<Select
+													open={openMonthPicker}
+													onClose={this.toggleMonthDropDown}
+													onOpen={this.toggleMonthDropDown}
+													value={monthOfBirth}
+													onChange={evt =>
+														this.handleChange("monthOfBirth", evt)
+													}
+													inputProps={{
+														name: "monthOfBirth",
+														id: "month-of-year-selector"
+													}}
+												>
+													{months.map(month => (
+														<MenuItem key={month} value={month}>
+															{upperFirst(month)}
+														</MenuItem>
+													))}
+												</Select>
+											</FormControl>
+											{/* <TextField
+												id="monthOfBirth"
+												label="Month of Birth"
+												className={classes.textField}
+												value={monthOfBirth}
+												// onChange={this.handleChange("name")}
+												margin="normal"
+											/> */}
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<TextField
+												id="yearOfBirth"
+												label="Year of Birth"
+												className={classes.textField}
+												value={yearOfBirth}
+												onChange={evt =>
+													this.handleChange("yearOfBirth", evt)
+												}
+												margin="normal"
+											/>
+										</Grid>
+									</Grid>
+								</Grid>
+								{/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
 									<Grid item xs={12} md={6}>
 										<DatePicker
 											format="MMMM do yyyy"
@@ -252,7 +333,7 @@ class NewOrder extends Component {
 											onChange={evt => this.handleChange("dateOfBirth", evt)}
 										/>
 									</Grid>
-								</MuiPickersUtilsProvider>
+								</MuiPickersUtilsProvider> */}
 								<Grid item xs={12} md={6}>
 									<TextField
 										id="last-name"
@@ -399,9 +480,9 @@ class NewOrder extends Component {
 								color="primary"
 								onClick={() => this.fileUploaderRef.current.click()}
 								disabled={uploadingAssets}
-								className={classes.button}
+								className={[classes.button, "primary"]}
 							>
-								{uploadingAssets ? "Uploading Assets ..." : "Upload a zip folder"}
+								{uploadingAssets ? "Uploading Assets ..." : "Zipped and PDF Only"}
 							</Button>
 						</div>
 					</CardContent>
@@ -420,7 +501,7 @@ class NewOrder extends Component {
 						disabled={uploadingAssets || loading}
 						color="primary"
 						onClick={this.createOrder}
-						className={classes.button}
+						className={[classes.button, "primary"]}
 					>
 						{uploadingAssets || loading ? "Uploading files ... " : "Confirm Order"}
 					</Button>
@@ -429,6 +510,7 @@ class NewOrder extends Component {
 				<input
 					ref={this.fileUploaderRef}
 					className="hidden"
+					accept="application/pdf,application/vnd.ms-excel,application/zip,application/x-zip,application/x-zip-compressed"
 					type="file"
 					onChange={this.uploadZippedFolder}
 				/>

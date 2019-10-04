@@ -175,7 +175,7 @@ class Dashboard extends Component {
 						[classes.appBarShift]: this.state.open
 					})}
 				>
-					<Toolbar disableGutters={!this.state.open}>
+					<Toolbar className="" disableGutters={!this.state.open}>
 						<IconButton
 							color="inherit"
 							aria-label="Open drawer"
@@ -187,7 +187,7 @@ class Dashboard extends Component {
 							<MenuIcon />
 						</IconButton>
 						<Typography variant="h6" color="inherit" className={classes.grow} noWrap>
-							Mwema Advocates KYE
+							MA Verification System
 						</Typography>
 						<IconButton
 							aria-owns={"menu-appbar"}
@@ -281,17 +281,17 @@ function ClientDashboard(props) {
 					<OverviewCard bgColor="#d84315" title="Declined" count={4} />
 				</Grid>
 			</Grid>
-			<Grid container style={{ marginBottom: "1em" }}>
+			{/* <Grid container style={{ marginBottom: "1em" }}>
 				<Grid style={{ paddingRight: "1em" }} item sm md={6}>
 					<NotificationsCard />
 				</Grid>
 				<Grid item sm md={6}>
 					<QuickOrderCard history={props.history} />
 				</Grid>
-			</Grid>
+			</Grid> */}
 			<Grid container style={{ marginBottom: "1em" }}>
 				<Grid item sm>
-					<OrdersTable />
+					<ViewOrders />
 				</Grid>
 			</Grid>
 		</div>

@@ -1,7 +1,7 @@
 // @ts-check
 import React, { Component } from "react";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import {} from "@material-ui/core/colors";
+import { black } from "@material-ui/core/colors";
 import { Provider, connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./firebase";
@@ -14,7 +14,22 @@ import { AppRoute, AdminRoute } from "./ExtendedRoutes";
 
 import Admin from "./views/admin";
 
-const theme = createMuiTheme({});
+const theme = createMuiTheme({
+	palette: {
+		// primary: {
+		// 	main: "#000"
+		// },
+		// secondary: {
+		// 	// light: will be calculated from palette.primary.main,
+		// 	main: "#999966"
+		// 	// dark: will be calculated from palette.primary.main,
+		// 	// contrastText: will be calculated to contrast with palette.primary.main
+		// }
+	},
+	status: {
+		danger: "orange"
+	}
+});
 
 class ScrollToTop extends React.Component {
 	componentDidUpdate(prevProps) {

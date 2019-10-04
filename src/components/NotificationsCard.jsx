@@ -44,7 +44,7 @@ const notifications = [
 	"Your Employee status order is completed",
 	"Please review the documents submitted",
 	"Receipt of your new order has been confirmed",
-	"Mwema now supports complete employee management.",
+	"Mwema Advocates now supports complete employee management.",
 	"Order #342 has been completed"
 ];
 

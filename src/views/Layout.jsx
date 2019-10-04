@@ -120,9 +120,9 @@ class Layout extends Component {
 						[classes.appBarShift]: this.state.open
 					})}
 				>
-					<Toolbar disableGutters={!this.state.open}>
+					<Toolbar className="" disableGutters={!this.state.open}>
 						<IconButton
-							color="inherit"
+							color=""
 							aria-label="Open drawer"
 							onClick={this.handleDrawerOpen}
 							className={classNames(classes.menuButton, {

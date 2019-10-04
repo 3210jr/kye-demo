@@ -191,7 +191,7 @@ OrdersTableToolbar = withStyles(toolbarStyles)(OrdersTableToolbar);
 
 const styles = theme => ({
 	root: {
-		width: "100%",
+		width: "100%"
 		// marginTop: theme.spacing.unit * 3
 	},
 	table: {
@@ -210,16 +210,16 @@ class OrdersTable extends React.Component {
 		data: [
 			createData("Ally Salim", 305, 3.7, 67, "Pending"),
 			createData("Edgar Mboki", 452, 25.0, 51, "Pending"),
-			createData("Faustine Mguma", 262, 16.0, 24, "Delivered"),
-			createData("James Sati", 159, 6.0, 24, "Pending"),
+			createData("Faustine Mguma", 262, 16.0, 24, "Completed"),
+			createData("James Sati", 159, 6.0, 24, "In Progress"),
 			createData("Gary Muro", 356, 16.0, 49, "Pending"),
 			createData("Happiness Mtasha", 408, 3.2, 87, "Pending"),
-			createData("Ideed Ally", 237, 9.0, 37, "Delivered"),
+			createData("Ideed Ally", 237, 9.0, 37, "Completed"),
 			createData("Lumumba Nasoro", 375, 0.0, 94, "Pending"),
 			createData("Ojukwu Mzee", 518, 26.0, 65, "Pending"),
-			createData("Sadaam Ally", 392, 0.2, 98, "Delivered"),
-			createData("Shamsa Aziz", 318, 0, 81, "Pending"),
-			createData("Peter Parker", 360, 19.0, 9, "Pending"),
+			createData("Sadaam Ally", 392, 0.2, 98, "Completed"),
+			createData("Shamsa Aziz", 318, 0, 81, "In Progress"),
+			createData("Peter Parker", 360, 19.0, 9, "Pending")
 		],
 		page: 0,
 		rowsPerPage: 5

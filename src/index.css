@@ -8,6 +8,23 @@ body {
 	width: 100%;
 }
 
+.no-text-decoration {
+	text-decoration: none;
+}
+
+.flex {
+	display: flex;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.justify-space-between {
+	justify-content: space-between;
+}
+
 .center {
 	text-align: center;
 }
@@ -25,7 +42,7 @@ body {
 .subtitle {
 	margin-top: 1.5px;
 	margin-bottom: 15px;
-	font-size: .95rem;
+	font-size: 0.95rem;
 }
 
 .hidden {
@@ -39,7 +56,7 @@ body {
 
 .fluid-container {
 	width: 90% !important;
-	margin: auto
+	margin: auto;
 }
 
 @media (min-width: 800px) {
@@ -49,26 +66,26 @@ body {
 }
 
 .bordered-wrapper {
-	border: 1px solid #2196F3;
+	border: 1px solid #999966;
 	border-radius: 7px;
 }
 
 .primary {
-	background-color: #2196F3;
+	background-color: #999966 !important;
 }
 
 .outlined {
-	border: 1px solid #2196F3;
+	border: 1px solid #999966;
 	border-radius: 5px;
 	padding: 10px;
 }
 
 .primary-text {
-	color: #2196F3;
+	color: #999966 !important;
 }
 
 .link {
-	color: #2196F3;
+	color: #999966;
 }
 
 .white-text {
@@ -80,12 +97,11 @@ body {
 	display: flex !important;
 	justify-content: center !important;
 	align-items: center !important;
-
 }
 
 .card-btn:hover {
 	color: #fff;
-	background-color: #2196F3;
+	background-color: #999966;
 }
 
 .card-btn-disabled {

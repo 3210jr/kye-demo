@@ -91,6 +91,7 @@ export default class CompanyStaff extends Component {
 					style={{ position: "fixed", bottom: 35, right: 35 }}
 					color="primary"
 					aria-label="Add"
+					className="primary"
 					onClick={this.toggleRegistrationForm}
 				>
 					{ addStaffForm ? <CloseIcon /> : <AddIcon /> }
