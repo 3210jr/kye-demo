@@ -210,7 +210,7 @@ class ViewOrders extends React.Component {
 											</TableCell>
 											<TableCell align="left"></TableCell>
 											<TableCell align="left">
-												{fullFormatDate(n.createdAt.toDate())}
+												{n.createdAt && fullFormatDate(n.createdAt.toDate())}
 											</TableCell>
 											<TableCell align="left">
 												{upperFirst(n.status)}
