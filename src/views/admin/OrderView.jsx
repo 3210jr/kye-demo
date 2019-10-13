@@ -168,6 +168,25 @@ class OrderView extends Component {
 }
 
 function AcademicReports({ order }) {
+	const [state, setstate] = useState({
+		establishmentName:"",
+		referenceMethod:"",
+		dateSupplied:"",
+		didCandidateStudyInTheEstablishment:true,
+		attendanceDateCandidate:"",
+		attendanceDateReference:"",
+		nameOfCourseStudiedCandidate:"",
+		nameOfCourseStudiedReference:"",
+		qualificationAndGradedAwardedCandidate:"",
+		qualificationAndGradedAwardedReference:"",
+		academicQualificationScore: "",
+	});
+
+	function handleChange(field, value) {
+		state[field] = value;
+		return setstate(clone(state));
+	}
+
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Academic Qualification</Typography>
@@ -186,7 +205,8 @@ function AcademicReports({ order }) {
 						variant="contained"
 						color="primary"
 						onClick={()=>{
-
+							console.log("Academic qualification state")
+							console.log(state)
 						}}
 						>
 						Save and Add another
@@ -200,9 +220,9 @@ function AcademicReports({ order }) {
 						<TextField
 							id="outlined-name"
 							label="Establish Name"
+							value={state.establishmentName}
+							onChange={({ target }) => handleChange("establishmentName", target.value)}
 							fullWidth
-							onChange={()=>{
-							}}
 							margin="normal"
 							variant="outlined"
 							style={{ margin: 3 }}
@@ -213,9 +233,9 @@ function AcademicReports({ order }) {
 						<TextField
 							id="outlined-name"
 							label="Reference Method"
+							value={state.referenceMethod}
+							onChange={({ target }) => handleChange("referenceMethod", target.value)}
 							fullWidth
-							onChange={()=>{
-							}}
 							margin="normal"
 							variant="outlined"
 							style={{ margin: 3 }}
@@ -226,9 +246,9 @@ function AcademicReports({ order }) {
 						<TextField
 							id="outlined-name"
 							label="Date Supplied"
+							value={state.dateSupplied}
+							onChange={({ target }) => handleChange("dateSupplied", target.value)}
 							fullWidth
-							onChange={()=>{
-							}}
 							margin="normal"
 							variant="outlined"
 							style={{ margin: 3 }}
@@ -239,12 +259,11 @@ function AcademicReports({ order }) {
 						<TextField
 							id="outlined-name"
 							label="Did candidate study at this Establishment?"
+							value={state.didCandidateStudyInTheEstablishment}
+							onChange={({ target }) => handleChange("didCandidateStudyInTheEstablishment", target.value)}
 							select
 							style={{ margin: 3 }}
 							className="wide"
-							onChange={({ target }) => {
-
-							}}
 							margin="normal"
 							variant="outlined"
 						>
@@ -286,10 +305,9 @@ function AcademicReports({ order }) {
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						id="outlined-name"
+						value={state.attendanceDateCandidate}
+						onChange={({ target }) => handleChange("attendanceDateCandidate", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -299,10 +317,9 @@ function AcademicReports({ order }) {
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						id="outlined-name"
+						value={state.attendanceDateReference}
+						onChange={({ target }) => handleChange("attendanceDateReference", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -320,10 +337,9 @@ function AcademicReports({ order }) {
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						id="outlined-name"
+						value={state.nameOfCourseStudiedCandidate}
+						onChange={({ target }) => handleChange("nameOfCourseStudiedCandidate", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -333,10 +349,9 @@ function AcademicReports({ order }) {
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						id="outlined-name"
+						value={state.nameOfCourseStudiedReference}
+						onChange={({ target }) => handleChange("nameOfCourseStudiedReference", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -354,10 +369,9 @@ function AcademicReports({ order }) {
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						id="outlined-name"
+						value={state.qualificationAndGradedAwardedCandidate}
+						onChange={({ target }) => handleChange("qualificationAndGradedAwardedCandidate", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -367,10 +381,9 @@ function AcademicReports({ order }) {
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						id="outlined-name"
+						value={state.qualificationAndGradedAwardedReference}
+						onChange={({ target }) => handleChange("qualificationAndGradedAwardedReference", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -381,19 +394,18 @@ function AcademicReports({ order }) {
 
 
 			<Grid container spacing={3} style={{marginTop:10}}>
-				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
+				<Grid item xs={6} style={{paddingLeft:3,paddingRight:3}}>
 				<p>Qualification check - System score</p>					
 				</Grid>
 
-				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
+				<Grid item xs={6} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 							id="outlined-name"
+							value={state.academicQualificationScore}
+							onChange={({ target }) => handleChange("academicQualificationScore", target.value)}
 							select
 							style={{ margin: 3 }}
 							className="wide"
-							onChange={({ target }) => {
-
-							}}
 							margin="normal"
 							variant="outlined"
 						>
@@ -402,11 +414,6 @@ function AcademicReports({ order }) {
 							<MenuItem value="other">Other</MenuItem>
 						</TextField>	
 				</Grid>	
-				
-				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
-		
-				</Grid>
-
 			
 			</Grid>
 
@@ -428,6 +435,19 @@ function PoliceReports({ order }) {
 }
 
 function GapsReports({ order }) {
+	const [state, setstate] = useState({
+		period:"",
+		comments:"",
+		gapInEmploymentHistoryScore:"",
+		generalComments:""
+
+	});
+
+	function handleChange(field, value) {
+		state[field] = value;
+		return setstate(clone(state));
+	}
+
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Gap Analysis</Typography>
@@ -446,7 +466,8 @@ function GapsReports({ order }) {
 						variant="contained"
 						color="primary"
 						onClick={()=>{
-
+							console.log("Gaps reports state")
+							console.log(state)
 						}}
 						>
 						Save and Add another
@@ -459,10 +480,9 @@ function GapsReports({ order }) {
 					<TextField
 						id="outlined-name"
 						label="Period"
+						value={state.period}
+						onChange={({ target }) => handleChange("period", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -472,10 +492,9 @@ function GapsReports({ order }) {
 					<TextField
 						id="outlined-name"
 						label="Comments"
+						value={state.comments}
+						onChange={({ target }) => handleChange("comments", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -495,12 +514,11 @@ function GapsReports({ order }) {
 			
 					<TextField
 						id="outlined-name"
+						value={state.gapInEmploymentHistoryScore}
+						onChange={({ target }) => handleChange("gapInEmploymentHistoryScore", target.value)}
 						select
 						style={{ margin: 3 }}
 						className="wide"
-						onChange={({ target }) => {
-
-						}}
 						margin="normal"
 						variant="outlined"
 					>
@@ -520,6 +538,8 @@ function GapsReports({ order }) {
 					<TextField
 						fullWidth
 						label="Comments"
+						value={state.generalComments}
+						onChange={({ target }) => handleChange("generalComments", target.value)}
 						id="outlined-dense-multiline"
 						margin="dense"
 						variant="outlined"
@@ -537,7 +557,7 @@ function GapsReports({ order }) {
 						variant="contained"
 						color="primary"
 						onClick={()=>{
-
+							console.log("Gaps state",state)
 						}}
 						>
 						Save
@@ -557,6 +577,27 @@ function GapsReports({ order }) {
 // 	this codes to be moved to separate js file
 //	EmploymentHistory component
 function EmploymentHistory({ order }) {
+	
+	const [state, setstate] = useState({
+		organization:"",
+		referenceMethod:"",
+		dateProduced:"",
+		positionHeldCandidate:"",
+		positionHeldReferee:"",
+		employmentStartDateCandidate:"",
+		employmentStartDateReferee:"",
+		employmentEndDateCandidate:"",
+		employmentEndDateReferee:"",
+		employmentHistoryScore:"",
+		comments: "",
+		additionalInformation: ""
+	});
+
+	function handleChange(field, value) {
+		state[field] = value;
+		return setstate(clone(state));
+	}
+
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Employment History and References</Typography>
@@ -589,11 +630,10 @@ function EmploymentHistory({ order }) {
 				<Grid item xs style={{paddingLeft:3,paddingRight:3}}> 
 				<TextField
 					id="outlined-name"
+					value={state.organization}
+					onChange={({ target }) => handleChange("organization", target.value)}
 					label="Organization"
 					fullWidth
-					onChange={()=>{
-
-					}}
 					margin="normal"
 					variant="outlined"
 					style={{ margin: 3 }}
@@ -603,10 +643,9 @@ function EmploymentHistory({ order }) {
 					<TextField
 						id="outlined-name"
 						label="Reference method"
+						value={state.referenceMethod}
+						onChange={({ target }) => handleChange("referenceMethod", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -617,10 +656,9 @@ function EmploymentHistory({ order }) {
 					<TextField
 						id="outlined-name"
 						label="Date Produced"
+						value={state.dateProduced}
+						onChange={({ target }) => handleChange("dateProduced", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -639,10 +677,9 @@ function EmploymentHistory({ order }) {
 				<TextField
 					id="outlined-name"
 					label="Candidate"
+					value={state.positionHeldCandidate}
+					onChange={({ target }) => handleChange("positionHeldCandidate", target.value)}
 					fullWidth
-					onChange={()=>{
-
-					}}
 					margin="normal"
 					variant="outlined"
 					style={{ margin: 3 }}
@@ -652,10 +689,9 @@ function EmploymentHistory({ order }) {
 					<TextField
 						id="outlined-name"
 						label="Referee"
+						value={state.positionHeldReferee}
+						onChange={({ target }) => handleChange("positionHeldReferee", target.value)}
 						fullWidth
-						onChange={()=>{
-
-						}}
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
@@ -680,10 +716,9 @@ function EmploymentHistory({ order }) {
 							<TextField
 								id="outlined-name"
 								label="Candidate"
+								value={state.employmentStartDateCandidate}
+								onChange={({ target }) => handleChange("employmentStartDateCandidate", target.value)}
 								fullWidth
-								onChange={()=>{
-
-								}}
 								margin="normal"
 								variant="outlined"
 								style={{ margin: 3 }}
@@ -695,10 +730,9 @@ function EmploymentHistory({ order }) {
 							<TextField
 								id="outlined-name"
 								label="Referee"
+								value={state.employmentStartDateReferee}
+								onChange={({ target }) => handleChange("employmentStartDateReferee", target.value)}
 								fullWidth
-								onChange={()=>{
-
-								}}
 								margin="normal"
 								variant="outlined"
 								style={{ margin: 3 }}
@@ -718,10 +752,9 @@ function EmploymentHistory({ order }) {
 							<TextField
 								id="outlined-name"
 								label="Candidate"
+								value={state.employmentEndDateCandidate}
+								onChange={({ target }) => handleChange("employmentEndDateCandidate", target.value)}
 								fullWidth
-								onChange={()=>{
-
-								}}
 								margin="normal"
 								variant="outlined"
 								style={{ margin: 3 }}
@@ -733,10 +766,9 @@ function EmploymentHistory({ order }) {
 							<TextField
 								id="outlined-name"
 								label="Referee"
+								value={state.employmentEndDateReferee}
+								onChange={({ target }) => handleChange("employmentEndDateReferee", target.value)}
 								fullWidth
-								onChange={()=>{
-
-								}}
 								margin="normal"
 								variant="outlined"
 								style={{ margin: 3 }}
@@ -759,17 +791,16 @@ function EmploymentHistory({ order }) {
 					<TextField
 						id="outlined-name"
 						select
+						value={state.employmentHistoryScore}
+						onChange={({ target }) => handleChange("employmentHistoryScore", target.value)}
 						style={{ margin: 3 }}
 						className="wide"
-						onChange={({ target }) => {
-
-						}}
 						margin="normal"
 						variant="outlined"
 					>
 						<MenuItem value="good">Good</MenuItem>
 						<MenuItem value="other">Other</MenuItem>
-						<MenuItem value="other">Other</MenuItem>
+						<MenuItem value="other2">Other2</MenuItem>
 					</TextField>
 				</Grid>		
 
@@ -786,6 +817,8 @@ function EmploymentHistory({ order }) {
 				<Grid item xs={12} sm={12} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						fullWidth
+						value={state.comments}
+						onChange={({ target }) => handleChange("comments", target.value)}
 						label="Comments"
 						id="outlined-dense-multiline"
 						margin="dense"
@@ -805,12 +838,15 @@ function EmploymentHistory({ order }) {
 				<Grid item xs={12} sm={12} style={{paddingLeft:3,paddingRight:3}}>
 					<TextField
 						fullWidth
+						value={state.additionalInformation}
+						onChange={({ target }) => handleChange("additionalInformation", target.value)}
 						label="Additional information"
 						id="outlined-dense-multiline"
 						margin="dense"
 						variant="outlined"
 						multiline
 						rowsMax="4"
+
 					/>
 				</Grid>
 				
@@ -828,7 +864,7 @@ function EmploymentHistory({ order }) {
 						variant="contained"
 						color="primary"
 						onClick={()=>{
-
+							console.log(state)
 						}}
 						>
 						Save
