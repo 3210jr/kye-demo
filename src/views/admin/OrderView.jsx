@@ -171,6 +171,28 @@ function AcademicReports({ order }) {
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Academic Qualification</Typography>
+
+			<Grid
+				justify="space-between" 
+				container 
+				spacing={24}
+			>
+				<Grid item>
+				</Grid>
+
+				<Grid item>
+					<Button
+						fullWidth
+						variant="contained"
+						color="primary"
+						onClick={()=>{
+
+						}}
+						>
+						Save and Add another
+					</Button>
+				</Grid>
+			</Grid>
 			
 			{/* first row  */}
 			<Grid container spacing={3} style={{marginTop:5}}>
@@ -214,26 +236,24 @@ function AcademicReports({ order }) {
 					</Grid>
 
 					<Grid item xs={3} style={{paddingLeft:3,paddingRight:3}}>
-						<FormControl 
-							fullWidth
-							variant="outlined"
-						>
-							<InputLabel htmlFor="select-edu">Did candidate study at this Establishment? </InputLabel>
-							<Select
-							variant="outlined"
-							onChange={()=>{
+						<TextField
+							id="outlined-name"
+							label="Did candidate study at this Establishment?"
+							select
+							style={{ margin: 3 }}
+							className="wide"
+							onChange={({ target }) => {
 
 							}}
-							inputProps={{
-								name: 'select-edu',
-								id: 'select-edu',
-							}}
-							>
-								<MenuItem value="">To be filled</MenuItem>
-								<MenuItem value="">Other</MenuItem>
-							</Select>
-						</FormControl>
+							margin="normal"
+							variant="outlined"
+						>
+							<MenuItem value="yes">Yes</MenuItem>
+							<MenuItem value="no">No</MenuItem>
+						</TextField>
 					</Grid>
+
+					
 				
 			
 			</Grid>
@@ -366,22 +386,21 @@ function AcademicReports({ order }) {
 				</Grid>
 
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
-					<Select
+					<TextField
+							id="outlined-name"
+							select
+							style={{ margin: 3 }}
+							className="wide"
+							onChange={({ target }) => {
 
-						variant="outlined"
-						onChange={()=>{
-						}}
-						inputProps={{
-							name: 'edu-score',
-							id: 'edu-score',
-						}}
-						fullWidth
+							}}
+							margin="normal"
+							variant="outlined"
 						>
-							<MenuItem value="">Good</MenuItem>
-							<MenuItem value="">Normal</MenuItem>
-							<MenuItem value="">Bad</MenuItem>
-						</Select>
-				
+							<MenuItem value="good">Good</MenuItem>
+							<MenuItem value="other">Other</MenuItem>
+							<MenuItem value="other">Other</MenuItem>
+						</TextField>	
 				</Grid>	
 				
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
@@ -412,6 +431,120 @@ function GapsReports({ order }) {
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Gap Analysis</Typography>
+
+			<Grid
+				justify="space-between" 
+				container 
+				spacing={24}
+			>
+				<Grid item>
+				</Grid>
+
+				<Grid item>
+					<Button
+						fullWidth
+						variant="contained"
+						color="primary"
+						onClick={()=>{
+
+						}}
+						>
+						Save and Add another
+					</Button>
+				</Grid>
+			</Grid>
+
+			<Grid container spacing={3} style={{marginTop:5}}>
+				<Grid item xs style={{paddingLeft:3,paddingRight:3}}> 
+					<TextField
+						id="outlined-name"
+						label="Period"
+						fullWidth
+						onChange={()=>{
+
+						}}
+						margin="normal"
+						variant="outlined"
+						style={{ margin: 3 }}
+					/>
+				</Grid>
+				<Grid item xs style={{paddingLeft:3,paddingRight:3}}>
+					<TextField
+						id="outlined-name"
+						label="Comments"
+						fullWidth
+						onChange={()=>{
+
+						}}
+						margin="normal"
+						variant="outlined"
+						style={{ margin: 3 }}
+					/>	
+					
+				</Grid>
+			</Grid>
+
+
+			<Grid container spacing={3} style={{marginTop:5}}>
+				<Grid item xs={6} sm={6}>
+					<p style={{paddingLeft:6}}>Gap in Employment History - System score</p>
+				</Grid>
+
+				
+				<Grid item xs={6} sm={6} style={{paddingLeft:6}}>
+			
+					<TextField
+						id="outlined-name"
+						select
+						style={{ margin: 3 }}
+						className="wide"
+						onChange={({ target }) => {
+
+						}}
+						margin="normal"
+						variant="outlined"
+					>
+						<MenuItem value="good">Good</MenuItem>
+						<MenuItem value="other">Other</MenuItem>
+						<MenuItem value="other">Other</MenuItem>
+					</TextField>
+				</Grid>		
+
+										
+			</Grid>
+
+
+			
+			<Grid container spacing={3} style={{marginTop:5}}>
+				<Grid item xs={12} sm={12} style={{paddingLeft:3,paddingRight:3}}>
+					<TextField
+						fullWidth
+						label="Comments"
+						id="outlined-dense-multiline"
+						margin="dense"
+						variant="outlined"
+						multiline
+						rowsMax="4"
+					/>
+				</Grid>						
+			</Grid>
+
+
+			<Grid container spacing={3} style={{marginTop:5}}>
+				<Grid item xs={2} sm={2} style={{paddingLeft:3,paddingRight:3}}>
+					<Button
+						fullWidth
+						variant="contained"
+						color="primary"
+						onClick={()=>{
+
+						}}
+						>
+						Save
+					</Button>
+			
+				</Grid>								
+			</Grid>
 			
 		</Paper>
 	);
@@ -427,6 +560,28 @@ function EmploymentHistory({ order }) {
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Employment History and References</Typography>
+
+			<Grid
+				justify="space-between" 
+				container 
+				spacing={24}
+			>
+				<Grid item>
+				</Grid>
+
+				<Grid item>
+					<Button
+						fullWidth
+						variant="contained"
+						color="primary"
+						onClick={()=>{
+
+						}}
+						>
+						Save and Add another
+					</Button>
+				</Grid>
+			</Grid>
 
 			{/* first row */}
 
@@ -601,27 +756,26 @@ function EmploymentHistory({ order }) {
 					<p style={{paddingLeft:6}}>Employment history and references - System score</p>
 				</Grid>
 				<Grid item xs={6} sm={6} style={{paddingLeft:6}}>
-				<Select
-					fullWidth
-					native
-					// value={state.age}
-					onChange={()=>{
+					<TextField
+						id="outlined-name"
+						select
+						style={{ margin: 3 }}
+						className="wide"
+						onChange={({ target }) => {
 
-					}}
-					inputProps={{
-						id: 'outlined-age-native-simple',
-					}}
-				>
-						<option value="" />
-						<option value={10}>Good</option>
-						<option value={20}>Other</option>
-						<option value={30}>Other</option>
-				</Select>
+						}}
+						margin="normal"
+						variant="outlined"
+					>
+						<MenuItem value="good">Good</MenuItem>
+						<MenuItem value="other">Other</MenuItem>
+						<MenuItem value="other">Other</MenuItem>
+					</TextField>
 				</Grid>		
 
 										
-				</Grid>
 			</Grid>
+		</Grid>
 
 			{/* forth row ends */}
 			
