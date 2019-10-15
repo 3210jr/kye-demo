@@ -156,14 +156,11 @@ class OrderView extends Component {
 
 				{/* true condition for developments only */}
 				{/* to be replaces */}
-				{true && <AcademicReports order={order} />}
+				{order.screeningTypes.includes("academic-qualifications") && <AcademicReports order={order} />}
 
-				{true && <PoliceReports order={order} />}
-				{order.screeningTypes.includes("employment-history") && (
-					<EmploymentHistoryReports order={order} />
-				)}
-				
-				{true && <GapsReports order={order} />}
+				{order.screeningTypes.includes("police-reports") && <PoliceReports order={order} />}
+				{order.screeningTypes.includes("employment-history") && (<EmploymentHistoryReports order={order} />)}
+				{order.screeningTypes.includes("gaps-reports") && <GapsReports order={order} />}
 				{order.screeningTypes.includes("identification") && <IdentityCheckReports order={order} />}
 						
 
