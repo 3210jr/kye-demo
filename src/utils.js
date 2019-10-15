@@ -29,6 +29,13 @@ export function requestOrderChanges(orderId, changes) {
 	return orderRef.update({ status: "changes requested", changes });
 }
 
+/**
+ * Changes the status of an order to completed
+ *
+ * @export
+ * @param {*} orderId
+ * @returns promise fo the update firestore method
+ */
 export function completeOrder(orderId) {
 	const orderRef = firebase
 		.firestore()
@@ -38,6 +45,14 @@ export function completeOrder(orderId) {
 	return orderRef.update({ status: "completed" });
 }
 
+/**
+ * Uploads a given file to the destination folder in the default bucket
+ *
+ * @export
+ * @param {*} file the reference to the file
+ * @param {*} folder the remote folder you will be storing the file in
+ * @returns promise to the firebase storage put method
+ */
 export function uploadFile(file, folder) {
 	if (!folder) {
 		throw new Error("You must specify what folder to upload the file in!");
@@ -47,6 +62,24 @@ export function uploadFile(file, folder) {
 	return storageRef.child(fileName).put(file);
 }
 
+/**
+ * Creates a new order given the specific details and the services needed.
+ *
+ * @export
+ * @param {*} object {
+ * 	firstName,
+ * 	lastName,
+ * 	middleName,
+ * 	dateOfBirth,
+ * 	address,
+ * 	gender,
+ * 	screeningTypes,
+ * 	assetsURL,
+ * 	organizationId,
+ * 	organizationName
+ * }
+ * @returns {*} promise batch commit
+ */
 export function createOrder({
 	firstName,
 	lastName,
@@ -59,32 +92,46 @@ export function createOrder({
 	organizationId,
 	organizationName
 }) {
+	// Creates new orders and sets up new sub documents to keep track of the results
 	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
 	const user = firebase.auth().currentUser;
 	if (!user) {
 		throw new Error("You must be registered to create an order!");
 	}
 
-	return firebase
-		.firestore()
-		.collection("orders")
-		.add({
-			firstName,
-			lastName,
-			middleName,
-			dateOfBirth,
-			address,
-			gender,
-			screeningTypes,
-			organizationId,
-			organizationName,
-			assetsURL,
-			status: "pending",
-			notes: "",
-			referenceNumber: generateOrderRefNo(organizationName),
-			createdAt: serverTime,
-			updatedAt: serverTime
+	const orderRef = firebase.firestore().collection("orders")
+	const batch = firebase.firestore().batch();
+
+	const newOrder = orderRef.doc();
+
+	batch.set(newOrder, {
+		firstName,
+		lastName,
+		middleName,
+		dateOfBirth,
+		address,
+		gender,
+		screeningTypes,
+		organizationId,
+		organizationName,
+		assetsURL,
+		status: "pending",
+		notes: "",
+		referenceNumber: generateOrderRefNo(organizationName),
+		createdAt: serverTime,
+		updatedAt: serverTime
+	});
+
+	const resultsRef = orderRef.doc(newOrder.id).collection("results");
+
+	screeningTypes.forEach(type => {
+		const resultRef = resultsRef.doc(type);
+		batch.set(resultRef, {
+			completed: false
 		});
+	});
+
+	return batch.commit()
 }
 
 export function generateOrderRefNo(companyName = "") {
