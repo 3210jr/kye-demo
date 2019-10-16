@@ -1,13 +1,14 @@
 // @ts-check
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { upperFirst, clone } from "lodash";
+import { upperFirst, clone, omit } from "lodash";
 import { Paper, Typography, Button, TextField, MenuItem,Grid } from "@material-ui/core";
+import { persistOrderResults } from "../../../../utils";
 
 
-export default function AcademicReports({ order }) {
-	const [state, setstate] = useState({
+function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
+	const [state, setState] = useState({
 		establishmentName:"",
 		referenceMethod:"",
 		dateSupplied:"",
@@ -19,17 +20,51 @@ export default function AcademicReports({ order }) {
 		qualificationAndGradedAwardedCandidate:"",
 		qualificationAndGradedAwardedReference:"",
 		academicQualificationScore: "",
+		loading: false
 	});
+
+	useEffect(() => {
+		const initialState = { ...state, ...order[type] };
+		setState(initialState);
+	}, []);
 
 	function handleChange(field, value) {
 		state[field] = value;
-		return setstate(clone(state));
+		return setState(clone(state));
+	}
+
+	function saveAcademicReports() {
+		const { loading } = state;
+		const currentState = omit(state, ["loading"]);
+		if (loading) return;
+		const emptyFields = Object.keys(currentState).filter(
+			key => state[key].length === 0
+		);
+		if (emptyFields.length > 0) {
+			alert("Please fill in all the appropriate fields");
+			return;
+		}
+
+		setState({ ...state, loading: true });
+
+		persistOrderResults(order.id, type, { ...currentState })
+			.then(res => {
+				toggleSnackBar({ message: "Police Reports updated successfully!" });
+			})
+			.catch(error => {
+				toggleSnackBar({
+					message: "Error. There was an error updating the police report."
+				});
+				console.log("Error: ", error);
+			})
+			.finally(() => {
+				setState({ ...state, loading: false });
+			});
 	}
 
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Academic Qualification</Typography>
-
 			<Grid
 				justify="space-between" 
 				container 
@@ -110,10 +145,6 @@ export default function AcademicReports({ order }) {
 							<MenuItem value="no">No</MenuItem>
 						</TextField>
 					</Grid>
-
-					
-				
-			
 			</Grid>
 
 			{/* education details headers */}
@@ -261,21 +292,29 @@ export default function AcademicReports({ order }) {
 						fullWidth
 						variant="contained"
 						color="primary"
-						onClick={()=>{
-
-							console.log("Academic qualificaiton state",state)
-						}}
+						onClick={saveAcademicReports}
 						>
-						Save
+						{state.loading ? "Loading ...":"Save"}
 					</Button>
 			
 				</Grid>								
 			</Grid>
 			{/* education details headers ends */}
 
-			
 		</Paper>
 	);
 }
 
 
+const mapState = state => ({
+	snackbar: state.snackbar
+});
+
+const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
+	toggleSnackBar: payload => asyncToggleSnackBar(payload)
+});
+
+export default connect(
+	mapState,
+	mapDispatch
+)(AcademicReports);

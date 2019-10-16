@@ -45,6 +45,16 @@ export function completeOrder(orderId) {
 	return orderRef.update({ status: "completed" });
 }
 
+export function persistOrderResults(orderId, resultType, results) {
+	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+	const update = { [resultType]: {...results}, updatedAt: serverTime };
+	return firebase
+		.firestore()
+		.collection("orders")
+		.doc(orderId)
+		.update(update);
+}
+
 /**
  * Uploads a given file to the destination folder in the default bucket
  *
@@ -87,7 +97,7 @@ export function createOrder({
 	dateOfBirth,
 	address,
 	gender,
-	screeningTypes,
+	screeningTypes = [],
 	assetsURL,
 	organizationId,
 	organizationName
@@ -99,39 +109,30 @@ export function createOrder({
 		throw new Error("You must be registered to create an order!");
 	}
 
-	const orderRef = firebase.firestore().collection("orders")
-	const batch = firebase.firestore().batch();
+	const sreenings = {};
+	screeningTypes.forEach(type => (sreenings[type] = {}));
 
-	const newOrder = orderRef.doc();
-
-	batch.set(newOrder, {
-		firstName,
-		lastName,
-		middleName,
-		dateOfBirth,
-		address,
-		gender,
-		screeningTypes,
-		organizationId,
-		organizationName,
-		assetsURL,
-		status: "pending",
-		notes: "",
-		referenceNumber: generateOrderRefNo(organizationName),
-		createdAt: serverTime,
-		updatedAt: serverTime
-	});
-
-	const resultsRef = orderRef.doc(newOrder.id).collection("results");
-
-	screeningTypes.forEach(type => {
-		const resultRef = resultsRef.doc(type);
-		batch.set(resultRef, {
-			completed: false
+	return firebase
+		.firestore()
+		.collection("orders")
+		.add({
+			firstName,
+			lastName,
+			middleName,
+			dateOfBirth,
+			address,
+			gender,
+			screeningTypes,
+			...sreenings,
+			organizationId,
+			organizationName,
+			assetsURL,
+			status: "pending",
+			notes: "",
+			referenceNumber: generateOrderRefNo(organizationName),
+			createdAt: serverTime,
+			updatedAt: serverTime
 		});
-	});
-
-	return batch.commit()
 }
 
 export function generateOrderRefNo(companyName = "") {

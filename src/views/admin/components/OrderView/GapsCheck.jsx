@@ -1,32 +1,66 @@
 // @ts-check
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { upperFirst, clone } from "lodash";
 import { Paper, Typography, Button, TextField, MenuItem,Grid } from "@material-ui/core";
+import { persistOrderResults } from "../../../../utils";
 
 
 
 
-function GapsReports({ order }) {
-	const [state, setstate] = useState({
+function GapsReports({ order, type, snackbar, toggleSnackBar }) {
+	const [state, setState] = useState({
 		period:"",
 		comments:"",
 		gapInEmploymentHistoryScore:"",
-		generalComments:""
-
+		generalComments:"",
+		loading: false
 	});
+
+	useEffect(() => {
+		// const { period = "", comments = "", gapInEmploymentHistoryScore = "", generalComments = "" } = order[type];
+		// const data = { ...order[type] };
+		const initialState = { ...state, ...order[type] };
+		setState(initialState);
+	}, []);
 
 	function handleChange(field, value) {
 		state[field] = value;
-		return setstate(clone(state));
+		return setState(clone(state));
+	}
+
+	function saveGapsReport() {
+		const { period, comments, gapInEmploymentHistoryScore, generalComments, loading } = state;
+		if (loading) return;
+		if (period.length < 3 || comments.length < 5 || generalComments.length < 5 || gapInEmploymentHistoryScore.length < 3) {
+			alert("Please fill all the provided fields");
+			return;
+		}
+		state.loading = true;
+		setState(clone(state));
+
+		persistOrderResults(order.id, type, { period, comments, gapInEmploymentHistoryScore, generalComments })
+			.then(res => {
+				toggleSnackBar({ message: "Police Reports updated successfully!" });
+			})
+			.catch(error => {
+				toggleSnackBar({
+					message: "Error. There was an error updating the police report."
+				});
+				console.log("Error: ", error);
+			})
+			.finally(() => {
+				state.loading = false;
+				setState(clone(state));
+			});
 	}
 
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Gap Analysis</Typography>
 
-			<Grid
+			{/* <Grid
 				justify="space-between" 
 				container 
 				spacing={24}
@@ -47,7 +81,7 @@ function GapsReports({ order }) {
 						Save and Add another
 					</Button>
 				</Grid>
-			</Grid>
+			</Grid> */}
 
 			<Grid container spacing={3} style={{marginTop:5}}>
 				<Grid item xs style={{paddingLeft:3,paddingRight:3}}> 
@@ -130,11 +164,9 @@ function GapsReports({ order }) {
 						fullWidth
 						variant="contained"
 						color="primary"
-						onClick={()=>{
-							console.log("Gaps check state",state)
-						}}
+						onClick={saveGapsReport}
 						>
-						Save
+						{state.loading ? "Loading...":"Save"}
 					</Button>
 			
 				</Grid>								
@@ -146,5 +178,15 @@ function GapsReports({ order }) {
 
 
 
+const mapState = state => ({
+	snackbar: state.snackbar
+});
 
-export default GapsReports
+const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
+	toggleSnackBar: payload => asyncToggleSnackBar(payload)
+});
+
+export default connect(
+	mapState,
+	mapDispatch
+)(GapsReports);
