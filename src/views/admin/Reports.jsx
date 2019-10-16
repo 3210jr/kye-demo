@@ -11,21 +11,44 @@ import {
 
 } from "@material-ui/core";
 
+const borders={
+	left:{
+		borderLeft:"1px solid #ececec"
+	},
+	right:{
+		borderRight:"1px solid #ececec"
+	},
+	left_right:{
+		borderLeft:"1px solid #ececec",
+		borderRight:"1px solid #ececec"
+	},
+	top:{
+		borderTop:"1px solid #ececec",
+	}
+}
+
+
+const headers={
+	marginTopBottom:{
+		marginTop:"40px",
+		marginBottom:"40px" 
+	}
+}
 
 const ReportsHeader = ()=>{
 	return(
 		<div>
-			<Grid container style={{ marginBottom: "1em" }}>
+			<Grid container style={{ marginBottom: "1em",}}>
 				<Table >
 				<TableBody>
-					<TableRow>
-					<TableCell>Subject Name</TableCell>
-					<TableCell>{"Lorem ipsum"}</TableCell>
-					<TableCell rowSpan={2}>Logo</TableCell>
+					<TableRow style={borders.top}>
+					<TableCell style={borders.left}>Subject Name</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left_right} rowSpan={2}>Logo</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell>ARS Ref No</TableCell>
-					<TableCell>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>ARS Ref No</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -35,40 +58,49 @@ const ReportsHeader = ()=>{
 	)
 }
 
+const SectionHeader=({label})=>(
+	<Typography variant="h5" align="center" style={headers.marginTopBottom}>{label}</Typography>
+
+)
+const TableHeaderText=({label})=>(
+	<Typography variant="h6" align="center" >{label}</Typography>
+)
+
 const FirstPage =()=>{
 	return(
 		<div>
 
 			<ReportsHeader/>
-	
+
+			<SectionHeader label="Background verification Report" />
 			<Grid container 
 				style={{ marginBottom: "1em" }}
-				 alignItems="center"
 			>
-				<Typography variant="h6">Background verification Report</Typography>
-
 				<Table >
-				<TableBody>
+				<TableBody style={borders.top}>
 					<TableRow>
-					<TableCell colSpan={4}>Report Details</TableCell>
+					<TableCell colSpan={4} style={borders.left_right}>
+						<TableHeaderText label="Report Details"/>
+				
+					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell>ARS No</TableCell>
-					<TableCell colSpan={3}></TableCell>
-					</TableRow>
-
-					<TableRow>
-					<TableCell>Class start date</TableCell>
-					<TableCell></TableCell>
-					<TableCell>Report Severity</TableCell>
-					<TableCell></TableCell>
+					<TableCell style={borders.left}>ARS No</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}></TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell>Report Date</TableCell>
-					<TableCell></TableCell>
-					<TableCell>Report Status</TableCell>
-					<TableCell></TableCell>
+					<TableCell style={borders.left}>Class start date</TableCell>
+					<TableCell style={borders.left}>{"Lorem Ipsum"}</TableCell>
+					<TableCell style={borders.left}>Report Severity</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem Ipsum"}</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>Report Date</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>Report Status</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -78,23 +110,25 @@ const FirstPage =()=>{
 			<Grid container>
 				<Grid item xs={6} style={{paddingLeft:3,paddingRight:3}}>
 				<Table >
-				<TableBody>
+				<TableBody style={borders.top}>
 					<TableRow>
-					<TableCell colSpan={2}>Candidate Details</TableCell>
+					<TableCell colSpan={2} style={borders.left_right}>
+						<TableHeaderText label="Candidate Details"/>
+					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell>Name of subject</TableCell>
-					<TableCell></TableCell>
-					</TableRow>
-
-					<TableRow>
-					<TableCell>Employment ID</TableCell>
-					<TableCell></TableCell>
+					<TableCell style={borders.left}>Name of subject</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell>Process Name</TableCell>
-					<TableCell></TableCell>
+					<TableCell style={borders.left}>Employment ID</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>Process Name</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -102,18 +136,20 @@ const FirstPage =()=>{
 				</Grid>
 				<Grid item xs={6} style={{paddingLeft:3,paddingRight:3}}>
 				<Table >
-				<TableBody>
+				<TableBody style={borders.top}>
 					<TableRow>
-					<TableCell colSpan={2}>Client Details</TableCell>
+					<TableCell colSpan={2} style={borders.left_right} >
+						<TableHeaderText label="Client Details"/>
+					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell>Name of subject</TableCell>
-					<TableCell></TableCell>
+					<TableCell style={borders.left}>Name of subject</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell>Process Name</TableCell>
-					<TableCell></TableCell>
+					<TableCell style={borders.left}>Process Name</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -124,9 +160,9 @@ const FirstPage =()=>{
 			<Grid container style={{paddingLeft:3,paddingRight:3,marginTop:5,marginBottom:5}}>
 				<Grid item xs={12}>
 				<Table >
-				<TableBody>
+				<TableBody style={borders.top}>
 					<TableRow>
-					<TableCell>All Check are clear</TableCell>
+					<TableCell style={borders.left_right}>All Check are clear</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -138,37 +174,39 @@ const FirstPage =()=>{
 			<Grid container>
 				<Grid item xs={12} style={{paddingLeft:3,paddingRight:3}}>
 				<Table >
-				<TableBody>
+				<TableBody style={borders.top}>
 					<TableRow>
-					<TableCell colSpan={6}>Severity Legend</TableCell>
+					<TableCell colSpan={6} style={borders.left_right}>
+						<TableHeaderText label="Severity Legend"/>
+					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell>Discrepant</TableCell>
-					<TableCell>Minor Discrepant</TableCell>
-					<TableCell>Attention Required</TableCell>
-					<TableCell>Insufficient</TableCell>
-					<TableCell>No response received</TableCell>
-					<TableCell>Clear</TableCell>
+					<TableCell style={borders.left}>Discrepant</TableCell>
+					<TableCell style={borders.left}>Minor Discrepant</TableCell>
+					<TableCell style={borders.left}>Attention Required</TableCell>
+					<TableCell style={borders.left}>Insufficient</TableCell>
+					<TableCell style={borders.left}>No response received</TableCell>
+					<TableCell style={borders.left_right}>Clear</TableCell>
 					</TableRow>
 
 
 
 					<TableRow>
-					<TableCell></TableCell>
-					<TableCell></TableCell>
-					<TableCell></TableCell>
-					<TableCell></TableCell>
-					<TableCell></TableCell>
-					<TableCell></TableCell>
+					<TableCell 	style={borders.left}></TableCell>
+					<TableCell 	style={borders.left}></TableCell>
+					<TableCell	style={borders.left}></TableCell>
+					<TableCell	style={borders.left}></TableCell>
+					<TableCell	style={borders.left}></TableCell>
+					<TableCell 	style={borders.left_right}></TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell>{"Lorem ipsum"}</TableCell>
-					<TableCell>{"Lorem ipsum"}</TableCell>
-					<TableCell>{"Lorem ipsum"}</TableCell>
-					<TableCell>{"Lorem ipsum"}</TableCell>
-					<TableCell>{"Lorem ipsum"}</TableCell>
-					<TableCell>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 
 
@@ -186,36 +224,38 @@ const FirstPage =()=>{
 
 const SecondPage =()=>{
 	return(
-	<div style={{backgroundColor:"red" }}>
+	<div style={{marginTop:30}}>
 		<ReportsHeader/>
 		<Grid container style={{ marginBottom: "1em"}}>
 		<Table >
-		<TableBody>
+		<TableBody style={borders.top}>
 			<TableRow>
-			<TableCell colSpan={7}>Executive Summary</TableCell>
+			<TableCell colSpan={7} style={borders.left_right}>
+				<TableHeaderText label="Executive Summary"/>
+			</TableCell>
 			</TableRow>
 			<TableRow>
-			<TableCell>S No</TableCell>
-			<TableCell>Check Name</TableCell>
-			<TableCell>Verified By/At</TableCell>
-			<TableCell>Check Status</TableCell>
-			<TableCell>Check Severity</TableCell>
-			<TableCell>Page</TableCell>
-			<TableCell>Annexure</TableCell>
-			</TableRow>
-
-			<TableRow>
-			<TableCell>{"1"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>S No</TableCell>
+			<TableCell style={borders.left}>Check Name</TableCell>
+			<TableCell style={borders.left}>Verified By/At</TableCell>
+			<TableCell style={borders.left}>Check Status</TableCell>
+			<TableCell style={borders.left}>Check Severity</TableCell>
+			<TableCell style={borders.left}>Page</TableCell>
+			<TableCell style={borders.left_right}>Annexure</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell colSpan={7}>Footer</TableCell>
+			<TableCell style={borders.left}>{"1"}</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
+
+			<TableRow>
+			<TableCell colSpan={7} style={borders.left_right}></TableCell>
 			</TableRow>
 
 			
@@ -232,76 +272,88 @@ const SecondPage =()=>{
 
 const ThirdPage =()=>{
 	return(
-	<div >
+	<div style={{marginTop:50}}>
 		<ReportsHeader/>
+		<SectionHeader label="Check 1"/>
+		<SectionHeader label="Education Verification Written"/>
+		
 		<Grid container style={{ marginBottom: "1em"}}>
 		<Table >
-		<TableBody>
+		<TableBody style={borders.top}>
 			<TableRow>
-			<TableCell>Details of Education</TableCell>
-			<TableCell>Antecedents Started</TableCell>
-			<TableCell>Antecedents verified</TableCell>
+			<TableCell style={borders.left}>
+				<TableHeaderText label="Details of Education"/>
+			</TableCell>
+			<TableCell style={borders.left}>
+				<TableHeaderText label="Antecedents Started"/>
+			</TableCell>
+			<TableCell style={borders.left_right}>
+				<TableHeaderText label="Antecedents verified"/>
+			</TableCell>
 
 			</TableRow>
 
 			<TableRow>
-			<TableCell>College/Institute/University/Location</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>College/Institute/University/Location</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 
 			<TableRow>
-			<TableCell>Roll No / Registration No/ Enrollment No.</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>Roll No / Registration No/ Enrollment No.</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 
 			<TableRow>
-			<TableCell>Course Name / Qualification</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>Course Name / Qualification</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell>Year of Passing </TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
-			<TableCell>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>Year of Passing </TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell>Details </TableCell>
-			<TableCell colSpan={2}>Antecedents Verified</TableCell>
+			<TableCell style={borders.left}>
+				<TableHeaderText label="Details "/>
+			</TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>
+				<TableHeaderText label="Antecedents Verified "/>
+			</TableCell>
 			</TableRow>
 
 
 			<TableRow>
-			<TableCell>Mode of verification </TableCell>
-			<TableCell colSpan={2}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>Mode of verification </TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 			
 
 			<TableRow>
-			<TableCell>Verifier's Comments </TableCell>
-			<TableCell colSpan={2}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>Verifier's Comments </TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell>Final Disposition </TableCell>
-			<TableCell colSpan={2}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left}>Final Disposition </TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell>Check Severity </TableCell>
-			<TableCell colSpan={2}>{"Clear"}</TableCell>
+			<TableCell style={borders.left}>Check Severity </TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Clear"}</TableCell>
 			</TableRow>
 		</TableBody>
 		</Table>
 
-		<Typography variant="h6">End of Checks</Typography>
 	</Grid>
-
+	<SectionHeader label="End of Checks"/>
 </div>
 	)
 }
@@ -309,7 +361,7 @@ const ThirdPage =()=>{
 
 const FourthPage =()=>{
 	return(
-	<div style={{backgroundColor:"red"}}>
+	<div style={{}}>
 		<ReportsHeader/>
 		<Grid container style={{ marginBottom: "1em"}}>
 			<Typography variant="h6">Disclaimer & Limitations of Research</Typography>
