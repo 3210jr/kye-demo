@@ -1,4 +1,7 @@
 // @ts-check
+
+
+//codes in this file are to be moved to different files in later commits
 import React from "react";
 import {
 	Grid,
@@ -363,16 +366,11 @@ const FourthPage =()=>{
 	return(
 	<div style={{}}>
 		<ReportsHeader/>
-		<Grid container style={{ marginBottom: "1em"}}>
-			<Typography variant="h6">Disclaimer & Limitations of Research</Typography>
-	
-		</Grid>
-
+		<SectionHeader label="Disclaimer & Limitations of Research"/>
 		<Grid container style={{ marginBottom: "1em"}}>
 			<Typography variant="subtitle1">
 				{"Disclaimer message"}
 			</Typography>
-	
 		</Grid>
 
 </div>
