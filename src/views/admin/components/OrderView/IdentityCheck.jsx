@@ -1,31 +1,61 @@
 // @ts-check
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { upperFirst, clone } from "lodash";
+import { omit, clone } from "lodash";
 import { Paper, Typography, Button, TextField, MenuItem} from "@material-ui/core";
+import { persistOrderResults } from "../../../../utils";
 
 
-
-function IdentityCheck({ order }) {
-	const [state, setstate] = useState({
+function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
+	const [state, setState] = useState({
 		documentType: "",
 		countryOfIssue: "",
 		dateOfCheck: "",
 		result: "",
 		dateOfBirthConsisntency: "no",
 		passportScore: "risk", // risk, medium, good
-		comments: ""
+		comments: "",
+		loading: false
 	});
+
+	useEffect(() => {
+		const initialState = { ...state, ...order[type] };
+		setState(initialState);
+	}, []);
 
 	function handleChange(field, value) {
 		state[field] = value;
-		return setstate(clone(state));
+		return setState(clone(state));
 	}
 
-	function updateIdentityCheck() {
-		console.log("Identity check state",state)
-		return;
+	function saveIdentityCheck() {
+		const { loading } = state;
+		const currentState = omit(state, ["loading"]);
+		if (loading) return;
+		const emptyFields = Object.keys(currentState).filter(
+			key => state[key].length === 0
+		);
+		if (emptyFields.length > 0) {
+			alert("Please fill in all the appropriate fields");
+			return;
+		}
+
+		setState({ ...state, loading: true });
+
+		persistOrderResults(order.id, type, { ...currentState })
+			.then(res => {
+				toggleSnackBar({ message: "Police Reports updated successfully!" });
+			})
+			.catch(error => {
+				toggleSnackBar({
+					message: "Error. There was an error updating the police report."
+				});
+				console.log("Error: ", error);
+			})
+			.finally(() => {
+				setState({ ...state, loading: false });
+			});
 	}
 
 	return (
@@ -140,10 +170,10 @@ function IdentityCheck({ order }) {
 				<Button
 					variant="contained"
 					color="primary"
-					onClick={updateIdentityCheck}
+					onClick={saveIdentityCheck}
 					// className=""
 				>
-					Publish Identity Verification Check
+					{state.loading ? "Loading ...":"Save"}
 				</Button>
 			</div>
 		</Paper>
@@ -151,4 +181,15 @@ function IdentityCheck({ order }) {
 }
 
 
-export default IdentityCheck
+const mapState = state => ({
+	snackbar: state.snackbar
+});
+
+const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
+	toggleSnackBar: payload => asyncToggleSnackBar(payload)
+});
+
+export default connect(
+	mapState,
+	mapDispatch
+)(IdentityCheck);

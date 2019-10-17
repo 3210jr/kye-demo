@@ -3,15 +3,30 @@ import React, { Component, useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { upperFirst, clone } from "lodash";
-import { Paper, Typography, Button, TextField, MenuItem,Grid,Select,FormControl,InputLabel } from "@material-ui/core";
-import { acceptOrder, rejectOrder, requestOrderChanges, completeOrder } from "../../utils";
+import {
+	Paper,
+	Typography,
+	Button,
+	TextField,
+	MenuItem,
+	Grid,
+	Select,
+	FormControl,
+	InputLabel
+} from "@material-ui/core";
+import {
+	acceptOrder,
+	rejectOrder,
+	requestOrderChanges,
+	completeOrder
+} from "../../utils";
 
 //	importing custom components
-import AcademicReports from './components/OrderView/AcademicQualification'
-import PoliceReports from './components/OrderView/CriminalCheck'
-import GapsReports from './components/OrderView/GapsCheck'
-import EmploymentHistoryReports from './components/OrderView/EmploymentCheck'
-import IdentityCheckReports from './components/OrderView/IdentityCheck'
+import AcademicReports from "./components/OrderView/AcademicQualification";
+import PoliceReports from "./components/OrderView/CriminalCheck";
+import GapsReports from "./components/OrderView/GapsCheck";
+import EmploymentHistoryReports from "./components/OrderView/EmploymentCheck";
+import IdentityCheckReports from "./components/OrderView/IdentityCheck";
 
 // const useStyles = makeStyles(theme => ({
 // 	container: {
@@ -156,24 +171,35 @@ class OrderView extends Component {
 
 				{/* true condition for developments only */}
 				{/* to be replaces */}
-				{order.screeningTypes.includes("academic-qualifications") && <AcademicReports order={order} />}
 
-				{order.screeningTypes.includes("police-reports") && <PoliceReports order={order} />}
-				{order.screeningTypes.includes("employment-history") && (<EmploymentHistoryReports order={order} />)}
-				{order.screeningTypes.includes("gaps-reports") && <GapsReports order={order} />}
-				{order.screeningTypes.includes("identification") && <IdentityCheckReports order={order} />}
-						
+				{order.status !== "pending" && order.status !== "rejected" && (
+					<>
+						{order.screeningTypes.includes("police-reports") && (
+							<PoliceReports type="police-reports" order={order} />
+						)}
+						{order.screeningTypes.includes("gaps-reports") && (
+							<GapsReports type="gaps-reports" order={order} />
+						)}
+						{order.screeningTypes.includes("identification") && (
+							<IdentityCheckReports type="identification" order={order} />
+						)}
+						{order.screeningTypes.includes("employment-history") && (
+							<EmploymentHistoryReports
+								type="employment-history"
+								order={order}
+							/>
+						)}
+						{order.screeningTypes.includes("academic-qualifications") && (
+							<AcademicReports type="academic-qualifications" order={order} />
+						)}
+					</>
+				)}
 
-				
-				
-				
 				{/* ))} */}
 			</div>
 		);
 	}
 }
-
-
 
 OrderView.propTypes = {
 	orders: PropTypes.instanceOf(Object).isRequired
