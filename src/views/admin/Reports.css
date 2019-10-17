@@ -1,0 +1,14 @@
+@media screen {
+    .report_print_form {
+        display: none;
+    }
+}
+
+@media print {
+    .report_print_form {
+        display: block; margin-top: 0px;
+
+        /* other print styles here */
+
+    }
+}
