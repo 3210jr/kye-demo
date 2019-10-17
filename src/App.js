@@ -13,6 +13,7 @@ import store from "./store";
 import { AppRoute, AdminRoute } from "./ExtendedRoutes";
 
 import Admin from "./views/admin";
+import { Snackbar } from "@material-ui/core";
 
 const theme = createMuiTheme({
 	palette: {
@@ -60,11 +61,34 @@ class App extends Component {
 								</Switch>
 							</ScrollToTop>
 						</BrowserRouter>
+
+						<SnackbarContainer />
 					</div>
 				</Provider>
 			</MuiThemeProvider>
 		);
 	}
 }
+
+
+const mapState = state => ({
+	snackbar: state.snackbar
+});
+
+const SnackbarContainer = connect(mapState)(({snackbar}) => {
+	console.log(snackbar)
+	return (
+	<Snackbar
+		anchorOrigin={{ vertical: snackbar.vertical, horizontal: snackbar.horizontal }}
+		key={snackbar.key}
+		open={snackbar.open}
+		onClose={snackbar.handleClose}
+		ContentProps={{
+			"aria-describedby": "message-id"
+		}}
+		title={snackbar.title}
+		message={<span id="message-id">{snackbar.message}</span>}
+	/>
+)});
 
 export default App;

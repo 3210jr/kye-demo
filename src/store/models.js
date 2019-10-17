@@ -84,3 +84,30 @@ export const orders = {
 		}
 	})
 };
+
+
+export const snackbar = {
+	state: {
+		open: false,
+		vertical: "top",
+		horizontal: "right",
+		message: "",
+		title: "",
+		key: Math.random().toString(36).substring(2)
+	},
+	reducers: {
+		toggleSnackBar(state, payload) {
+			const openState = state.open;
+			return { ...state, ...payload, open: !openState }
+		}
+	},
+	effects: dispatch => ({
+		asyncToggleSnackBar(payload, rootState) {
+			console.log("PAYLOAD:", payload, rootState)
+			if (!rootState.snackbar.open) {
+				setTimeout(() => dispatch.snackbar.toggleSnackBar(payload), 3000)
+			}
+			dispatch.snackbar.toggleSnackBar(payload)
+		}
+	})
+}
