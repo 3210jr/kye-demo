@@ -14,6 +14,11 @@ import {
 
 } from "@material-ui/core";
 
+// import Pdf from "react-to-pdf";
+
+
+import Pdf from "react-to-pdf";
+
 import * as logoImg from '../../assets/mwema_logo.png'
 import './Reports.css';
 
@@ -94,7 +99,7 @@ const TableHeaderText=({label})=>(
 	<Typography variant="h6" align="center" >{label}</Typography>
 )
 
-const FirstPage =()=>{
+const FirstPage =(props)=>{
 	return(
 		<div>
 
@@ -266,9 +271,9 @@ const FirstPage =()=>{
 				</Grid>
 			</Grid>
 
-		
-		
+
 		</div>
+		
 	)
 }
 
@@ -458,18 +463,35 @@ const FourthPage =()=>{
 
 
 
+const ref = React.createRef();
 
 const Reports = () => {
 	return (
-		<div className="report_print_form">
-			<FirstPage/>
-			<SecondPage/>
-			<ThirdPage/>
-			<FourthPage/>
+		<div className="report_print_form" 
+			// ref={ref}
+		>
+
+		<Pdf targetRef={ref} filename="code-example.pdf">
+			{({ toPdf }) => <button onClick={toPdf}>Test</button>}
+		</Pdf>
+		<div ref={ref} style={{width:794,padding:20}}>
+			<FirstPage />
+		</div>
+
+
+
+			{/* <FirstPage /> */}
+
+			{/* <SecondPage />  */}
+			{/* <ThirdPage /> */}
+			{/* <FourthPage />  */}
+			
 		</div>
 
 		
 	);
 };
+
+
 
 export default Reports;
