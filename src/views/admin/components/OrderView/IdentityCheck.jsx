@@ -1,11 +1,16 @@
 // @ts-check
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, createRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { omit, clone } from "lodash";
-import { Paper, Typography, Button, TextField, MenuItem} from "@material-ui/core";
-import { persistOrderResults } from "../../../../utils";
-
+import {
+	Paper,
+	Typography,
+	Button,
+	TextField,
+	MenuItem
+} from "@material-ui/core";
+import { persistOrderResults, uploadFile } from "../../../../utils";
 
 function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 	const [state, setState] = useState({
@@ -16,8 +21,36 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 		dateOfBirthConsisntency: "no",
 		passportScore: "risk", // risk, medium, good
 		comments: "",
+		supportingDocsURL: "",
+		uploadingAttachment: false,
 		loading: false
 	});
+
+	let fileUploaderRef = createRef();
+
+	function uploadAttachment(evt) {
+		if (state.uploadingAttachment) return;
+		const file = evt.target.files[0];
+
+		setState({ ...state, uploadingAttachment: true });
+		uploadFile(file, "supporting-documents")
+			.then(res => {
+				res.ref
+					.getDownloadURL()
+					.then(url =>
+						setState({
+							...state,
+							uploadingAttachment: false,
+							supportingDocsURL: url
+						})
+					);
+			})
+			.catch(error => {
+				alert("There was an error uploading your assets, please try again");
+				console.log(error);
+				setState({ uploadingAttachment: false });
+			});
+	}
 
 	useEffect(() => {
 		const initialState = { ...state, ...order[type] };
@@ -70,7 +103,9 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 						style={{ margin: 3 }}
 						className="wide"
 						value={state.documentType}
-						onChange={({ target }) => handleChange("documentType", target.value)}
+						onChange={({ target }) =>
+							handleChange("documentType", target.value)
+						}
 						margin="normal"
 						variant="outlined"
 					/>
@@ -82,7 +117,9 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 						style={{ margin: 3 }}
 						className="wide"
 						value={state.countryOfIssue}
-						onChange={({ target }) => handleChange("countryOfIssue", target.value)}
+						onChange={({ target }) =>
+							handleChange("countryOfIssue", target.value)
+						}
 						margin="normal"
 						variant="outlined"
 					/>
@@ -140,7 +177,9 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 						style={{ margin: 3 }}
 						className="wide"
 						value={state.passportScore}
-						onChange={({ target }) => handleChange("passportScore", target.value)}
+						onChange={({ target }) =>
+							handleChange("passportScore", target.value)
+						}
 						margin="normal"
 						variant="outlined"
 					>
@@ -171,15 +210,33 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 					variant="contained"
 					color="primary"
 					onClick={saveIdentityCheck}
-					// className=""
+					style={{ marginRight: 10 }}
 				>
-					{state.loading ? "Loading ...":"Save"}
+					{state.loading ? "Loading ..." : "Save"}
+				</Button>
+				<Button
+					variant={state.supportingDocsURL.length > 0 ? "text":"contained"}
+					color="primary"
+					onClick={() => fileUploaderRef.current.click()}
+				>
+					{state.uploadingAttachment
+						? "Uploading..."
+						: state.supportingDocsURL.length > 0
+						? "Update Supporting Documents"
+						: "Upload Supporting Documents"}
 				</Button>
 			</div>
+
+			<input
+				type="file"
+				ref={fileUploaderRef}
+				onChange={uploadAttachment}
+				id="attachmentUploader"
+				className="hidden"
+			/>
 		</Paper>
 	);
 }
-
 
 const mapState = state => ({
 	snackbar: state.snackbar
