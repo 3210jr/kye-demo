@@ -127,7 +127,7 @@ export default function AcademicReports({ order }) {
 				</Grid>
 
 				<Grid item xs={4} style={{paddingLeft:3,paddingRight:3}}>
-					<Typography variant="h6">Reference</Typography>
+					<Typography variant="h6">Referee</Typography>
 				</Grid>	
 			
 			</Grid>

@@ -14,6 +14,11 @@ import {
 
 } from "@material-ui/core";
 
+import * as logoImg from '../../assets/mwema_logo.png'
+import './Reports.css';
+
+
+
 const borders={
 	left:{
 		borderLeft:"1px solid #ececec"
@@ -38,6 +43,14 @@ const headers={
 	}
 }
 
+
+const Logo=()=>(
+	<div className="center">
+		<div style={{ textAlign: "center" }}>
+			<img alt="" style={{  }} src={logoImg} />
+		</div>
+	</div>
+)
 const ReportsHeader = ()=>{
 	return(
 		<div>
@@ -45,13 +58,19 @@ const ReportsHeader = ()=>{
 				<Table >
 				<TableBody>
 					<TableRow style={borders.top}>
-					<TableCell style={borders.left}>Subject Name</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Subject Name" />
+					</TableCell>
 					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-					<TableCell style={borders.left_right} rowSpan={2}>Logo</TableCell>
+					<TableCell style={borders.left_right} rowSpan={2}>
+						<Logo/>
+					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell style={borders.left}>ARS Ref No</TableCell>
-					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="ARS Ref No" />
+					</TableCell>
+						<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -60,6 +79,12 @@ const ReportsHeader = ()=>{
 		</div>
 	)
 }
+
+const FieldsTitle=({label})=>(
+	<Typography variant="subtitle2">
+		{label}
+	</Typography>
+)
 
 const SectionHeader=({label})=>(
 	<Typography variant="h5" align="center" style={headers.marginTopBottom}>{label}</Typography>
@@ -88,21 +113,31 @@ const FirstPage =()=>{
 					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell style={borders.left}>ARS No</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="ARS No" />
+					</TableCell>
 					<TableCell style={borders.left_right} colSpan={3}></TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell style={borders.left}>Class start date</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Class start date" />
+					</TableCell>
 					<TableCell style={borders.left}>{"Lorem Ipsum"}</TableCell>
-					<TableCell style={borders.left}>Report Severity</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Report Severity" />
+					</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem Ipsum"}</TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell style={borders.left}>Report Date</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Report Date" />
+					</TableCell>
 					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-					<TableCell style={borders.left}>Report Status</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Report Status" />
+					</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
@@ -120,17 +155,23 @@ const FirstPage =()=>{
 					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell style={borders.left}>Name of subject</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Name of subject" />
+					</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell style={borders.left}>Employment ID</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Employment ID" />
+					</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell style={borders.left}>Process Name</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Process Name" />
+					</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
@@ -146,12 +187,16 @@ const FirstPage =()=>{
 					</TableCell>
 					</TableRow>
 					<TableRow>
-					<TableCell style={borders.left}>Name of subject</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Name of subject" />
+					</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 
 					<TableRow>
-					<TableCell style={borders.left}>Process Name</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Process Name" />
+					</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 				</TableBody>
@@ -165,7 +210,9 @@ const FirstPage =()=>{
 				<Table >
 				<TableBody style={borders.top}>
 					<TableRow>
-					<TableCell style={borders.left_right}>All Check are clear</TableCell>
+					<TableCell style={borders.left_right}>
+						<FieldsTitle label="All Check are clear" />
+					</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -238,13 +285,27 @@ const SecondPage =()=>{
 			</TableCell>
 			</TableRow>
 			<TableRow>
-			<TableCell style={borders.left}>S No</TableCell>
-			<TableCell style={borders.left}>Check Name</TableCell>
-			<TableCell style={borders.left}>Verified By/At</TableCell>
-			<TableCell style={borders.left}>Check Status</TableCell>
-			<TableCell style={borders.left}>Check Severity</TableCell>
-			<TableCell style={borders.left}>Page</TableCell>
-			<TableCell style={borders.left_right}>Annexure</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="S No" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Check Name" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Verified By/At" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Check Status" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Check Severity" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Page" />
+			</TableCell>
+			<TableCell style={borders.left_right}>
+				<FieldsTitle label="Annexure" />
+			</TableCell>
 			</TableRow>
 
 			<TableRow>
@@ -297,27 +358,35 @@ const ThirdPage =()=>{
 			</TableRow>
 
 			<TableRow>
-			<TableCell style={borders.left}>College/Institute/University/Location</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="College/Institute/University/Location" />
+			</TableCell>
 			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 
 			<TableRow>
-			<TableCell style={borders.left}>Roll No / Registration No/ Enrollment No.</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Roll No / Registration No/ Enrollment No." />
+			</TableCell>
 			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 
 			<TableRow>
-			<TableCell style={borders.left}>Course Name / Qualification</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Course Name / Qualification" />
+			</TableCell>
 			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell style={borders.left}>Year of Passing </TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Year of Passing" />
+			 </TableCell>
 			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
@@ -333,23 +402,31 @@ const ThirdPage =()=>{
 
 
 			<TableRow>
-			<TableCell style={borders.left}>Mode of verification </TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Mode of verification " />
+			</TableCell>
 			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 			
 
 			<TableRow>
-			<TableCell style={borders.left}>Verifier's Comments </TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Verifier's Comments" />
+			</TableCell>
 			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell style={borders.left}>Final Disposition </TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Final Disposition" />
+			</TableCell>
 			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 			</TableRow>
 
 			<TableRow>
-			<TableCell style={borders.left}>Check Severity </TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Check Severity " />
+			</TableCell>
 			<TableCell colSpan={2} style={borders.left_right}>{"Clear"}</TableCell>
 			</TableRow>
 		</TableBody>
@@ -384,7 +461,7 @@ const FourthPage =()=>{
 
 const Reports = () => {
 	return (
-		<div>
+		<div className="report_print_form">
 			<FirstPage/>
 			<SecondPage/>
 			<ThirdPage/>
