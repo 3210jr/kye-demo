@@ -55,6 +55,17 @@ export function persistOrderResults(orderId, resultType, results) {
 		.update(update);
 }
 
+export function persistOrderEmbeddedResults(orderId, resultType, resultKey, results) {
+	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+	const update = { [`${resultType}.${resultKey.toString()}`]: {...results, updatedAt: serverTime }};
+	return firebase
+		.firestore()
+		.collection("orders")
+		.doc(orderId)
+		.update(update);
+}
+
+
 /**
  * Uploads a given file to the destination folder in the default bucket
  *

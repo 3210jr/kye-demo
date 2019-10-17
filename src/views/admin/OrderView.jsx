@@ -178,7 +178,7 @@ class OrderView extends Component {
 							<PoliceReports type="police-reports" order={order} />
 						)}
 						{order.screeningTypes.includes("gaps-reports") && (
-							<GapsReports type="gaps-report" order={order} />
+							<GapsReports type="gaps-reports" order={order} />
 						)}
 						{order.screeningTypes.includes("identification") && (
 							<IdentityCheckReports type="identification" order={order} />
