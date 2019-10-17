@@ -18,7 +18,7 @@ body {
 
 .flex-row {
 	display: flex;
-	flex-direction: row;
+	flex-direction: row !important;
 }
 
 .justify-space-between {

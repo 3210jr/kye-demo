@@ -1,5 +1,5 @@
 // @ts-check
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { upperFirst, clone } from "lodash";
@@ -11,12 +11,14 @@ import {
 	MenuItem,
 	Grid
 } from "@material-ui/core";
-import { persistOrderResults } from "../../../../utils";
+import { persistOrderResults, uploadFile } from "../../../../utils";
 
 function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 	const [state, setState] = useState({
 		comments: "",
 		criminalAnalysisScore: "",
+		supportingDocsURL: "",
+		uploadingAttachment: false,
 		loading: false
 	});
 
@@ -26,13 +28,42 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 		setState(initialState);
 	}, []);
 
+	let fileUploaderRef = createRef();
+
+	function uploadAttachment(evt) {
+		if (state.uploadingAttachment) return;
+		const file = evt.target.files[0];
+
+		setState({ ...state, uploadingAttachment: true });
+		uploadFile(file, "supporting-documents")
+			.then(res => {
+				res.ref.getDownloadURL().then(url =>
+					setState({
+						...state,
+						uploadingAttachment: false,
+						supportingDocsURL: url
+					})
+				);
+			})
+			.catch(error => {
+				alert("There was an error uploading your assets, please try again");
+				console.log(error);
+				setState({ uploadingAttachment: false });
+			});
+	}
+
 	function handleChange(field, value) {
 		state[field] = value;
 		return setState(clone(state));
 	}
 
 	function saveCriminalCheck() {
-		const { comments, criminalAnalysisScore, loading } = state;
+		const {
+			comments,
+			criminalAnalysisScore,
+			supportingDocsURL,
+			loading
+		} = state;
 		if (loading) return;
 		if (comments.length < 5) {
 			alert("Comments are too short. Please enter valid comments.");
@@ -43,10 +74,20 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 			alert("Please enter a valid analysis score");
 			return;
 		}
+
+		if (supportingDocsURL.length < 5) {
+			alert("Please upload any supporting documents");
+			return;
+		}
+
 		state.loading = true;
 		setState(clone(state));
 
-		persistOrderResults(order.id, type, { comments, criminalAnalysisScore })
+		persistOrderResults(order.id, type, {
+			comments,
+			criminalAnalysisScore,
+			supportingDocsURL
+		})
 			.then(res => {
 				toggleSnackBar({ message: "Police Reports updated successfully!" });
 			})
@@ -115,10 +156,32 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 						color="primary"
 						onClick={saveCriminalCheck}
 					>
-						{state.loading ? "Loading":"Save"}
+						{state.loading ? "Loading" : "Save"}
+					</Button>
+				</Grid>
+
+				<Grid item xs={2} sm={3} style={{ paddingLeft: 3, paddingRight: 3 }}>
+					<Button
+						variant={state.supportingDocsURL.length > 0 ? "text" : "contained"}
+						color="primary"
+						onClick={() => fileUploaderRef.current.click()}
+					>
+						{state.uploadingAttachment
+							? "Uploading..."
+							: state.supportingDocsURL.length > 0
+							? "Update Supporting Documents"
+							: "Upload Supporting Documents"}
 					</Button>
 				</Grid>
 			</Grid>
+
+			<input
+				type="file"
+				ref={fileUploaderRef}
+				onChange={uploadAttachment}
+				id="attachmentUploader"
+				className="hidden"
+			/>
 		</Paper>
 	);
 }

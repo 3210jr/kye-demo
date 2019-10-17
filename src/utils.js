@@ -70,9 +70,9 @@ export function persistOrderEmbeddedResults(orderId, resultType, resultKey, resu
  * Uploads a given file to the destination folder in the default bucket
  *
  * @export
- * @param {*} file the reference to the file
- * @param {*} folder the remote folder you will be storing the file in
- * @returns promise to the firebase storage put method
+ * @param {string} file the reference to the file
+ * @param {string} folder the remote folder you will be storing the file in
+ * @returns {promise} to the firebase storage put method
  */
 export function uploadFile(file, folder) {
 	if (!folder) {
