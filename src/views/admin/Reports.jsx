@@ -17,7 +17,7 @@ import {
 // import Pdf from "react-to-pdf";
 
 
-import Pdf from "react-to-pdf";
+import ReactToPrint from 'react-to-print';
 
 import * as logoImg from '../../assets/mwema_logo.png'
 import './Reports.css';
@@ -62,7 +62,7 @@ const ReportsHeader = ()=>{
 			<Grid container style={{ marginBottom: "1em",}}>
 				<Table >
 				<TableBody>
-					<TableRow style={borders.top}>
+					<TableRow style={{}}>
 					<TableCell style={borders.left}>
 						<FieldsTitle label="Subject Name" />
 					</TableCell>
@@ -461,31 +461,62 @@ const FourthPage =()=>{
 
 
 
+class ReportGenerated extends React.Component{
 
 
-const ref = React.createRef();
+render(){
+return(
+<div  className="report_print_form ">
+	<h2 id="page-one"></h2>
+		<FirstPage/>
+	<h2 className="page-break"></h2>
+		<SecondPage/>
+	<h2 className="page-break"></h2>
+		<ThirdPage/>
+	<h2 className="page-break"></h2>
+		<FourthPage/>
+	<h2 className="page-break"></h2>
+
+</div>
+
+)
+}
+
+}
 
 const Reports = () => {
+	
 	return (
-		<div className="report_print_form" 
-			// ref={ref}
-		>
+		// <div className="report_print_form" 
+		// 	// ref={ref}
+		// >
 
-		<Pdf targetRef={ref} filename="code-example.pdf">
-			{({ toPdf }) => <button onClick={toPdf}>Test</button>}
-		</Pdf>
-		<div ref={ref} style={{width:794,padding:20}}>
-			<FirstPage />
-		</div>
+		// <Pdf targetRef={ref} filename="code-example.pdf">
+		// 	{({ toPdf }) => <button onClick={toPdf}>Test</button>}
+		// </Pdf>
+		// <div ref={ref} style={{width:794,padding:20}}>
+		// 	<FirstPage />
+		// </div>
 
 
 
-			{/* <FirstPage /> */}
+		// 	{/* <FirstPage /> */}
 
-			{/* <SecondPage />  */}
-			{/* <ThirdPage /> */}
-			{/* <FourthPage />  */}
+		// 	{/* <SecondPage />  */}
+		// 	{/* <ThirdPage /> */}
+		// 	{/* <FourthPage />  */}
 			
+	
+		// </div>
+		<div>
+		
+		{/* <ReactToPrint
+			trigger={() => <button>Print this out!</button>}
+			content={() => componentRef.current}
+		/>
+		<ReportGenerated ref={componentRef} /> */}
+				
+
 		</div>
 
 		
@@ -494,4 +525,22 @@ const Reports = () => {
 
 
 
-export default Reports;
+class Example extends React.Component {
+  render() {
+    return (
+      <div>
+        <ReactToPrint
+          trigger={() => <a href="#">Print this out!</a>}
+          content={() => this.componentRef}
+        />
+        <ReportGenerated ref={el => (this.componentRef = el)} />
+      </div>
+    );
+  }
+}
+
+export default Example;
+
+
+
+// export default Reports;
