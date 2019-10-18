@@ -27,6 +27,11 @@ import {
 	FilterList as FilterListIcon
 } from "@material-ui/icons";
 
+import {ReportGenerated} from './admin/Reports'
+
+import ReactToPrint from 'react-to-print';
+
+
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
 		return -1;
@@ -164,6 +169,11 @@ class ViewOrders extends React.Component {
 	// 	this.setState({ selected: newSelected });
 	// };
 
+	handlePrint=(item)=>{
+		console.log(item)
+		console.log("ui")
+		console.log(ReportGenerated)
+	}	
 	handleChangePage = (event, page) => {
 		this.setState({ page });
 	};
@@ -216,14 +226,30 @@ class ViewOrders extends React.Component {
 												{upperFirst(n.status)}
 											</TableCell>
 											<TableCell align="center">
-												<CloudDownload
-													color={
-														n.status === "completed"
-															? "default"
-															: "disabled"
-													}
-													className="pointer"
+												<ReactToPrint
+												trigger={() => (
+													<CloudDownload
+														onClick={()=>{
+															this.handlePrint(n)
+
+														}}
+														color={
+															n.status === "completed"
+																? "default"
+																: "disabled"
+														}
+														className="pointer"
+													/>
+
+												)}
+												content={() => this.componentRef}
 												/>
+												<ReportGenerated 
+													person={n.firstName+" "+n.lastName}	//NB : this is test prop ony
+													reportOwner={n}
+													ref={el => (this.componentRef = el)}
+												 />
+												
 											</TableCell>
 										</TableRow>
 									);

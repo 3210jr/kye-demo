@@ -14,6 +14,7 @@ import {
 
 } from "@material-ui/core";
 
+
 import * as logoImg from '../../assets/mwema_logo.png'
 import './Reports.css';
 
@@ -51,17 +52,17 @@ const Logo=()=>(
 		</div>
 	</div>
 )
-const ReportsHeader = ()=>{
+const ReportsHeader = (props)=>{
 	return(
 		<div>
 			<Grid container style={{ marginBottom: "1em",}}>
 				<Table >
 				<TableBody>
-					<TableRow style={borders.top}>
+					<TableRow style={{}}>
 					<TableCell style={borders.left}>
 						<FieldsTitle label="Subject Name" />
 					</TableCell>
-					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>{props.person}</TableCell>
 					<TableCell style={borders.left_right} rowSpan={2}>
 						<Logo/>
 					</TableCell>
@@ -94,11 +95,11 @@ const TableHeaderText=({label})=>(
 	<Typography variant="h6" align="center" >{label}</Typography>
 )
 
-const FirstPage =()=>{
+const FirstPage =(props)=>{
 	return(
 		<div>
 
-			<ReportsHeader/>
+			<ReportsHeader person={props.person}/>
 
 			<SectionHeader label="Background verification Report" />
 			<Grid container 
@@ -266,9 +267,9 @@ const FirstPage =()=>{
 				</Grid>
 			</Grid>
 
-		
-		
+
 		</div>
+		
 	)
 }
 
@@ -456,20 +457,56 @@ const FourthPage =()=>{
 
 
 
+class ReportGenerated extends React.Component{
+	constructor(props){
+		super(props)
+		this.state={
+			
+		}
+	}
+
+	render(){
+		// currenly reach record is passed to this component
+		// and the reports are generated on data load time
+		// this to be improved on later commits such that data is passed 
+		// and components are generated only on click
+		const {reportOwner,person}=this.props
+		return(
+			<div  className="report_print_form ">
+				<h2 id="page-one"></h2>
+					<FirstPage person={person}/>
+				<h2 className="page-break"></h2>
+					<SecondPage/>
+				<h2 className="page-break"></h2>
+					<ThirdPage/>
+				<h2 className="page-break"></h2>
+					<FourthPage/>
+
+				{/* last page */}
+				{/* pages to be generated based on props data */}
+
+			</div>
+
+		)
+	}
+
+}
 
 
 
-const Reports = () => {
-	return (
-		<div className="report_print_form">
-			<FirstPage/>
-			<SecondPage/>
-			<ThirdPage/>
-			<FourthPage/>
-		</div>
 
-		
-	);
-};
+class ReportsMain extends React.Component {
+  render() {
+    return (
+      <div>
 
-export default Reports;
+      </div>
+    );
+  }
+}
+
+
+
+
+export  {ReportGenerated};
+export default ReportsMain;
