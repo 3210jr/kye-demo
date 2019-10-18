@@ -66,6 +66,7 @@ const rows = [
 ];
 
 class EnhancedTableHead extends React.Component {
+
 	createSortHandler = property => event => {
 		this.props.onRequestSort(event, property);
 	};
@@ -129,13 +130,19 @@ const styles = theme => ({
 });
 
 class ViewOrders extends React.Component {
-	state = {
-		order: "asc",
-		orderBy: "name",
-		selected: [],
-		page: 0,
-		rowsPerPage: 5
-	};
+	constructor(props){
+		super(props)
+		
+		this.state = {
+			order: "asc",
+			orderBy: "name",
+			selected: [],
+			page: 0,
+			rowsPerPage: 5,
+			
+		};
+	}
+	
 
 	handleRequestSort = (event, property) => {
 		const orderBy = property;
@@ -171,9 +178,9 @@ class ViewOrders extends React.Component {
 
 	handlePrint=(item)=>{
 		console.log(item)
-		console.log("ui")
-		console.log(ReportGenerated)
+
 	}	
+
 	handleChangePage = (event, page) => {
 		this.setState({ page });
 	};
@@ -187,6 +194,7 @@ class ViewOrders extends React.Component {
 	render() {
 		const { classes, myOrders } = this.props;
 		const { order, orderBy, selected, rowsPerPage, page } = this.state;
+		var reportsReferences=[]	//references
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
 		return (
 			<Paper className={classes.root}>
@@ -202,7 +210,7 @@ class ViewOrders extends React.Component {
 						<TableBody>
 							{stableSort(myOrders, getSorting(order, orderBy))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-								.map(n => {
+								.map((n,index) => {
 									const isSelected = this.isSelected(n.id);
 									return (
 										<TableRow
@@ -230,7 +238,7 @@ class ViewOrders extends React.Component {
 												trigger={() => (
 													<CloudDownload
 														onClick={()=>{
-															this.handlePrint(n)
+															this.handlePrint(index)
 
 														}}
 														color={
@@ -242,12 +250,12 @@ class ViewOrders extends React.Component {
 													/>
 
 												)}
-												content={() => this.componentRef}
+												content={() => reportsReferences[index]}
 												/>
 												<ReportGenerated 
 													person={n.firstName+" "+n.lastName}	//NB : this is test prop ony
 													reportOwner={n}
-													ref={el => (this.componentRef = el)}
+													ref={el => (reportsReferences[index] = el)}
 												 />
 												
 											</TableCell>
