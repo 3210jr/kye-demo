@@ -7,9 +7,12 @@
 @media print {
     .report_print_form {
         display: block; margin-top: 0px;
-
+        
         /* other print styles here */
 
+    }
+    .page{
+        padding:0.5cm 1cm;
     }
  }
 
