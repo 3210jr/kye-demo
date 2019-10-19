@@ -27,7 +27,7 @@ import {
 	FilterList as FilterListIcon
 } from "@material-ui/icons";
 
-import {ReportGenerated} from './admin/Reports'
+import ReportGenerated from './ClientReport'
 
 import ReactToPrint from 'react-to-print';
 
