@@ -253,6 +253,7 @@ class ViewOrders extends React.Component {
 												content={() => reportsReferences[index]}
 												/>
 												<ReportGenerated 
+													order={n}
 													person={n.firstName+" "+n.lastName}	//NB : this is test prop ony
 													reportOwner={n}
 													ref={el => (reportsReferences[index] = el)}
