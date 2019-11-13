@@ -95,11 +95,11 @@ const TableHeaderText=({label})=>(
 	<Typography variant="h6" align="center" >{label}</Typography>
 )
 
-const FirstPage =(props)=>{
+const FirstPage =({person})=>{
 	return(
 		<div className="page">
 
-			<ReportsHeader person={props.person}/>
+			<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
 
 			<SectionHeader label="Background verification Report" />
 			<Grid container 
@@ -273,10 +273,11 @@ const FirstPage =(props)=>{
 	)
 }
 
-const SecondPage =()=>{
+const SecondPage =({person})=>{
 	return(
         <div className="page">
-		<ReportsHeader/>
+		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+
 		<Grid container style={{ marginBottom: "1em"}}>
 		<Table >
 		<TableBody style={borders.top}>
@@ -335,10 +336,11 @@ const SecondPage =()=>{
 
 
 
-const ThirdPage =()=>{
+const ThirdPage =({person})=>{
 	return(
         <div className="page">
-		<ReportsHeader/>
+		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+
 		<SectionHeader label="Check 1"/>
 		<SectionHeader label="Education Verification Written"/>
 		
@@ -440,10 +442,11 @@ const ThirdPage =()=>{
 }
 
 
-const FourthPage =()=>{
+const FourthPage =({person})=>{
 	return(
         <div className="page">
-            <ReportsHeader/>
+            <ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+
             <SectionHeader label="Disclaimer & Limitations of Research"/>
             <Grid container style={{ marginBottom: "1em"}}>
                 <Typography variant="subtitle1">
@@ -470,17 +473,30 @@ class ReportGenerated extends React.Component{
 		// and the reports are generated on data load time
 		// this to be improved on later commits such that data is passed 
 		// and components are generated only on click
-		const {reportOwner,person}=this.props
+		const {reportOwner}=this.props
+		
+		// this codes to be shifted to jsx in rendering 
+		// accessing objects in objects
+
+		// if(reportOwner['academic-qualifications']){
+		// 	Object.keys(reportOwner['academic-qualifications']).forEach(function(key) {
+		// 		console.log(key, reportOwner['academic-qualifications'][key]);
+		// 	});
+		// }
+
+		console.log("Report owner details ",reportOwner)
+
 		return(
+			
 			<div  className="report_print_form ">
 				<h2 id="page-one"></h2>
-					<FirstPage person={person} />
+					<FirstPage person={reportOwner} />
 				<h2 className="page-break"></h2>
-					<SecondPage/>
+					<SecondPage person={reportOwner}/>
 				<h2 className="page-break"></h2>
-					<ThirdPage/>
+					<ThirdPage person={reportOwner}/>
 				<h2 className="page-break"></h2>
-					<FourthPage/>
+					<FourthPage person={reportOwner}/>
 
 				{/* last page */}
 				{/* pages to be generated based on props data */}
