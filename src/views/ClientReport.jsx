@@ -92,10 +92,11 @@ const TableHeaderText = ({ label }) => (
 	</Typography>
 );
 
-const FirstPage = ({ order }) => {
-	return (
+const FirstPage =({person})=>{
+	return(
 		<div className="page">
-			<ReportsHeader order={order} />
+
+			<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
 
 			<SectionHeader label="Background verification Report" />
 			<Grid container style={{ marginBottom: "1em" }}>
@@ -273,32 +274,33 @@ const FirstPage = ({ order }) => {
 	);
 };
 
-const SecondPage = ({ order }) => {
-	return (
-		<div className="page">
-			<ReportsHeader order={order} />
-			<Grid container style={{ marginBottom: "1em" }}>
-				<Table>
-					<TableBody style={borders.top}>
-						<TableRow>
-							<TableCell colSpan={7} style={borders.left_right}>
-								<TableHeaderText label="Executive Summary" />
-							</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="S No" />
-							</TableCell>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Check Name" />
-							</TableCell>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Verified By/At" />
-							</TableCell>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Check Status" />
-							</TableCell>
-							{/* <TableCell style={borders.left}>
+const SecondPage =({person})=>{
+	return(
+        <div className="page">
+		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+
+		<Grid container style={{ marginBottom: "1em"}}>
+		<Table >
+		<TableBody style={borders.top}>
+			<TableRow>
+			<TableCell colSpan={7} style={borders.left_right}>
+				<TableHeaderText label="Executive Summary"/>
+			</TableCell>
+			</TableRow>
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="S No" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Check Name" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Verified By/At" />
+			</TableCell>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Check Status" />
+			</TableCell>
+			{/* <TableCell style={borders.left}>
 				<FieldsTitle label="Check Severity" />
 			</TableCell>
 			<TableCell style={borders.left}>
@@ -329,111 +331,128 @@ const SecondPage = ({ order }) => {
 	);
 };
 
-const ThirdPage = ({ order }) => {
-	return (
-		<div className="page">
-			<ReportsHeader order={order} />
-			<SectionHeader label="Check 1" />
-			<SectionHeader label="Education Verification Written" />
+const ThirdPage =({person})=>{
+	return(
+        <div className="page">
+		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
 
-			<Grid container style={{ marginBottom: "1em" }}>
-				<Table>
-					<TableBody style={borders.top}>
-						<TableRow>
-							<TableCell style={borders.left}>
-								<TableHeaderText label="Details of Education" />
-							</TableCell>
-							<TableCell style={borders.left}>
-								<TableHeaderText label="Antecedents Started" />
-							</TableCell>
-							<TableCell style={borders.left_right}>
-								<TableHeaderText label="Antecedents verified" />
-							</TableCell>
-						</TableRow>
+		<SectionHeader label="Check 1"/>
+		<SectionHeader label="Education Verification Written"/>
+		
+		<Grid container style={{ marginBottom: "1em"}}>
+		<Table >
+		<TableBody style={borders.top}>
+			<TableRow>
+			<TableCell style={borders.left}>
+				<TableHeaderText label="Details of Education"/>
+			</TableCell>
+			<TableCell style={borders.left}>
+				<TableHeaderText label="Antecedents Started"/>
+			</TableCell>
+			<TableCell style={borders.left_right}>
+				<TableHeaderText label="Antecedents verified"/>
+			</TableCell>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="College/Institute/University/Location" />
-							</TableCell>
-							<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-							<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-						</TableRow>
+			</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Roll No / Registration No/ Enrollment No." />
-							</TableCell>
-							<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-							<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-						</TableRow>
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="College/Institute/University/Location" />
+			</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Course Name / Qualification" />
-							</TableCell>
-							<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-							<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-						</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Year of Passing" />
-							</TableCell>
-							<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-							<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-						</TableRow>
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Roll No / Registration No/ Enrollment No." />
+			</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<TableHeaderText label="Details " />
-							</TableCell>
-							<TableCell colSpan={2} style={borders.left_right}>
-								<TableHeaderText label="Antecedents Verified " />
-							</TableCell>
-						</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Mode of verification " />
-							</TableCell>
-							<TableCell colSpan={2} style={borders.left_right}>
-								{"Lorem ipsum"}
-							</TableCell>
-						</TableRow>
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Course Name / Qualification" />
+			</TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Verifier's Comments" />
-							</TableCell>
-							<TableCell colSpan={2} style={borders.left_right}>
-								{"Lorem ipsum"}
-							</TableCell>
-						</TableRow>
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Year of Passing" />
+			 </TableCell>
+			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Final Disposition" />
-							</TableCell>
-							<TableCell colSpan={2} style={borders.left_right}>
-								{"Lorem ipsum"}
-							</TableCell>
-						</TableRow>
+			<TableRow>
+			<TableCell style={borders.left}>
+				<TableHeaderText label="Details "/>
+			</TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>
+				<TableHeaderText label="Antecedents Verified "/>
+			</TableCell>
+			</TableRow>
 
-						<TableRow>
-							<TableCell style={borders.left}>
-								<FieldsTitle label="Check Severity " />
-							</TableCell>
-							<TableCell colSpan={2} style={borders.left_right}>
-								{"Clear"}
-							</TableCell>
-						</TableRow>
-					</TableBody>
-				</Table>
-			</Grid>
-			<SectionHeader label="End of Checks" />
-		</div>
-	);
-};
+
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Mode of verification " />
+			</TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
+			
+
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Verifier's Comments" />
+			</TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
+
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Final Disposition" />
+			</TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+			</TableRow>
+
+			<TableRow>
+			<TableCell style={borders.left}>
+				<FieldsTitle label="Check Severity " />
+			</TableCell>
+			<TableCell colSpan={2} style={borders.left_right}>{"Clear"}</TableCell>
+			</TableRow>
+		</TableBody>
+		</Table>
+
+	</Grid>
+	<SectionHeader label="End of Checks"/>
+</div>
+	)
+}
+
+
+const FourthPage =({person})=>{
+	return(
+        <div className="page">
+            <ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+
+            <SectionHeader label="Disclaimer & Limitations of Research"/>
+            <Grid container style={{ marginBottom: "1em"}}>
+                <Typography variant="subtitle1">
+                    {"Disclaimer message"}
+                </Typography>
+            </Grid>
+
+      </div>
+	)
+}
+
 
 const FourthPage = ({ order }) => {
 	return (
@@ -458,17 +477,30 @@ class ReportGenerated extends React.Component {
 		// and the reports are generated on data load time
 		// this to be improved on later commits such that data is passed
 		// and components are generated only on click
-		const { order, person } = this.props;
-		return (
-			<div className="report_print_form ">
+		const {reportOwner}=this.props
+		
+		// this codes to be shifted to jsx in rendering 
+		// accessing objects in objects
+
+		// if(reportOwner['academic-qualifications']){
+		// 	Object.keys(reportOwner['academic-qualifications']).forEach(function(key) {
+		// 		console.log(key, reportOwner['academic-qualifications'][key]);
+		// 	});
+		// }
+
+		console.log("Report owner details ",reportOwner)
+
+		return(
+			
+			<div  className="report_print_form ">
 				<h2 id="page-one"></h2>
-				<FirstPage order={order} />
+					<FirstPage person={reportOwner} />
 				<h2 className="page-break"></h2>
-				<SecondPage order={order} />
+					<SecondPage person={reportOwner}/>
 				<h2 className="page-break"></h2>
-				<ThirdPage order={order} />
+					<ThirdPage person={reportOwner}/>
 				<h2 className="page-break"></h2>
-				<FourthPage order={order} />
+					<FourthPage person={reportOwner}/>
 
 				{/* last page */}
 				{/* pages to be generated based on props data */}
