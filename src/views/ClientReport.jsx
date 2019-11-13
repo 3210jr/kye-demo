@@ -52,7 +52,7 @@ const Logo=()=>(
 		</div>
 	</div>
 )
-const ReportsHeader = (props)=>{
+const ReportsHeader = ({person,referenceNumber})=>{
 	return(
 		<div>
 			<Grid container style={{ marginBottom: "1em",}}>
@@ -62,16 +62,16 @@ const ReportsHeader = (props)=>{
 					<TableCell style={borders.left}>
 						<FieldsTitle label="Subject Name" />
 					</TableCell>
-					<TableCell style={borders.left}>{props.person}</TableCell>
+					<TableCell style={borders.left}>{person}</TableCell>
 					<TableCell style={borders.left_right} rowSpan={2}>
 						<Logo/>
 					</TableCell>
 					</TableRow>
 					<TableRow>
 					<TableCell style={borders.left}>
-						<FieldsTitle label="ARS Ref No" />
+						<FieldsTitle label="Ref No" />
 					</TableCell>
-						<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+						<TableCell style={borders.left}>{referenceNumber}</TableCell>
 					</TableRow>
 				</TableBody>
 				</Table>
@@ -99,7 +99,7 @@ const FirstPage =({person})=>{
 	return(
 		<div className="page">
 
-			<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+			<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
 
 			<SectionHeader label="Background verification Report" />
 			<Grid container 
@@ -276,7 +276,7 @@ const FirstPage =({person})=>{
 const SecondPage =({person})=>{
 	return(
         <div className="page">
-		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
 
 		<Grid container style={{ marginBottom: "1em"}}>
 		<Table >
@@ -339,7 +339,7 @@ const SecondPage =({person})=>{
 const ThirdPage =({person})=>{
 	return(
         <div className="page">
-		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
 
 		<SectionHeader label="Check 1"/>
 		<SectionHeader label="Education Verification Written"/>
@@ -445,7 +445,7 @@ const ThirdPage =({person})=>{
 const FourthPage =({person})=>{
 	return(
         <div className="page">
-            <ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName}/>
+            <ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
 
             <SectionHeader label="Disclaimer & Limitations of Research"/>
             <Grid container style={{ marginBottom: "1em"}}>
@@ -484,6 +484,7 @@ class ReportGenerated extends React.Component{
 		// 	});
 		// }
 
+	
 		console.log("Report owner details ",reportOwner)
 
 		return(
