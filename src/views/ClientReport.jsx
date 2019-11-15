@@ -478,11 +478,11 @@ class ReportGenerated extends React.Component {
 		// this codes to be shifted to jsx in rendering 
 		// accessing objects in objects
 
-		// if(reportOwner['academic-qualifications']){
-		// 	Object.keys(reportOwner['academic-qualifications']).forEach(function(key) {
-		// 		console.log(key, reportOwner['academic-qualifications'][key]);
-		// 	});
-		// }
+		if(reportOwner['academic-qualifications']){
+			Object.keys(reportOwner['academic-qualifications']).forEach(function(key) {
+				console.log(key, reportOwner['academic-qualifications'][key]);
+			});
+		}
 
 	
 		console.log("Report owner details ",reportOwner)
