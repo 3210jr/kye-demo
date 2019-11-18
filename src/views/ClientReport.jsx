@@ -4,7 +4,6 @@
 import React from "react";
 import {
 	Grid,
-	TableHead,
 	TableRow,
 	TableCell,
 	TableBody,
