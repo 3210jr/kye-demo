@@ -96,12 +96,13 @@ const TableHeaderText=({label})=>(
 )
 
 const FirstPage =({person})=>{
+	if(person.identification===null||person.identification===undefined) return null
 	return(
 		<div className="page">
 
 			<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
 
-			<SectionHeader label="Background verification Report" />
+			<SectionHeader label="Identity verification Report" />
 			<Grid container 
 				style={{ marginBottom: "1em" }}
 			>
@@ -113,40 +114,49 @@ const FirstPage =({person})=>{
 				
 					</TableCell>
 					</TableRow>
+				
 					<TableRow>
 					<TableCell style={borders.left}>
-						<FieldsTitle label="ARS No" />
+						<FieldsTitle label="Document Type" />
 					</TableCell>
-					<TableCell style={borders.left_right} colSpan={3}></TableCell>
+					<TableCell style={borders.left}>{person.identification.documentType}</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Country of Issue" />
+					</TableCell>
+					<TableCell style={borders.left_right}>{person.identification.countryOfIssue}</TableCell>
 					</TableRow>
 
 					<TableRow>
 					<TableCell style={borders.left}>
-						<FieldsTitle label="Class start date" />
+						<FieldsTitle label="Date of Check" />
 					</TableCell>
-					<TableCell style={borders.left}>{"Lorem Ipsum"}</TableCell>
+					<TableCell style={borders.left}>{person.identification.dateOfCheck}</TableCell>
 					<TableCell style={borders.left}>
-						<FieldsTitle label="Report Severity" />
+						<FieldsTitle label="Date of Birth Consisteny" />
 					</TableCell>
-					<TableCell style={borders.left_right}>{"Lorem Ipsum"}</TableCell>
+					<TableCell style={borders.left_right}>{person.identification.dateOfBirthConsisntency}</TableCell>
+					</TableRow>
+					
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Score" />
+					</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}>{person.identification.passportScore}</TableCell>
 					</TableRow>
 
 					<TableRow>
 					<TableCell style={borders.left}>
-						<FieldsTitle label="Report Date" />
+						<FieldsTitle label="Verifier's Comments" />
 					</TableCell>
-					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-					<TableCell style={borders.left}>
-						<FieldsTitle label="Report Status" />
-					</TableCell>
-					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}>{person.identification.comments}</TableCell>
 					</TableRow>
+				
 				</TableBody>
 				</Table>
 				
 			</Grid>
 
-			<Grid container>
+			{/* <Grid container>
 				<Grid item xs={6} style={{paddingLeft:3,paddingRight:3}}>
 				<Table >
 				<TableBody style={borders.top}>
@@ -219,10 +229,10 @@ const FirstPage =({person})=>{
 				</Table>
 				</Grid>
 			</Grid>
+ */}
 
 
-
-			<Grid container>
+			{/* <Grid container>
 				<Grid item xs={12} style={{paddingLeft:3,paddingRight:3}}>
 				<Table >
 				<TableBody style={borders.top}>
@@ -235,8 +245,8 @@ const FirstPage =({person})=>{
 					<TableCell style={borders.left}>Discrepant</TableCell>
 					<TableCell style={borders.left}>Minor Discrepant</TableCell>
 					<TableCell style={borders.left}>Attention Required</TableCell>
-					{/* <TableCell style={borders.left}>Insufficient</TableCell>
-					<TableCell style={borders.left}>No response received</TableCell> */}
+					<TableCell style={borders.left}>Insufficient</TableCell> 
+					<TableCell style={borders.left}>No response received</TableCell> 
 					<TableCell style={borders.left_right}>Clear</TableCell>
 					</TableRow>
 
@@ -246,8 +256,8 @@ const FirstPage =({person})=>{
 					<TableCell 	style={borders.left}></TableCell>
 					<TableCell 	style={borders.left}></TableCell>
 					<TableCell	style={borders.left}></TableCell>
-					{/* <TableCell	style={borders.left}></TableCell>
-					<TableCell	style={borders.left}></TableCell> */}
+					<TableCell	style={borders.left}></TableCell>
+					<TableCell	style={borders.left}></TableCell>
 					<TableCell 	style={borders.left_right}></TableCell>
 					</TableRow>
 
@@ -255,8 +265,8 @@ const FirstPage =({person})=>{
 					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-					{/* <TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell> */}
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
+					<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
 					<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
 					</TableRow>
 
@@ -264,8 +274,8 @@ const FirstPage =({person})=>{
 				</TableBody>
 				</Table>
 
-				</Grid>
-			</Grid>
+				</Grid> */}
+			{/* </Grid> */}
 
 
 		</div>
@@ -274,6 +284,7 @@ const FirstPage =({person})=>{
 }
 
 const SecondPage =({person})=>{
+
 	return(
         <div className="page">
 		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
@@ -335,112 +346,372 @@ const SecondPage =({person})=>{
 }
 
 
-
 const ThirdPage =({person})=>{
+	if(person['academic-qualifications']===null||person['academic-qualifications']===undefined) return null
+
 	return(
         <div className="page">
+
 		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
 
-		<SectionHeader label="Check 1"/>
-		<SectionHeader label="Education Verification Written"/>
+		{/* <SectionHeader label="Check 1"/> */}
+		<SectionHeader label="Education Verification Report"/>
 		
-		<Grid container style={{ marginBottom: "1em"}}>
-		<Table >
-		<TableBody style={borders.top}>
-			<TableRow>
-			<TableCell style={borders.left}>
-				<TableHeaderText label="Details of Education"/>
-			</TableCell>
-			<TableCell style={borders.left}>
-				<TableHeaderText label="Antecedents Started"/>
-			</TableCell>
-			<TableCell style={borders.left_right}>
-				<TableHeaderText label="Antecedents verified"/>
-			</TableCell>
+		{
+			Object.keys(person['academic-qualifications']).map((key)=> {
 
-			</TableRow>
+				const details = person['academic-qualifications'][key];
+		
+				return(
 
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="College/Institute/University/Location" />
-			</TableCell>
-			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-			</TableRow>
+					<Grid container style={{ marginBottom: "1em"}}>
+					<Table >
+					<TableBody style={borders.top}>
+						<TableRow>
+						<TableCell style={borders.left}>
+							<TableHeaderText label="Details of Education"/>
+						</TableCell>
+						{/* <TableCell style={borders.left}>
+							<TableHeaderText label="Antecedents Started"/>
+						</TableCell> */}
+						<TableCell style={borders.left_right}>
+							<TableHeaderText label="Antecedents verified"/>
+						</TableCell>
 
+						</TableRow>
 
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="Roll No / Registration No/ Enrollment No." />
-			</TableCell>
-			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-			</TableRow>
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="College/Institute/University/Location" />
+						</TableCell>
+						{/* <TableCell style={borders.left}>{details.establishmentName}</TableCell> */}
+						<TableCell style={borders.left_right}>{details.establishmentName}</TableCell>
+						</TableRow>
 
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Did candidate study in this establishment" />
+						</TableCell>
+						{/* <TableCell style={borders.left}>{"Lorem ipsum"}</TableCell> */}
+						<TableCell style={borders.left_right}>{details.didCandidateStudyInTheEstablishment}</TableCell>
+						</TableRow>
 
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="Course Name / Qualification" />
-			</TableCell>
-			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-			</TableRow>
-
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="Year of Passing" />
-			 </TableCell>
-			<TableCell style={borders.left}>{"Lorem ipsum"}</TableCell>
-			<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-			</TableRow>
-
-			<TableRow>
-			<TableCell style={borders.left}>
-				<TableHeaderText label="Details "/>
-			</TableCell>
-			<TableCell colSpan={2} style={borders.left_right}>
-				<TableHeaderText label="Antecedents Verified "/>
-			</TableCell>
-			</TableRow>
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Roll No / Registration No/ Enrollment No." />
+						</TableCell>
+						{/* <TableCell style={borders.left}>{"Lorem ipsum"}</TableCell> */}
+						<TableCell style={borders.left_right}>{"Lorem ipsum"}</TableCell>
+						</TableRow>
 
 
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="Mode of verification " />
-			</TableCell>
-			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-			</TableRow>
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Course Name / Qualification" />
+						</TableCell>
+						{/* <TableCell style={borders.left}>{"Lorem ipsum"}</TableCell> */}
+						<TableCell style={borders.left_right}>{details.nameOfCourseStudiedCandidate}</TableCell>
+						</TableRow>
+
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Grade " />
+						</TableCell>
+						<TableCell colSpan={2} style={borders.left_right}>{details.qualificationAndGradedAwardedCandidate}</TableCell>
+						</TableRow>
+
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Year of Passing" />
+						</TableCell>
+						{/* <TableCell style={borders.left}>{"Lorem ipsum"}</TableCell> */}
+						<TableCell style={borders.left_right}>{details.dateSupplied}</TableCell>
+						</TableRow>
+
+					
+
+						{/* <TableRow>
+						<TableCell style={borders.left}>
+							<TableHeaderText label="Details "/>
+						</TableCell>
+						<TableCell colSpan={2} style={borders.left_right}>
+							<TableHeaderText label="Antecedents Verified "/>
+						</TableCell>
+						</TableRow> */}
+
+
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Mode of verification " />
+						</TableCell>
+						<TableCell colSpan={2} style={borders.left_right}>{details.referenceMethod}</TableCell>
+						</TableRow>
+						
+
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Verifier's Comments" />
+						</TableCell>
+						<TableCell colSpan={2} style={borders.left_right}>{}</TableCell>
+						</TableRow>
+
+						{/* <TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Final Disposition" />
+						</TableCell>
+						<TableCell colSpan={2} style={borders.left_right}>{qualificationAndGradedAwardedCandidate}</TableCell>
+						</TableRow>
+
+						<TableRow>
+						<TableCell style={borders.left}>
+							<FieldsTitle label="Check Severity " />
+						</TableCell>
+						<TableCell colSpan={2} style={borders.left_right}>{"Clear"}</TableCell>
+						</TableRow> */}
+					</TableBody>
+					</Table>
+
+				</Grid>
+
+				)
 			
+			})
+		}
 
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="Verifier's Comments" />
-			</TableCell>
-			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-			</TableRow>
-
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="Final Disposition" />
-			</TableCell>
-			<TableCell colSpan={2} style={borders.left_right}>{"Lorem ipsum"}</TableCell>
-			</TableRow>
-
-			<TableRow>
-			<TableCell style={borders.left}>
-				<FieldsTitle label="Check Severity " />
-			</TableCell>
-			<TableCell colSpan={2} style={borders.left_right}>{"Clear"}</TableCell>
-			</TableRow>
-		</TableBody>
-		</Table>
-
-	</Grid>
-	<SectionHeader label="End of Checks"/>
+		
+	{/* <SectionHeader label="End of Checks"/> */}
 </div>
 	)
 }
 
+const EmploymentHistoryReportPage =({person})=>{
+	if(person['employment-history']===null||person['employment-history']===undefined) return null
+
+	return(
+        <div className="page">
+
+		<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
+
+		{/* <SectionHeader label="Check 1"/> */}
+		<SectionHeader label="Employment History Verification Report"/>
+		
+		{
+			Object.keys(person['employment-history']).map((key)=> {
+
+				const details = person['employment-history'][key];
+		
+				return(
+
+					<Grid container 
+				style={{ marginBottom: "1em" }}
+			>
+				<Table >
+				<TableBody style={borders.top}>
+					<TableRow>
+					<TableCell colSpan={4} style={borders.left_right}>
+						<TableHeaderText label="Report Details"/>
+				
+					</TableCell>
+					</TableRow>
+				
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Organization" />
+					</TableCell>
+					<TableCell style={borders.left}>{details.organization}</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Position" />
+					</TableCell>
+					<TableCell style={borders.left_right}>{details.positionHeldCandidate}</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Position" />
+					</TableCell>
+					<TableCell style={borders.left}>{details.positionHeldCandidate}</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Referee" />
+					</TableCell>
+					<TableCell style={borders.left_right}>{details.positionHeldReferee}</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Start date candidate" />
+					</TableCell>
+					<TableCell style={borders.left}>{details.employmentStartDateCandidate}</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Start date Referee" />
+					</TableCell>
+					<TableCell style={borders.left_right}>{details.employmentStartDateReferee}</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="End date candidate" />
+					</TableCell>
+					<TableCell style={borders.left}>{details.employmentEndDateCandidate}</TableCell>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="End date Referee" />
+					</TableCell>
+					<TableCell style={borders.left_right}>{details.employmentEndDateReferee}</TableCell>
+					</TableRow>
+
+					
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Score" />
+					</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}>{details.employmentHistoryScore }</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Verifier's Comments" />
+					</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}>{details.comments}</TableCell>
+					</TableRow>
+				
+				</TableBody>
+				</Table>
+				
+			</Grid>
+
+				)
+			
+			})
+		}
+
+		
+	{/* <SectionHeader label="End of Checks"/> */}
+</div>
+	)
+}
+
+const GapsInEMploymentReportPage =({person})=>{
+	if(person['gaps-reports']===null||person['gaps-reports']===undefined) return null
+	return(
+		<div className="page">
+
+			<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
+
+			<SectionHeader label="Gaps verification Report" />
+
+			{
+			Object.keys(person['gaps-reports']).map((key)=> {
+
+				const details = person['gaps-reports'][key];
+
+				return(
+					<Grid container 
+				style={{ marginBottom: "1em" }}
+			>
+				<Table >
+				<TableBody style={borders.top}>
+					<TableRow>
+					<TableCell colSpan={4} style={borders.left_right}>
+						<TableHeaderText label="Report Details"/>
+					</TableCell>
+					</TableRow>
+				
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Period" />
+					</TableCell>
+					<TableCell style={borders.left_right}>{details.period}</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Score" />
+					</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}>{details.gapInEmploymentHistoryScore}</TableCell>
+					</TableRow>
+
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="General Comments" />
+					</TableCell>
+			
+					<TableCell style={borders.left_right} colSpan={3} >{details.gapInEmploymentHistoryScore}</TableCell>
+					</TableRow>
+					
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Verifier's Comments" />
+					</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}>{details.comments}</TableCell>
+					</TableRow>
+				
+				</TableBody>
+				</Table>
+				
+			</Grid>
+
+			
+
+				)
+				
+			})
+			}
+			
+
+		</div>
+		
+	)
+}
+
+const PoliceReportPage =({person})=>{
+	if(person['police-reports']===null||person['police-reports']===undefined) return null
+	const details=person['police-reports']
+	return(
+		<div className="page">
+
+			<ReportsHeader person={person.firstName+" "+person.middleName+" "+person.lastName} referenceNumber={person.referenceNumber}/>
+
+			<SectionHeader label="Police verification Report" />
+
+		
+			<Grid container 
+				style={{ marginBottom: "1em" }}
+			>
+				<Table >
+				<TableBody style={borders.top}>
+					<TableRow>
+					<TableCell colSpan={4} style={borders.left_right}>
+						<TableHeaderText label="Report Details"/>
+					</TableCell>
+					</TableRow>
+				
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Score" />
+					</TableCell>
+					<TableCell style={borders.left_right}>{details.criminalAnalysisScore}</TableCell>
+					</TableRow>
+
+			
+					<TableRow>
+					<TableCell style={borders.left}>
+						<FieldsTitle label="Verifier's Comments" />
+					</TableCell>
+					<TableCell style={borders.left_right} colSpan={3}>{details.comments}</TableCell>
+					</TableRow>
+				
+				</TableBody>
+				</Table>
+				
+			</Grid>
+
+			
+
+					
+
+		</div>
+		
+	)
+}
 
 const FourthPage =({person})=>{
 	return(
@@ -469,38 +740,26 @@ class ReportGenerated extends React.Component{
 	}
 
 	render(){
-		// currenly reach record is passed to this component
-		// and the reports are generated on data load time
-		// this to be improved on later commits such that data is passed 
-		// and components are generated only on click
+
 		const {reportOwner}=this.props
 		
-		// this codes to be shifted to jsx in rendering 
-		// accessing objects in objects
-
-		if(reportOwner['academic-qualifications']){
-			Object.keys(reportOwner['academic-qualifications']).forEach(function(key) {
-				console.log(key, reportOwner['academic-qualifications'][key]);
-			});
-		}
-
-	
-		console.log("Report owner details ",reportOwner)
-
 		return(
 			
 			<div  className="report_print_form ">
 				<h2 id="page-one"></h2>
 					<FirstPage person={reportOwner} />
 				<h2 className="page-break"></h2>
-					<SecondPage person={reportOwner}/>
-				<h2 className="page-break"></h2>
 					<ThirdPage person={reportOwner}/>
 				<h2 className="page-break"></h2>
+					<EmploymentHistoryReportPage person={reportOwner}/>
+				<h2 className="page-break"></h2>
+					<GapsInEMploymentReportPage person={reportOwner}/>
+				<h2 className="page-break"></h2>
+					<PoliceReportPage person={reportOwner}/>
+				<h2 className="page-break"></h2>
+					<SecondPage person={reportOwner}/>
+				<h2 className="page-break"></h2>
 					<FourthPage person={reportOwner}/>
-
-				{/* last page */}
-				{/* pages to be generated based on props data */}
 
 			</div>
 
