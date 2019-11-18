@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 
 import * as logoImg from "../../assets/mwema_logo.png";
-import "./Reports.css";
+import "../ClientReport.css";
 
 const borders = {
 	left: {

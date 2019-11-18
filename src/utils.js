@@ -47,7 +47,7 @@ export function completeOrder(orderId) {
 
 export function persistOrderResults(orderId, resultType, results) {
 	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-	const update = { [resultType]: {...results}, updatedAt: serverTime };
+	const update = { [resultType]: { ...results }, updatedAt: serverTime };
 	return firebase
 		.firestore()
 		.collection("orders")
@@ -55,16 +55,25 @@ export function persistOrderResults(orderId, resultType, results) {
 		.update(update);
 }
 
-export function persistOrderEmbeddedResults(orderId, resultType, resultKey, results) {
+export function persistOrderEmbeddedResults(
+	orderId,
+	resultType,
+	resultKey,
+	results
+) {
 	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-	const update = { [`${resultType}.${resultKey.toString()}`]: {...results, updatedAt: serverTime }};
+	const update = {
+		[`${resultType}.${resultKey.toString()}`]: {
+			...results,
+			updatedAt: serverTime
+		}
+	};
 	return firebase
 		.firestore()
 		.collection("orders")
 		.doc(orderId)
 		.update(update);
 }
-
 
 /**
  * Uploads a given file to the destination folder in the default bucket
@@ -81,6 +90,60 @@ export function uploadFile(file, folder) {
 	const fileName = uuidV1() + "___" + file.name;
 	const storageRef = firebase.storage().ref(`${folder}/`);
 	return storageRef.child(fileName).put(file);
+}
+
+/**
+ * Creates a new KYC specific order
+ *
+ * @export
+ * @param {*} {
+ * 	customerName,
+ * 	registeretedOrganization,
+ * 	registrationNumber,
+ * 	tinNumber,
+ * 	attachmentURL,
+ * 	address,
+ * 	organizationId,
+ * 	organizationName,
+ * 	notes
+ * }
+ * @returns
+ */
+export function createKYCOrder({
+	customerName,
+	registeretedOrganization,
+	registrationNumber,
+	tinNumber,
+	attachmentURL,
+	address,
+	organizationId,
+	organizationName,
+	notes
+}) {
+	// Creates new orders and sets up new sub documents to keep track of the results
+	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+	const user = firebase.auth().currentUser;
+	if (!user) {
+		throw new Error("You must be registered to create an order!");
+	}
+	return firebase
+		.firestore()
+		.collection("orders")
+		.add({
+			customerName,
+			registeretedOrganization,
+			registrationNumber,
+			tinNumber,
+			attachmentURL,
+			address,
+			notes,
+			createdAt: serverTime,
+			referenceNumber: generateOrderRefNo(organizationName),
+			status: "pending",
+			organizationId,
+			organizationName,
+			orderType: "kyc"
+		});
 }
 
 /**
@@ -108,6 +171,7 @@ export function createOrder({
 	telephone,
 	dateOfBirth,
 	address,
+	nidaNumber,
 	gender,
 	screeningTypes = [],
 	assetsURL,
@@ -135,7 +199,9 @@ export function createOrder({
 			address,
 			gender,
 			telephone,
+			nidaNumber,
 			screeningTypes,
+			orderType: "kye",
 			...sreenings,
 			organizationId,
 			organizationName,
@@ -144,6 +210,7 @@ export function createOrder({
 			notes: "",
 			referenceNumber: generateOrderRefNo(organizationName),
 			createdAt: serverTime,
+			personMAID: null,
 			updatedAt: serverTime
 		});
 }

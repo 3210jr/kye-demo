@@ -220,6 +220,9 @@ class ViewOrders extends React.Component {
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map((n, index) => {
 									const isSelected = this.isSelected(n.id);
+									if (n.orderType === "kyc") {
+										return <KYCOrderItem order={n} index={index} />;
+									}
 									return (
 										<TableRow
 											hover
@@ -290,6 +293,49 @@ class ViewOrders extends React.Component {
 			</Paper>
 		);
 	}
+}
+
+function KYCOrderItem({ order, index }) {
+	var reportsReferences = []; //references
+	return (
+		<TableRow
+			hover
+			// onClick={event => this.handleClick(event, n.id)}
+			role="checkbox"
+			tabIndex={-1}
+			key={order.id}
+			// selected={isSelected}
+		>
+			<TableCell align="left">{order.referenceNumber}</TableCell>
+			<TableCell component="th" scope="row" padding="default">
+				{order.customerName}
+			</TableCell>
+			<TableCell align="left"></TableCell>
+			<TableCell align="left">
+				{order.createdAt && fullFormatDate(order.createdAt.toDate())}
+			</TableCell>
+			<TableCell align="left">{upperFirst(order.status)}</TableCell>
+			<TableCell align="left">
+				{order.status === "completed" ? (
+					<ReactToPrint
+						trigger={() => (
+							<CloudDownload color="default" className="pointer" />
+						)}
+						content={() => reportsReferences[index]}
+					/>
+				) : (
+					<CloudDownload color="disabled" className="pointer" />
+				)}
+
+				<ReportGenerated
+					order={order}
+					person={order.firstName + " " + order.lastName} //NB : this is test prop ony
+					reportOwner={order}
+					ref={el => (reportsReferences[index] = el)}
+				/>
+			</TableCell>
+		</TableRow>
+	);
 }
 
 ViewOrders.propTypes = {
