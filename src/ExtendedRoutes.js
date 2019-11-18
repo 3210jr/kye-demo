@@ -2,6 +2,7 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
 import { Provider, connect } from "react-redux";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const isAdmin = (profile) => {
     if (profile && profile.admin) {
@@ -15,10 +16,24 @@ const mapState = state => ({
 	profile: state.profile
 });
 
+function Loader(){
+	return(
+		<div style={{ 
+			width: "100vw",
+			height: "100vh",
+			display: "flex",
+			alignItems: "center",
+			justifyContent: "center"
+		}}>
+			<CircularProgress />
+		</div>
+	)
+}
+
 
 export const AdminRoute = connect(mapState)(({ component: Component, ...rest }) => {
     if (rest.profile.loading) {
-		return "Loading ...";
+		return <Loader/>;
 	}
 	return (
 		<Route
@@ -45,7 +60,7 @@ export const AdminRoute = connect(mapState)(({ component: Component, ...rest }) 
 
 export const AppRoute = connect(mapState)(({ component: Component, ...rest }) => {
 	if (rest.profile.loading) {
-		return "Loading ...";
+		return <Loader/>;
 	}
 	return (
 		<Route
