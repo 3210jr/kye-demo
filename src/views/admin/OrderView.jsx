@@ -69,8 +69,7 @@ class OrderView extends Component {
 		const { match } = this.props;
 		const { orderId } = match.params;
 		if (window.confirm("Are you sure you want to COMPLETE this order?")) {
-			// rejectOrder(orderId);
-			alert("Feature coming soon");
+			completeOrder(orderId)
 		}
 	};
 
@@ -142,6 +141,7 @@ class OrderView extends Component {
 						<p>First Name: {order.firstName}</p>
 						<p>Middle Name: {order.middleName}</p>
 						<p>Last Name: {order.lastName}</p>
+						<p>Telephone: {order.telephone}</p>
 						<p>Address: {order.address}</p>
 
 						<p>

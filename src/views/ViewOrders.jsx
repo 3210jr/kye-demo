@@ -27,10 +27,9 @@ import {
 	FilterList as FilterListIcon
 } from "@material-ui/icons";
 
-import ReportGenerated from './ClientReport'
+import ReportGenerated from "./ClientReport";
 
-import ReactToPrint from 'react-to-print';
-
+import ReactToPrint from "react-to-print";
 
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -53,20 +52,31 @@ function stableSort(array, cmp) {
 }
 
 function getSorting(order, orderBy) {
-	return order === "desc" ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+	return order === "desc"
+		? (a, b) => desc(a, b, orderBy)
+		: (a, b) => -desc(a, b, orderBy);
 }
 
 const rows = [
 	{ id: "order", numeric: true, disablePadding: false, label: "Reference ID" },
 	{ id: "name", numeric: false, disablePadding: true, label: "Full Name" },
-	{ id: "deliveryDate", numeric: true, disablePadding: false, label: "Delivery Date" },
-	{ id: "placementDate", numeric: true, disablePadding: false, label: "Placement Date" },
+	{
+		id: "deliveryDate",
+		numeric: true,
+		disablePadding: false,
+		label: "Delivery Date"
+	},
+	{
+		id: "placementDate",
+		numeric: true,
+		disablePadding: false,
+		label: "Placement Date"
+	},
 	{ id: "status", numeric: true, disablePadding: false, label: "Status" },
 	{ id: "actions", numeric: false, disablePadding: false, label: "Actions" }
 ];
 
 class EnhancedTableHead extends React.Component {
-
 	createSortHandler = property => event => {
 		this.props.onRequestSort(event, property);
 	};
@@ -130,19 +140,17 @@ const styles = theme => ({
 });
 
 class ViewOrders extends React.Component {
-	constructor(props){
-		super(props)
-		
+	constructor(props) {
+		super(props);
+
 		this.state = {
 			order: "asc",
 			orderBy: "name",
 			selected: [],
 			page: 0,
-			rowsPerPage: 5,
-			
+			rowsPerPage: 5
 		};
 	}
-	
 
 	handleRequestSort = (event, property) => {
 		const orderBy = property;
@@ -176,10 +184,9 @@ class ViewOrders extends React.Component {
 	// 	this.setState({ selected: newSelected });
 	// };
 
-	handlePrint=(item)=>{
-		console.log(item)
-
-	}	
+	handlePrint = item => {
+		console.log(item);
+	};
 
 	handleChangePage = (event, page) => {
 		this.setState({ page });
@@ -194,8 +201,9 @@ class ViewOrders extends React.Component {
 	render() {
 		const { classes, myOrders } = this.props;
 		const { order, orderBy, selected, rowsPerPage, page } = this.state;
-		var reportsReferences=[]	//references
-		const emptyRows = rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
+		var reportsReferences = []; //references
+		const emptyRows =
+			rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrapper}>
@@ -210,7 +218,7 @@ class ViewOrders extends React.Component {
 						<TableBody>
 							{stableSort(myOrders, getSorting(order, orderBy))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-								.map((n,index) => {
+								.map((n, index) => {
 									const isSelected = this.isSelected(n.id);
 									return (
 										<TableRow
@@ -230,35 +238,28 @@ class ViewOrders extends React.Component {
 											<TableCell align="left">
 												{n.createdAt && fullFormatDate(n.createdAt.toDate())}
 											</TableCell>
+											<TableCell align="left">{upperFirst(n.status)}</TableCell>
 											<TableCell align="left">
-												{upperFirst(n.status)}
-											</TableCell>
-											<TableCell align="center">
-												<ReactToPrint
-												trigger={() => (
-													<CloudDownload
-														onClick={()=>{
-															this.handlePrint(index)
-
-														}}
-														color={
-															n.status === "completed"
-																? "default"
-																: "disabled"
-														}
-														className="pointer"
+												{n.status === "completed" ? (
+													<ReactToPrint
+														trigger={() => (
+															<CloudDownload
+																color="default"
+																className="pointer"
+															/>
+														)}
+														content={() => reportsReferences[index]}
 													/>
-
+												) : (
+													<CloudDownload color="disabled" className="pointer" />
 												)}
-												content={() => reportsReferences[index]}
-												/>
-												<ReportGenerated 
+
+												<ReportGenerated
 													order={n}
-													person={n.firstName+" "+n.lastName}	//NB : this is test prop ony
+													person={n.firstName + " " + n.lastName} //NB : this is test prop ony
 													reportOwner={n}
 													ref={el => (reportsReferences[index] = el)}
-												 />
-												
+												/>
 											</TableCell>
 										</TableRow>
 									);

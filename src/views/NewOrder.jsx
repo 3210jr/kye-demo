@@ -81,6 +81,7 @@ class NewOrder extends Component {
 			firstName: "",
 			lastName: "",
 			middleName: "",
+			telephone: "+255",
 			dateOfBirth: 1,
 			monthOfBirth: "january",
 			yearOfBirth: 1990,
@@ -160,6 +161,7 @@ class NewOrder extends Component {
 			screeningTypes,
 			assetsURL,
 			loading,
+			telephone,
 			uploadingAssets
 		} = this.state;
 		const { profile, history } = this.props;
@@ -179,6 +181,7 @@ class NewOrder extends Component {
 			firstName,
 			lastName,
 			middleName,
+			telephone,
 			dateOfBirth: new Date(`${dateOfBirth}/${monthOfBirth}/${yearOfBirth}`),
 			address,
 			gender,
@@ -205,6 +208,7 @@ class NewOrder extends Component {
 			firstName,
 			lastName,
 			middleName,
+			telephone,
 			dateOfBirth,
 			monthOfBirth,
 			yearOfBirth,
@@ -229,7 +233,7 @@ class NewOrder extends Component {
 
 						<form className={classes.container} noValidate autoComplete="off">
 							<Grid container spacing={24}>
-								<Grid item xs={12} md={6}>
+								<Grid item xs={12} md={4}>
 									<TextField
 										id="first-name"
 										label="First Name"
@@ -239,7 +243,7 @@ class NewOrder extends Component {
 										margin="normal"
 									/>
 								</Grid>
-								<Grid item xs={12} md={6}>
+								<Grid item xs={12} md={4}>
 									<TextField
 										id="middle-name"
 										label="Middle Name"
@@ -249,13 +253,23 @@ class NewOrder extends Component {
 										margin="normal"
 									/>
 								</Grid>
-								<Grid item xs={12} md={6}>
+								<Grid item xs={12} md={4}>
 									<TextField
 										id="last-name"
 										label="Last Name"
 										className={classes.textField}
 										value={lastName}
 										onChange={evt => this.handleChange("lastName", evt)}
+										margin="normal"
+									/>
+								</Grid>
+								<Grid item xs={12} md={6}>
+									<TextField
+										id="telephone"
+										label="Telephone"
+										className={classes.textField}
+										value={telephone}
+										onChange={evt => this.handleChange("telephone", evt)}
 										margin="normal"
 									/>
 								</Grid>
