@@ -146,7 +146,9 @@ function AdminOrdersTable({ orders, history }) {
 								>
 									<TableCell align="left">{row.referenceNumber}</TableCell>
 									<TableCell component="th" scope="row" padding="default">
-										{`${row.firstName} ${row.middleName} ${row.lastName}`}
+										{row.orderType === "kyc"
+											? row.customerName
+											: `${row.firstName} ${row.middleName} ${row.lastName}`}
 									</TableCell>
 									<TableCell align="left">{row.organizationName}</TableCell>
 									<TableCell align="left">

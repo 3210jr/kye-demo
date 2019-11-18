@@ -69,7 +69,7 @@ class OrderView extends Component {
 		const { match } = this.props;
 		const { orderId } = match.params;
 		if (window.confirm("Are you sure you want to COMPLETE this order?")) {
-			completeOrder(orderId)
+			completeOrder(orderId);
 		}
 	};
 
@@ -85,6 +85,7 @@ class OrderView extends Component {
 		if (!order) {
 			return <div />;
 		}
+		const { orderType, status } = order;
 		return (
 			<div>
 				<Paper style={{ padding: "1em" }}>
@@ -144,10 +145,12 @@ class OrderView extends Component {
 						<p>Telephone: {order.telephone}</p>
 						<p>Address: {order.address}</p>
 
-						<p>
-							Screening Types <br />
-							{order.screeningTypes.map(el => upperFirst(el)).join(", ")}
-						</p>
+						{orderType === "kye" && (
+							<p>
+								Screening Types <br />
+								{order.screeningTypes.map(el => upperFirst(el)).join(", ")}
+							</p>
+						)}
 
 						<a
 							href={order.assetsURL}
@@ -172,28 +175,13 @@ class OrderView extends Component {
 				{/* true condition for developments only */}
 				{/* to be replaces */}
 
-				{order.status !== "pending" && order.status !== "rejected" && (
-					<>
-						{order.screeningTypes.includes("police-reports") && (
-							<PoliceReports type="police-reports" order={order} />
-						)}
-						{order.screeningTypes.includes("gaps-reports") && (
-							<GapsReports type="gaps-reports" order={order} />
-						)}
-						{order.screeningTypes.includes("identification") && (
-							<IdentityCheckReports type="identification" order={order} />
-						)}
-						{order.screeningTypes.includes("employment-history") && (
-							<EmploymentHistoryReports
-								type="employment-history"
-								order={order}
-							/>
-						)}
-						{order.screeningTypes.includes("academic-qualifications") && (
-							<AcademicReports type="academic-qualifications" order={order} />
-						)}
-					</>
-				)}
+				{order.status !== "pending" &&
+					order.status !== "rejected" &&
+					(order.orderType === "kyc" ? (
+						<KYCReportsCollection order={order} />
+					) : (
+						<KYEReportsCollection order={order} />
+					))}
 
 				{/* ))} */}
 			</div>
@@ -201,6 +189,31 @@ class OrderView extends Component {
 	}
 }
 
+function KYCReportsCollection({ order }) {
+	return <>KYCReportsCollection</>;
+}
+
+function KYEReportsCollection({ order }) {
+	return (
+		<>
+			{order.screeningTypes.includes("police-reports") && (
+				<PoliceReports type="police-reports" order={order} />
+			)}
+			{order.screeningTypes.includes("gaps-reports") && (
+				<GapsReports type="gaps-reports" order={order} />
+			)}
+			{order.screeningTypes.includes("identification") && (
+				<IdentityCheckReports type="identification" order={order} />
+			)}
+			{order.screeningTypes.includes("employment-history") && (
+				<EmploymentHistoryReports type="employment-history" order={order} />
+			)}
+			{order.screeningTypes.includes("academic-qualifications") && (
+				<AcademicReports type="academic-qualifications" order={order} />
+			)}
+		</>
+	);
+}
 OrderView.propTypes = {
 	orders: PropTypes.instanceOf(Object).isRequired
 };

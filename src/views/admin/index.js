@@ -54,6 +54,11 @@ const drawerItems = [
 		path: "/admin/"
 	},
 	{
+		text: "New Order",
+		icons: <Create />,
+		path: "/dashboard/new-order"
+	},
+	{
 		text: "Companies",
 		icons: <AccountBalance />,
 		path: "/admin/companies/"
@@ -93,7 +98,11 @@ class Admin extends Component {
 				>
 					<Switch>
 						<AdminRoute path={`${match.path}`} exact component={Dashboard} />
-						<AdminRoute path={`${match.path}companies/`} exact component={Companies} />
+						<AdminRoute
+							path={`${match.path}companies/`}
+							exact
+							component={Companies}
+						/>
 						<AdminRoute
 							path={`${match.path}companies/:companyId`}
 							exact
@@ -104,8 +113,16 @@ class Admin extends Component {
 							exact
 							component={CompanyStaff}
 						/>
-						<AdminRoute path={`${match.path}reports`} exact component={Reports} />
-						<AdminRoute path={`${match.path}orders`} exact component={OrdersView} />
+						<AdminRoute
+							path={`${match.path}reports`}
+							exact
+							component={Reports}
+						/>
+						<AdminRoute
+							path={`${match.path}orders`}
+							exact
+							component={OrdersView}
+						/>
 						<AdminRoute
 							path={`${match.path}orders/:orderId`}
 							exact
@@ -133,16 +150,36 @@ const Dashboard = ({ history }) => {
 		<div>
 			<Grid container style={{ marginBottom: "1em" }}>
 				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard bgColor="#fff" whiteText={false} title="Companies" count={13} />
+					<OverviewCard
+						bgColor="#fff"
+						whiteText={false}
+						title="Companies"
+						count={13}
+					/>
 				</Grid>
 				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard bgColor="#fff" whiteText={false} title="Unconfirmed" count={3} />
+					<OverviewCard
+						bgColor="#fff"
+						whiteText={false}
+						title="Unconfirmed"
+						count={3}
+					/>
 				</Grid>
 				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard bgColor="#fff" whiteText={false} title="In Progress" count={12} />
+					<OverviewCard
+						bgColor="#fff"
+						whiteText={false}
+						title="In Progress"
+						count={12}
+					/>
 				</Grid>
 				<Grid style={{ paddingRight: "1em" }} item sm={6} md={3}>
-					<OverviewCard bgColor="#fff" whiteText={false} title="Declined" count={4} />
+					<OverviewCard
+						bgColor="#fff"
+						whiteText={false}
+						title="Declined"
+						count={4}
+					/>
 				</Grid>
 			</Grid>
 
