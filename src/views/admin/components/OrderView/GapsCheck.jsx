@@ -281,6 +281,7 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 
 						<input
 							type="file"
+							accept="application/pdf,application/vnd.ms-excel,application/zip,application/x-zip,application/x-zip-compressed"
 							ref={fileUploaderRef}
 							onChange={evt => uploadAttachment(evt, key)}
 							id="attachmentUploader"
