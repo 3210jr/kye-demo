@@ -152,7 +152,7 @@ function AdminOrdersTable({ orders, history }) {
 									</TableCell>
 									<TableCell align="left">{row.organizationName}</TableCell>
 									<TableCell align="left">
-										{fullFormatDate(row.createdAt.toDate())}
+										{row.createdAt && fullFormatDate(row.createdAt.toDate())}
 									</TableCell>
 									<TableCell align="left"></TableCell>
 									<TableCell align="left">{upperFirst(row.status)}</TableCell>

@@ -266,7 +266,7 @@ class NewOrder extends Component {
 						</InputLabel>
 
 						<Select
-							labelId="order-type-picker-label"
+							labelid="order-type-picker-label"
 							id="order-type-picker"
 							value={orderType}
 							style={{ width: 200 }}
