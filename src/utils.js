@@ -45,6 +45,42 @@ export function completeOrder(orderId) {
 	return orderRef.update({ status: "completed" });
 }
 
+export function createNewCase(caseDetails) {
+	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+	return firebase
+		.firestore()
+		.collection("preLitigationCases")
+		.add({
+			...caseDetails,
+			status: "in progress",
+			createdAt: serverTime,
+			referenceNumber: generateOrderRefNo("Mwema Advocates")
+		});
+}
+
+export function addCaseUpdate({
+	caseId,
+	title,
+	description,
+	comments,
+	attachmentURL
+}) {
+	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+	return firebase
+		.firestore()
+		.collection("preLitigationCases")
+		.doc(caseId)
+		.collection("updates")
+		.add({
+			title,
+			description,
+			comments,
+			attachmentURL,
+			status: "in progress",
+			createdAt: serverTime
+		});
+}
+
 export function persistOrderResults(orderId, resultType, results) {
 	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
 	const update = { [resultType]: { ...results }, updatedAt: serverTime };

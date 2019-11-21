@@ -40,12 +40,14 @@ import {
 	SupervisedUserCircle,
 	HowToReg,
 	Close,
-	HelpOutline
+	HelpOutline,
+	Gavel
 } from "@material-ui/icons";
 import AdminOrdersTable from "./components/AdminOrdersTable";
 import CompanyForm from "./components/CompanyForm";
 import CompanyStaff from "../CompanyStaff";
 import Reports from "./Reports";
+import PreLitigation from "./Prelitigation";
 
 const drawerItems = [
 	{
@@ -67,6 +69,11 @@ const drawerItems = [
 		text: "View Orders",
 		icons: <ViewCarousel />,
 		path: "/admin/orders"
+	},
+	{
+		text: "Pre Litigation",
+		icons: <Gavel />,
+		path: "/admin/pre-litigation"
 	},
 	{
 		text: "Mwema Users",
@@ -122,6 +129,10 @@ class Admin extends Component {
 							path={`${match.path}orders`}
 							exact
 							component={OrdersView}
+						/>
+						<AdminRoute
+							path={`${match.path}pre-litigation`}
+							component={PreLitigation}
 						/>
 						<AdminRoute
 							path={`${match.path}orders/:orderId`}

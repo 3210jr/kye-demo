@@ -637,6 +637,7 @@ function KYCOrderForm({ classes, profile, history }) {
 		return setstate({ ...state, [field]: evt.target.value });
 	}
 
+	// FIXME: Abstract out! Repeated way too much time!
 	function uploadZippedFolder(evt) {
 		const file = evt.target.files[0];
 		setstate({ ...state, loading: true, uploadingAttachment: true });
@@ -660,7 +661,7 @@ function KYCOrderForm({ classes, profile, history }) {
 	function createOrder() {
 		if (state.uploadingAttachment || state.loading) return;
 		const order = omit(state, ["uploadingAttachment", "loading"]);
-		console.log(order);
+		setstate({ ...state, loading: false });
 		return createKYCOrder({
 			...order,
 			organizationId: profile.organizationId,
