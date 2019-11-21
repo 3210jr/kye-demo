@@ -15,6 +15,14 @@ export const countries = [
 	"zambia"
 ].sort();
 
+export const caseTypes = [
+	"fraud",
+	"theft",
+	"espionage",
+	"insider trading",
+	"other",
+]
+
 
 export const KYC_COMPANY_DB_NAME = "company-analysis";
 export const KYC_SHAREHOLDER_ANALYSIS_DB_NAME = "share-holder-analysis"

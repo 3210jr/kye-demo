@@ -30,6 +30,7 @@ firebase.auth().onAuthStateChanged(user => {
 					store.dispatch.orders.loadMyOrders(profile.organizationId);
 					if (profile.admin === true) {
 						store.dispatch.orders.loadRecentOrders();
+						store.dispatch.litigationCases.loadRecentCases();
 					}
 				} else {
 					store.dispatch.profile.clearProfile();

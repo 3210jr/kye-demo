@@ -26,6 +26,7 @@ import {
 	AccountCircle,
 	ExitToApp,
 	Dashboard as DashboardIcon,
+	Gavel,
 	Create,
 	ImportExport,
 	ViewCarousel,
@@ -42,6 +43,7 @@ import QuickOrderCard from "../components/QuickOrderCard";
 
 import NewOrder from "./NewOrder";
 import ViewOrders from "./ViewOrders";
+import PreLitigation from "./pre-litigation"
 import CompanyStaff from "./CompanyStaff";
 import Help from "./Help";
 
@@ -132,6 +134,11 @@ const drawerItems = [
 		text: "View Orders",
 		icons: <ViewCarousel />,
 		path: "/dashboard/my-orders"
+	},
+	{
+		text: "Pre Litigation",
+		icons: <Gavel />,
+		path: "/dashboard/pre-litigation"
 	},
 	{
 		text: "Company Users",
@@ -257,6 +264,7 @@ class Dashboard extends Component {
 						<Route path={`${match.url}/my-orders`} component={ViewOrders} />
 						<Route path={`${match.url}/company-users`} component={CompanyStaff} />
 						<Route path={`${match.url}/help`} component={Help} />
+						<Route path={`${match.url}/pre-litigation`} component={PreLitigation} />
 					</Switch>
 				</main>
 			</div>

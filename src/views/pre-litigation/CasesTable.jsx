@@ -20,17 +20,18 @@ import {
 import { upperFirst } from "lodash";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
 import { connect } from "react-redux";
-import { fullFormatDate } from "../utils";
+import { fullFormatDate } from "../../utils";
 import {
 	CloudDownload,
 	Delete as DeleteIcon,
 	FilterList as FilterListIcon
 } from "@material-ui/icons";
 
-import ReportGenerated from "./ClientReport";
+// import ReportGenerated from "./ClientReport";
 
 import ReactToPrint from "react-to-print";
-import { ExtendedTableHead } from "../components/Table";
+import CaseItem from "./components/CaseItem";
+import { ExtendedTableHead } from "../../components/Table";
 
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -53,7 +54,6 @@ function stableSort(array, cmp) {
 }
 
 function getSorting(order, orderBy) {
-	// TODO: Fix sorting for string values ... maybe a sort and optional reverse() for specific rows
 	return order === "desc"
 		? (a, b) => desc(a, b, orderBy)
 		: (a, b) => -desc(a, b, orderBy);
@@ -61,7 +61,7 @@ function getSorting(order, orderBy) {
 
 const rows = [
 	{ id: "id", numeric: true, disablePadding: false, label: "Reference ID" },
-	{ id: "fullName", numeric: false, disablePadding: true, label: "Full Name" },
+	{ id: "customerName", numeric: false, disablePadding: true, label: "Customer Name" },
 	{
 		id: "deliveryDate",
 		numeric: true,
@@ -70,7 +70,7 @@ const rows = [
 	},
 	{
 		id: "createdAt",
-		numeric: false,
+		numeric: true,
 		disablePadding: false,
 		label: "Placement Date"
 	},
@@ -78,20 +78,7 @@ const rows = [
 	{ id: "actions", numeric: false, disablePadding: false, label: "Actions" }
 ];
 
-const styles = theme => ({
-	root: {
-		width: "100%",
-		marginTop: theme.spacing.unit * 3
-	},
-	table: {
-		minWidth: 1020
-	},
-	tableWrapper: {
-		overflowX: "auto"
-	}
-});
-
-class ViewOrders extends React.Component {
+class CasesList extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -130,45 +117,44 @@ class ViewOrders extends React.Component {
 	isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 	render() {
-		const { classes, myOrders } = this.props;
+        const { classes, cases, onClickCase = () => {} } = this.props;
+        console.log("Cases: ", cases);
 		const { order, orderBy, selected, rowsPerPage, page } = this.state;
 		var reportsReferences = []; //references
-		console.log(myOrders);
 		const emptyRows =
-			rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
+			rowsPerPage - Math.min(rowsPerPage, cases.length - page * rowsPerPage);
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrapper}>
 					<Table className={classes.table} aria-labelledby="tableTitle">
 						<ExtendedTableHead
 							numSelected={selected.length}
-							rows={rows}
-							order={order}
+                            order={order}
+                            rows={rows}
 							orderBy={orderBy}
 							onRequestSort={this.handleRequestSort}
-							rowCount={myOrders.length}
+							rowCount={cases.length}
 						/>
 						<TableBody>
-							{stableSort(myOrders, getSorting(order, orderBy))
+							{stableSort(cases, getSorting(order, orderBy))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map((n, index) => {
 									const isSelected = this.isSelected(n.id);
 									if (n.orderType === "kyc") {
-										return <KYCOrderItem order={n} index={index} />;
+										return <CaseItem order={n} index={index} />;
 									}
 									return (
 										<TableRow
 											hover
-											// onClick={event => this.handleClick(event, n.id)}
 											role="checkbox"
 											aria-checked={isSelected}
-											tabIndex={-1}
+                                            tabIndex={-1}
+                                            onClick={() => onClickCase(n.id)}
 											key={n.id}
-											// selected={isSelected}
 										>
 											<TableCell align="left">{n.referenceNumber}</TableCell>
 											<TableCell component="th" scope="row" padding="default">
-												{`${n.firstName} ${n.middleName} ${n.lastName}`}
+												{n.customerName}
 											</TableCell>
 											<TableCell align="left"></TableCell>
 											<TableCell align="left">
@@ -190,12 +176,12 @@ class ViewOrders extends React.Component {
 													<CloudDownload color="disabled" className="pointer" />
 												)}
 
-												<ReportGenerated
+												{/* <ReportGenerated
 													order={n}
 													person={n.firstName + " " + n.lastName} //NB : this is test prop ony
 													reportOwner={n}
 													ref={el => (reportsReferences[index] = el)}
-												/>
+												/> */}
 											</TableCell>
 										</TableRow>
 									);
@@ -211,7 +197,7 @@ class ViewOrders extends React.Component {
 				<TablePagination
 					rowsPerPageOptions={[5, 10, 25]}
 					component="div"
-					count={myOrders.length}
+					count={cases.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					backIconButtonProps={{
@@ -228,62 +214,26 @@ class ViewOrders extends React.Component {
 	}
 }
 
-function KYCOrderItem({ order, index }) {
-	var reportsReferences = []; //references
-	return (
-		<TableRow
-			hover
-			// onClick={event => this.handleClick(event, n.id)}
-			role="checkbox"
-			tabIndex={-1}
-			key={order.id}
-			// selected={isSelected}
-		>
-			<TableCell align="left">{order.referenceNumber}</TableCell>
-			<TableCell component="th" scope="row" padding="default">
-				{order.customerName}
-			</TableCell>
-			<TableCell align="left"></TableCell>
-			<TableCell align="left">
-				{order.createdAt && fullFormatDate(order.createdAt.toDate())}
-			</TableCell>
-			<TableCell align="left">{upperFirst(order.status)}</TableCell>
-			<TableCell align="left">
-				{order.status === "completed" ? (
-					<ReactToPrint
-						trigger={() => (
-							<CloudDownload color="default" className="pointer" />
-						)}
-						content={() => reportsReferences[index]}
-					/>
-				) : (
-					<CloudDownload color="disabled" className="pointer" />
-				)}
-
-				<ReportGenerated
-					order={order}
-					person={order.firstName + " " + order.lastName} //NB : this is test prop ony
-					reportOwner={order}
-					ref={el => (reportsReferences[index] = el)}
-				/>
-			</TableCell>
-		</TableRow>
-	);
-}
-
-ViewOrders.propTypes = {
+CasesList.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-const mapState = state => ({
-	profile: state.profile,
-	// FIXME: This only loads the current users orders ... in our case, the user is also admin and its the only reason it "works" for the admin too
-	myOrders: state.orders.myOrders.map(order => {
-		return {
-			...order,
-			fullName: `${order.firstName} ${order.middleName} ${order.lastName}`
-		};
-	})
+const styles = theme => ({
+	root: {
+		width: "100%",
+		marginTop: theme.spacing.unit * 3
+	},
+	table: {
+		minWidth: 1020
+	},
+	tableWrapper: {
+		overflowX: "auto"
+	}
 });
 
-export default connect(mapState)(withStyles(styles)(ViewOrders));
+const mapState = state => ({
+	profile: state.profile,
+	cases: state.litigationCases.cases
+});
+
+export default connect(mapState)(withStyles(styles)(CasesList));

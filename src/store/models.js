@@ -86,6 +86,50 @@ export const orders = {
 };
 
 
+export const litigationCases = {
+	state: {
+		loading: true,
+		cases: [],
+		myCases: []
+	},
+	reducers: {
+		setMyCases(state, payload) {
+			return { ...state, myCases: payload, loading: false };
+		},
+
+		setRecentCases(state, payload) {
+			return { ...state, cases: payload, loading: false };
+		}
+	},
+	effects: dispatch => ({
+		// handle state changes with impure functions.
+		// use async/await for async actions
+		loadMyCases(payload) {
+			const myCasesRef = firebase
+				.firestore()
+				.collection("preLitigationCases")
+				.where("organizationId", "==", payload);
+			myCasesRef.onSnapshot(snap => {
+				const cases = [];
+				snap.forEach(c => cases.push({ ...c.data(), id: c.id }));
+				dispatch.litigationCases.setMyCases(cases);
+			});
+		},
+
+		loadRecentCases() {
+			const casesRef = firebase.firestore().collection("preLitigationCases");
+			casesRef
+				.orderBy("createdAt", "desc")
+				.limit(30)
+				.onSnapshot(snap => {
+					const cases = [];
+					snap.forEach(doc => cases.push({ ...doc.data(), id: doc.id }));
+					dispatch.litigationCases.setRecentCases(cases);
+				});
+		}
+	})
+};
+
 export const snackbar = {
 	state: {
 		open: false,
