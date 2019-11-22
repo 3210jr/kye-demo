@@ -647,9 +647,12 @@ function CompanyAnalysis({ order }) {
 
 	useEffect(() => {
 		const persistedOrder = order[KYC_COMPANY_DB_NAME];
-		persistedOrder["incorporationDate"] = new Date(
-			persistedOrder["incorporationDate"]
-		).getTime();
+		if (persistedOrder) {
+			persistedOrder["incorporationDate"] = new Date(
+				persistedOrder["incorporationDate"]
+			).getTime();
+		}
+
 		const initialState = { ...state, ...persistedOrder };
 		setstate(initialState);
 	}, []);
