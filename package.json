@@ -11,6 +11,7 @@
     "firebase": "^5.9.0",
     "lodash": "^4.17.11",
     "material-ui-pickers": "^2.2.4",
+    "node-pre-gyp": "^0.14.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
@@ -30,7 +31,7 @@
     "eject": "react-scripts eject"
   },
   "engines": {
-    "node": ">=10.12"
+    "node": "10.16.0"
   },
   "eslintConfig": {
     "extends": "react-app"
