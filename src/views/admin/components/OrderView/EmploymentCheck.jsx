@@ -10,7 +10,9 @@ import {
 	Button,
 	TextField,
 	MenuItem,
-	Grid
+	Grid,
+	FormControlLabel,
+	Checkbox
 } from "@material-ui/core";
 import {
 	persistOrderResults,
@@ -29,6 +31,14 @@ const EMPLOYMENT_HISTORY_TEMPLATE = {
 	employmentEndDateCandidate: "",
 	employmentEndDateReferee: "",
 	employmentHistoryScore: "",
+	disciplinaryAction: false,
+	disciplinaryInfo: "",
+	reasonForLeaving: "",
+	conduct: "",
+	grossSalary: 0,
+	liabilities: false,
+	liabilitiesInfo: "",
+	rehirePossibility: "",
 	comments: "",
 	additionalInformation: "",
 	supportingDocsURL: "",
@@ -50,7 +60,11 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 	}, []);
 
 	function insertNewResult() {
-		state[uuidV1()] = { ...EMPLOYMENT_HISTORY_TEMPLATE, loading: false, uploadingAttachment: false };
+		state[uuidV1()] = {
+			...EMPLOYMENT_HISTORY_TEMPLATE,
+			loading: false,
+			uploadingAttachment: false
+		};
 		setState({ ...state });
 	}
 
@@ -89,15 +103,19 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 			"uploadingAttachment"
 		]);
 		if (loading || uploadingAttachment) return;
-		const emptyFields = Object.keys(currentState).filter(
-			key => currentState[key].length < 2
-		);
-		if (emptyFields.length > 0) {
-			alert("Please fill in all the appropriate fields");
+		const emptyFields = Object.keys(currentState).filter(key => {
+			if (typeof currentState[key] === "boolean") return false;
+			return currentState[key].length < 2;
+		});
+		if (
+			!currentState.supportingDocsURL ||
+			currentState.supportingDocsURL.length < 5
+		) {
+			alert("Please upload the supporting documents");
 			return;
 		}
-		if (!currentState.supportingDocsURL || currentState.supportingDocsURL.length < 5) {
-			alert("Please upload the supporting documents");
+		if (emptyFields.length > 0) {
+			alert("Please fill in all the appropriate fields");
 			return;
 		}
 
@@ -147,11 +165,11 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 					<div
 						key={key}
 						style={{
-							marginBottom: 15,
-							marginTop: 5,
+							marginBottom: `${keys(state).length > 1 ? 50 : 15}px`,
+							marginTop: 10,
 							paddingBottom: 10,
-							paddingTop: 10,
-							borderTop: `${keys(state).length > 1 ? 1 : 0}px solid #ccc`
+							paddingTop: `${keys(state).length > 1 ? 50 : 10}px`,
+							borderTop: `${keys(state).length > 1 ? 3 : 0}px solid #ccc`
 						}}
 					>
 						<Grid container spacing={3} style={{ marginTop: 5 }}>
@@ -193,6 +211,7 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 									}
 									fullWidth
 									margin="normal"
+									type="date"
 									variant="outlined"
 									style={{ margin: 3 }}
 								/>
@@ -328,6 +347,159 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 
 							{/* third row ends */}
 
+							{/* Extras start */}
+							<Grid container spacing={3} style={{ marginTop: 5 }}>
+								<Grid item sm={12} style={{ paddingLeft: 6 }}>
+									<FormControlLabel
+										style={{ fontSize: 18 }}
+										control={
+											<Checkbox
+												checked={result.disciplinaryAction}
+												onChange={({ target }) =>
+													handleChange(
+														key,
+														"disciplinaryAction",
+														!result.disciplinaryAction
+													)
+												}
+												// value=""
+											/>
+										}
+										label="Involved in any Disciplinary Action"
+									/>
+								</Grid>
+								<Grid
+									item
+									md={12}
+									style={{ paddingLeft: 3, paddingRight: 3, marginTop: 10 }}
+								>
+									<TextField
+										id="outlined-name"
+										label="Disciplinary Action Comments (if any)"
+										value={result.disciplinaryInfo}
+										onChange={({ target }) =>
+											handleChange(key, "disciplinaryInfo", target.value)
+										}
+										fullWidth
+										margin="normal"
+										variant="outlined"
+										style={{ margin: 3 }}
+									/>
+								</Grid>
+
+								<Grid
+									item
+									md={12}
+									style={{ paddingLeft: 3, paddingRight: 3, marginTop: 10 }}
+								>
+									<TextField
+										id="outlined-name"
+										label="Reason for leaving"
+										value={result.reasonForLeaving}
+										onChange={({ target }) =>
+											handleChange(key, "reasonForLeaving", target.value)
+										}
+										fullWidth
+										margin="normal"
+										variant="outlined"
+										style={{ margin: 3 }}
+									/>
+								</Grid>
+
+								<Grid
+									item
+									md={12}
+									style={{ paddingLeft: 3, paddingRight: 3, marginTop: 10 }}
+								>
+									<TextField
+										id="outlined-name"
+										label="Employee conduct during Employment"
+										value={result.conduct}
+										onChange={({ target }) =>
+											handleChange(key, "conduct", target.value)
+										}
+										fullWidth
+										margin="normal"
+										variant="outlined"
+										style={{ margin: 3 }}
+									/>
+								</Grid>
+
+								<Grid
+									item
+									md={12}
+									style={{ paddingLeft: 3, paddingRight: 3, marginTop: 10 }}
+								>
+									<TextField
+										id="outlined-name"
+										label="Gross Salary (Optional)"
+										value={result.grossSalary}
+										onChange={({ target }) =>
+											handleChange(key, "grossSalary", target.value)
+										}
+										fullWidth
+										margin="normal"
+										variant="outlined"
+										style={{ margin: 3 }}
+									/>
+								</Grid>
+
+								<Grid item sm={12} style={{ paddingLeft: 6 }}>
+									<FormControlLabel
+										style={{ fontSize: 18 }}
+										control={
+											<Checkbox
+												checked={result.liabilities}
+												onChange={({ target }) =>
+													handleChange(key, "liabilities", !result.liabilities)
+												}
+												// value=""
+											/>
+										}
+										label="Involved in any Liabilities"
+									/>
+								</Grid>
+
+								<Grid
+									item
+									md={12}
+									style={{ paddingLeft: 3, paddingRight: 3, marginTop: 10 }}
+								>
+									<TextField
+										id="outlined-name"
+										label="Liability Comments (if any)"
+										value={result.liabilitiesInfo}
+										onChange={({ target }) =>
+											handleChange(key, "liabilitiesInfo", target.value)
+										}
+										fullWidth
+										margin="normal"
+										variant="outlined"
+										style={{ margin: 3 }}
+									/>
+								</Grid>
+
+								<Grid
+									item
+									md={12}
+									style={{ paddingLeft: 3, paddingRight: 3, marginTop: 10 }}
+								>
+									<TextField
+										id="outlined-name"
+										label="Posibility of being rehired by the organization"
+										value={result.rehirePossibility}
+										onChange={({ target }) =>
+											handleChange(key, "rehirePossibility", target.value)
+										}
+										fullWidth
+										margin="normal"
+										variant="outlined"
+										style={{ margin: 3 }}
+									/>
+								</Grid>
+							</Grid>
+							{/* Extras end */}
+
 							{/* forth row */}
 
 							<Grid container spacing={3} style={{ marginTop: 5 }}>
@@ -438,7 +610,10 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 								<Button
 									fullWidth
 									variant={
-										result.supportingDocsURL && result.supportingDocsURL.length > 0 ? "text" : "contained"
+										result.supportingDocsURL &&
+										result.supportingDocsURL.length > 0
+											? "text"
+											: "contained"
 									}
 									onClick={() => fileUploaderRef.current.click()}
 									color="primary"
@@ -478,7 +653,4 @@ const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
 	toggleSnackBar: payload => asyncToggleSnackBar(payload)
 });
 
-export default connect(
-	mapState,
-	mapDispatch
-)(EmploymentHistory);
+export default connect(mapState, mapDispatch)(EmploymentHistory);
