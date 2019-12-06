@@ -34,6 +34,7 @@ import {
 	KYC_SHAREHOLDER_ANALYSIS_DB_NAME,
 	KYC_ADDITIONAL_INFORMATION_DB_NAME
 } from "../../constants";
+import CivilLitigation from "./components/OrderView/CivilLitigation";
 
 class OrderView extends Component {
 	state = {
@@ -281,7 +282,7 @@ function KYCAddidionalInformation({ order, downloadAttachment }) {
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Additional Information</Typography>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={6} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -467,7 +468,7 @@ function StakeholdersAnalysis({ order }) {
 			</Typography>
 
 			{map(state.shareholders, (holder, key) => (
-				<Grid key={key} container spacing={2} style={{ marginTop: 5 }}>
+				<Grid key={key} container style={{ marginTop: 5 }}>
 					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
 						<TextField
 							fullWidth
@@ -546,7 +547,7 @@ function StakeholdersAnalysis({ order }) {
 			</Typography>
 
 			{map(state.directors, (director, key) => (
-				<Grid key={key} container spacing={2} style={{ marginTop: 5 }}>
+				<Grid key={key} container style={{ marginTop: 5 }}>
 					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
 						<TextField
 							fullWidth
@@ -697,7 +698,7 @@ function CompanyAnalysis({ order }) {
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Company Analysis</Typography>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -741,7 +742,7 @@ function CompanyAnalysis({ order }) {
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -783,7 +784,7 @@ function CompanyAnalysis({ order }) {
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -830,7 +831,7 @@ function CompanyAnalysis({ order }) {
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={3} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={2} sm={2} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<Button
 						fullWidth
@@ -858,6 +859,9 @@ function KYEReportsCollection({ order }) {
 			{order.screeningTypes.includes("identification") && (
 				<IdentityCheckReports type="identification" order={order} />
 			)}
+			{order.screeningTypes.includes("civil-litigation") && (
+				<CivilLitigation type="civil-litigation" order={order} />
+			)}
 			{order.screeningTypes.includes("employment-history") && (
 				<EmploymentHistoryReports type="employment-history" order={order} />
 			)}
@@ -867,6 +871,7 @@ function KYEReportsCollection({ order }) {
 		</>
 	);
 }
+
 
 const styles = {
 	inputs: { paddingLeft: 3, paddingRight: 3 }

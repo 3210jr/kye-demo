@@ -1,47 +1,53 @@
 // @ts-check
-import React, { useState, useEffect, createRef } from "react";
+import React, { Component, useState, useEffect, createRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { upperFirst, clone } from "lodash";
+import { storage } from "firebase";
+import { upperFirst, clone, map, omit, padStart } from "lodash";
+import uuidV1 from "uuid/v1";
 import {
 	Paper,
 	Typography,
 	Button,
+	Grid,
 	TextField,
-	MenuItem,
-	Grid
 } from "@material-ui/core";
 import { persistOrderResults, uploadFile, friendlyFormatDate } from "../../../../utils";
 
-function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
-	const [state, setState] = useState({
+
+function CivilLitigation({ order, type, toggleSnackBar }) {
+	const [state, setstate] = useState({
+		date: new Date(),
+		caseNumber: "",
+		caseNature: "",
+		checkParameter: "",
 		comments: "",
-		criminalAnalysisScore: "",
 		supportingDocsURL: "",
-		fingerprintDate: "",
-		fingerprintLocation: "",
 		uploadingAttachment: false,
 		loading: false
 	});
 
 	useEffect(() => {
-		// FIXME: Potential issue here with some updated fields not working well
-		const { comments, criminalAnalysisScore } = order[type];
-		const initialState = { ...state, comments, criminalAnalysisScore };
-		setState(initialState);
+		const initialState = { ...state, ...order[type] };
+		setstate(initialState);
 	}, []);
 
 	let fileUploaderRef = createRef();
 
-	function uploadAttachment(evt) {
+	function handleChange(field, value) {
+		state[field] = value;
+		return setstate(clone(state));
+    }
+    
+    function uploadAttachment(evt) {
 		if (state.uploadingAttachment) return;
 		const file = evt.target.files[0];
 
-		setState({ ...state, uploadingAttachment: true });
+		setstate({ ...state, uploadingAttachment: true });
 		uploadFile(file, "supporting-documents")
 			.then(res => {
 				res.ref.getDownloadURL().then(url =>
-					setState({
+					setstate({
 						...state,
 						uploadingAttachment: false,
 						supportingDocsURL: url
@@ -50,31 +56,13 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 			})
 			.catch(error => {
 				alert("There was an error uploading your assets, please try again");
-				console.log(error);
-				setState({ uploadingAttachment: false });
+				setstate({ ...state, uploadingAttachment: false });
 			});
 	}
 
-	function calculateExpiryDate() {
-		const { fingerprintDate } = state;
-
-		const date = new Date(fingerprintDate);
-		if (!date.getTime()) return "Please enter the fingerprint date";
-
-		date.setMonth(date.getMonth() + 3)
-
-		return friendlyFormatDate(date);
-	}
-
-	function handleChange(field, value) {
-		state[field] = value;
-		return setState(clone(state));
-	}
-
-	function saveCriminalCheck() {
+	function saveCivilLitigation() {
 		const {
 			comments,
-			criminalAnalysisScore,
 			supportingDocsURL,
 			loading
 		} = state;
@@ -84,26 +72,16 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 			return;
 		}
 
-		if (criminalAnalysisScore.length < 2) {
-			alert("Please enter a valid analysis score");
-			return;
-		}
-
 		if (supportingDocsURL.length < 5) {
 			alert("Please upload any supporting documents");
 			return;
 		}
 
-		state.loading = true;
-		setState(clone(state));
+		setstate({ ...state, loading: true });
 
-		persistOrderResults(order.id, type, {
-			comments,
-			criminalAnalysisScore,
-			supportingDocsURL
-		})
+		persistOrderResults(order.id, type, omit(state, ["loading", "uploadingAttachment"]))
 			.then(res => {
-				toggleSnackBar({ message: "Police Reports updated successfully!" });
+				toggleSnackBar({ message: "Civil Litigation Reports updated successfully!" });
 			})
 			.catch(error => {
 				toggleSnackBar({
@@ -112,38 +90,59 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 				console.log("Error: ", error);
 			})
 			.finally(() => {
-				state.loading = false;
-				setState(clone(state));
+				setstate({ ...state, loading: false });
 			});
 	}
 
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
-			<Typography variant="h6">Criminal check</Typography>
+			<Typography variant="h6">Civil Litigation</Typography>
 
 			<Grid container style={{ marginTop: 5 }}>
-				<Grid item xs md={6} style={{ paddingLeft: 3, paddingRight: 3 }}>
+				<Grid item xs md={6} lg={4} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<TextField
 						id="outlined-name"
-						label="Date fingerprints taken"
-						value={state.fingerprintDate}
+						label="Date checks were conducted"
+						value={state.date}
 						type="date"
-						onChange={({ target }) =>
-							handleChange("fingerprintDate", target.value)
-						}
+						onChange={({ target }) => handleChange("date", target.value)}
 						fullWidth
 						margin="normal"
 						variant="outlined"
 						style={{ margin: 3 }}
 					/>
 				</Grid>
-				<Grid item xs md={6} style={{ paddingLeft: 3, paddingRight: 3 }}>
+				<Grid item xs md={6} lg={4} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<TextField
 						id="outlined-name"
-						label="Location fingerprints taken"
-						value={state.fingerprintLocation}
+						label="Case Number"
+						value={state.caseNumber}
+						onChange={({ target }) => handleChange("caseNumber", target.value)}
+						fullWidth
+						margin="normal"
+						variant="outlined"
+						style={{ margin: 3 }}
+					/>
+				</Grid>
+				<Grid item xs md={6} lg={4} style={{ paddingLeft: 3, paddingRight: 3 }}>
+					<TextField
+						id="outlined-name"
+						label="Nature of Case"
+						value={state.caseNature}
+						onChange={({ target }) => handleChange("caseNature", target.value)}
+						fullWidth
+						margin="normal"
+						variant="outlined"
+						style={{ margin: 3 }}
+					/>
+				</Grid>
+				<Grid item xs md={6} lg={4} style={{ paddingLeft: 3, paddingRight: 3 }}>
+					<TextField
+						id="outlined-name"
+						label="Check Parameter"
+						value={state.checkParameter}
 						onChange={({ target }) =>
-							handleChange("fingerprintLocation", target.value)
+							handleChange("checkParameter", target.value)
 						}
 						fullWidth
 						margin="normal"
@@ -165,51 +164,18 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 						variant="outlined"
 						multiline
 						rowsMax="4"
+						rows="3"
 					/>
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={3} style={{ marginTop: 5 }}>
-				<Grid item xs={6} sm={6}>
-					<p style={{ paddingLeft: 6 }}>Criminal Analysis - System score</p>
-				</Grid>
-
-				<Grid item xs={6} sm={6} style={{ paddingLeft: 6 }}>
-					<TextField
-						id="outlined-name"
-						value={state.criminalAnalysisScore}
-						onChange={({ target }) =>
-							handleChange("criminalAnalysisScore", target.value)
-						}
-						select
-						style={{ margin: 3 }}
-						className="wide"
-						margin="normal"
-						variant="outlined"
-					>
-						<MenuItem value="good">Good</MenuItem>
-						<MenuItem value="normal">Normal</MenuItem>
-						<MenuItem value="bad">Bad</MenuItem>
-					</TextField>
-				</Grid>
-			</Grid>
-
-			<Grid container spacing={3} style={{ marginTop: 10, marginBottom: 10 }}>
-				<Grid>
-					<Typography component="h6">
-						NOTE: This criminal check expires on: {calculateExpiryDate()}
-					</Typography>
-				</Grid>
-			</Grid>
-
-
-			<Grid container spacing={3} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={2} sm={2} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<Button
 						fullWidth
 						variant="contained"
 						color="primary"
-						onClick={saveCriminalCheck}
+						onClick={saveCivilLitigation}
 					>
 						{state.loading ? "Loading" : "Save"}
 					</Button>
@@ -250,4 +216,4 @@ const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
 	toggleSnackBar: payload => asyncToggleSnackBar(payload)
 });
 
-export default connect(mapState, mapDispatch)(PoliceReports);
+export default connect(mapState, mapDispatch)(CivilLitigation);

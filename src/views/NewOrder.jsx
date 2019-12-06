@@ -531,6 +531,22 @@ class NewOrder extends Component {
 											label="Gaps Reports"
 										/>
 									</Grid>
+
+									<Grid item xs={12} md={3}>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={screeningTypes.includes("civil-litigation")}
+													onChange={evt =>
+														this.toggleScreeningType("civil-litigation")
+													}
+													value="litigation"
+													color="primary"
+												/>
+											}
+											label="Civil Litigation"
+										/>
+									</Grid>
 								</Grid>
 							</CardContent>
 						</Card>
