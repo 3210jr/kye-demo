@@ -28,13 +28,14 @@ import PoliceReports from "./components/OrderView/CriminalCheck";
 import GapsReports from "./components/OrderView/GapsCheck";
 import EmploymentHistoryReports from "./components/OrderView/EmploymentCheck";
 import IdentityCheckReports from "./components/OrderView/IdentityCheck";
+import CivilLitigation from "./components/OrderView/CivilLitigation";
+import SocialMediaSearch from "./components/OrderView/SocialMediaSearch";
 import {
 	countries,
 	KYC_COMPANY_DB_NAME,
 	KYC_SHAREHOLDER_ANALYSIS_DB_NAME,
 	KYC_ADDITIONAL_INFORMATION_DB_NAME
 } from "../../constants";
-import CivilLitigation from "./components/OrderView/CivilLitigation";
 
 class OrderView extends Component {
 	state = {
@@ -868,10 +869,12 @@ function KYEReportsCollection({ order }) {
 			{order.screeningTypes.includes("academic-qualifications") && (
 				<AcademicReports type="academic-qualifications" order={order} />
 			)}
+			{order.screeningTypes.includes("social-media") && (
+				<SocialMediaSearch type="social-media" order={order} />
+			)}
 		</>
 	);
 }
-
 
 const styles = {
 	inputs: { paddingLeft: 3, paddingRight: 3 }

@@ -547,6 +547,22 @@ class NewOrder extends Component {
 											label="Civil Litigation"
 										/>
 									</Grid>
+
+									<Grid item xs={12} md={3}>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={screeningTypes.includes("social-media")}
+													onChange={evt =>
+														this.toggleScreeningType("social-media")
+													}
+													value="social-media"
+													color="primary"
+												/>
+											}
+											label="Social Media"
+										/>
+									</Grid>
 								</Grid>
 							</CardContent>
 						</Card>

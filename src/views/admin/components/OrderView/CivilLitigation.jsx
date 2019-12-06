@@ -85,7 +85,7 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
 			})
 			.catch(error => {
 				toggleSnackBar({
-					message: "Error. There was an error updating the police report."
+					message: "Error. There was an error updating the social media report."
 				});
 				console.log("Error: ", error);
 			})
