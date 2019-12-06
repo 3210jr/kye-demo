@@ -28,6 +28,8 @@ import PoliceReports from "./components/OrderView/CriminalCheck";
 import GapsReports from "./components/OrderView/GapsCheck";
 import EmploymentHistoryReports from "./components/OrderView/EmploymentCheck";
 import IdentityCheckReports from "./components/OrderView/IdentityCheck";
+import CivilLitigation from "./components/OrderView/CivilLitigation";
+import SocialMediaSearch from "./components/OrderView/SocialMediaSearch";
 import {
 	countries,
 	KYC_COMPANY_DB_NAME,
@@ -281,7 +283,7 @@ function KYCAddidionalInformation({ order, downloadAttachment }) {
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Additional Information</Typography>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={6} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -467,7 +469,7 @@ function StakeholdersAnalysis({ order }) {
 			</Typography>
 
 			{map(state.shareholders, (holder, key) => (
-				<Grid key={key} container spacing={2} style={{ marginTop: 5 }}>
+				<Grid key={key} container style={{ marginTop: 5 }}>
 					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
 						<TextField
 							fullWidth
@@ -546,7 +548,7 @@ function StakeholdersAnalysis({ order }) {
 			</Typography>
 
 			{map(state.directors, (director, key) => (
-				<Grid key={key} container spacing={2} style={{ marginTop: 5 }}>
+				<Grid key={key} container style={{ marginTop: 5 }}>
 					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
 						<TextField
 							fullWidth
@@ -697,7 +699,7 @@ function CompanyAnalysis({ order }) {
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
 			<Typography variant="h6">Company Analysis</Typography>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -741,7 +743,7 @@ function CompanyAnalysis({ order }) {
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -783,7 +785,7 @@ function CompanyAnalysis({ order }) {
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={2} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
 					<TextField
 						fullWidth
@@ -830,7 +832,7 @@ function CompanyAnalysis({ order }) {
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={3} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={2} sm={2} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<Button
 						fullWidth
@@ -858,11 +860,17 @@ function KYEReportsCollection({ order }) {
 			{order.screeningTypes.includes("identification") && (
 				<IdentityCheckReports type="identification" order={order} />
 			)}
+			{order.screeningTypes.includes("civil-litigation") && (
+				<CivilLitigation type="civil-litigation" order={order} />
+			)}
 			{order.screeningTypes.includes("employment-history") && (
 				<EmploymentHistoryReports type="employment-history" order={order} />
 			)}
 			{order.screeningTypes.includes("academic-qualifications") && (
 				<AcademicReports type="academic-qualifications" order={order} />
+			)}
+			{order.screeningTypes.includes("social-media") && (
+				<SocialMediaSearch type="social-media" order={order} />
 			)}
 		</>
 	);
