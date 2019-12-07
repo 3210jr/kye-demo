@@ -11,16 +11,24 @@ import {
 	Button,
 	Grid,
 	TextField,
+	Select,
+	InputLabel,
+	FormControl,
+	MenuItem
 } from "@material-ui/core";
-import { persistOrderResults, uploadFile, friendlyFormatDate } from "../../../../utils";
-
+import {
+	persistOrderResults,
+	uploadFile,
+	friendlyFormatDate
+} from "../../../../utils";
 
 function CivilLitigation({ order, type, toggleSnackBar }) {
 	const [state, setstate] = useState({
 		date: new Date(),
 		caseNumber: "",
 		caseNature: "",
-		checkParameter: "",
+		partiesInvolved: "",
+		rullingComments: "",
 		comments: "",
 		supportingDocsURL: "",
 		uploadingAttachment: false,
@@ -37,9 +45,9 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
 	function handleChange(field, value) {
 		state[field] = value;
 		return setstate(clone(state));
-    }
-    
-    function uploadAttachment(evt) {
+	}
+
+	function uploadAttachment(evt) {
 		if (state.uploadingAttachment) return;
 		const file = evt.target.files[0];
 
@@ -61,11 +69,7 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
 	}
 
 	function saveCivilLitigation() {
-		const {
-			comments,
-			supportingDocsURL,
-			loading
-		} = state;
+		const { comments, supportingDocsURL, loading } = state;
 		if (loading) return;
 		if (comments.length < 5) {
 			alert("Comments are too short. Please enter valid comments.");
@@ -79,9 +83,15 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
 
 		setstate({ ...state, loading: true });
 
-		persistOrderResults(order.id, type, omit(state, ["loading", "uploadingAttachment"]))
+		persistOrderResults(
+			order.id,
+			type,
+			omit(state, ["loading", "uploadingAttachment"])
+		)
 			.then(res => {
-				toggleSnackBar({ message: "Civil Litigation Reports updated successfully!" });
+				toggleSnackBar({
+					message: "Civil Litigation Reports updated successfully!"
+				});
 			})
 			.catch(error => {
 				toggleSnackBar({
@@ -132,17 +142,47 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
 						onChange={({ target }) => handleChange("caseNature", target.value)}
 						fullWidth
 						margin="normal"
+						select
 						variant="outlined"
 						style={{ margin: 3 }}
-					/>
+					>
+						<MenuItem value={"criminal"}>Criminal</MenuItem>
+						<MenuItem value={"civil"}>Civl</MenuItem>
+						<MenuItem value={"other"}>Other (add to comments)</MenuItem>
+					</TextField>
+					{/* <FormControl fullWidth>
+						<InputLabel fullWidth htmlFor="demo-controlled-open-select">
+							Nature of Case
+						</InputLabel>
+						<Select
+							// open={open}
+							value={state.caseNature}
+							fullWidth
+							// onChange={() => {}}
+							onChange={({ target }) => handleChange("caseNature", target.value)}
+							inputProps={{
+								name: "gender",
+								id: "demo-controlled-open-select"
+							}}
+						>
+							<MenuItem value={"criminal"}>Criminal</MenuItem>
+							<MenuItem value={"civil"}>Civl</MenuItem>
+							<MenuItem value={"other"}>Other (add to comments)</MenuItem>
+						</Select>
+					</FormControl> */}
 				</Grid>
-				<Grid item xs md={6} lg={4} style={{ paddingLeft: 3, paddingRight: 3 }}>
+				<Grid
+					item
+					xs
+					md={6}
+					style={{ paddingLeft: 3, paddingRight: 3, marginTop: 5 }}
+				>
 					<TextField
 						id="outlined-name"
-						label="Check Parameter"
-						value={state.checkParameter}
+						label="Parties Involved"
+						value={state.partiesInvolved}
 						onChange={({ target }) =>
-							handleChange("checkParameter", target.value)
+							handleChange("partiesInvolved", target.value)
 						}
 						fullWidth
 						margin="normal"
@@ -152,11 +192,30 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
 				</Grid>
 			</Grid>
 
+			<Grid container style={{ marginTop: 5 }}>
+				<Grid item xs={12} sm={12} style={{ paddingLeft: 3, paddingRight: 3 }}>
+					<TextField
+						fullWidth
+						label="Rulling Comments"
+						value={state.rullingComments}
+						onChange={({ target }) =>
+							handleChange("rullingComments", target.value)
+						}
+						id="outlined-dense-multiline"
+						margin="dense"
+						variant="outlined"
+						multiline
+						rowsMax="4"
+						rows="3"
+					/>
+				</Grid>
+			</Grid>
+
 			<Grid container spacing={3} style={{ marginTop: 5 }}>
 				<Grid item xs={12} sm={12} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<TextField
 						fullWidth
-						label="Comments"
+						label="Comments & Findings"
 						value={state.comments}
 						onChange={({ target }) => handleChange("comments", target.value)}
 						id="outlined-dense-multiline"
@@ -169,7 +228,7 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
 				</Grid>
 			</Grid>
 
-			<Grid container style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 10 }}>
 				<Grid item xs={2} sm={2} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<Button
 						fullWidth
