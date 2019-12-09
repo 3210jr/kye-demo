@@ -1,5 +1,5 @@
 // @ts-check
-import React, { Component, createRef } from "react";
+import React, { Component, createRef, Fragment, useState } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -18,8 +18,10 @@ import {
 	TableRow,
 	Grid,
 	Button,
-	TextField
+	TextField,
+	MenuItem
 } from "@material-ui/core";
+import Icon from "@material-ui/core/Icon";
 import { upperFirst, omit } from "lodash";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
 import { connect } from "react-redux";
@@ -33,7 +35,8 @@ import {
 import {
 	CloudDownload,
 	Delete as DeleteIcon,
-	FilterList as FilterListIcon
+	FilterList as FilterListIcon,
+	AttachFile as AttachFileIcon
 } from "@material-ui/icons";
 import firebase from "firebase";
 
@@ -50,10 +53,9 @@ class PreLitigationCaseView extends Component {
 		uploadingAttachment: false
 	};
 
-	fileUploaderRef = createRef();
-
 	componentDidMount() {
 		const { profile, cases, match } = this.props;
+		console.log("PROFILE: ", profile);
 		const { caseId } = match.params;
 		this.updatesListener = firebase
 			.firestore()
@@ -75,67 +77,6 @@ class PreLitigationCaseView extends Component {
 		this.setState({ [field]: value });
 	};
 
-	uploadAttachment = (evt, key) => {
-		const state = this.state;
-		if (state.uploadingAttachment) return;
-		const file = evt.target.files[0];
-
-		this.setState({ uploadingAttachment: true });
-
-		uploadFile(file, "supporting-documents")
-			.then(res => {
-				res.ref.getDownloadURL().then(url => {
-					this.setState({ uploadingAttachment: false, attachmentURL: url });
-				});
-			})
-			.catch(error => {
-				alert("There was an error uploading your assets, please try again");
-				console.log(error);
-				this.setState({ uploadingAttachment: false });
-			});
-	};
-
-	saveCaseUpdate = () => {
-		const { loading, uploadingAttachment } = this.state;
-		const { match } = this.props;
-		const { caseId } = match.params;
-		const { title, description, comments, attachmentURL } = omit(this.state, [
-			"loading",
-			"uploadingAttachment",
-			"showUpdateForm",
-			"addingUpdates",
-			"loadingUpdates"
-		]);
-
-		addCaseUpdate({
-			caseId,
-			title,
-			description,
-			comments,
-			attachmentURL
-		})
-			.then(res => {
-				alert("Update Added!");
-				this.setState({
-					title: "",
-					comments: "",
-					description: "",
-					attachmentURL: "",
-					loadingUpdates: true,
-					uploadingAttachment: false,
-					showUpdateForm: false
-				});
-			})
-			.catch(error => {
-				alert("There was an error saving your update. Please try again.");
-				console.log("Error: ", error);
-			});
-	};
-
-	downloadAtt = url => {
-		window.open(url, "_blank");
-	};
-
 	render() {
 		const { profile, cases, match } = this.props;
 		const { caseId } = match.params;
@@ -145,6 +86,100 @@ class PreLitigationCaseView extends Component {
 		}
 		const state = this.state;
 		console.log(litigationCase);
+		return (
+			<div className="">
+				<Paper style={{ padding: "1em" }}>
+					<Grid container>
+						<Grid>
+							<p style={{ fontSize: 26, fontWeight: 500 }}>
+								{litigationCase.customerName}
+							</p>
+							<div style={{ display: "flex", flexDirection: "row" }}>
+								<div
+									style={{
+										flex: 1,
+										lineHeight: 1.5,
+										fontSize: 20,
+										fontWeight: 500
+									}}
+								>
+									<div>Department:</div>
+									<div>Company Asignee:</div>
+									<div>MA Asignee:</div>
+									<div>Date Initiated:</div>
+								</div>
+								<div style={{ flex: 2.5, lineHeight: 1.5, fontSize: 20 }}>
+									<div>{litigationCase.department}</div>
+									<div>{litigationCase.companyPointPerson}</div>
+									<div>{litigationCase.MAPointPerson}</div>
+									<div>
+										{litigationCase.createdAt &&
+											friendlyFormatDate(litigationCase.createdAt.toDate())}
+									</div>
+								</div>
+							</div>
+							<div style={{ fontSize: 20, lineHeight: 1.5, marginTop: 10 }}>
+								<span style={{ fontWeight: 500 }}>Case Description:</span>
+								<br />
+								{litigationCase.description} <br />
+							</div>
+
+							<div
+								style={{
+									fontSize: 20,
+									lineHeight: 1.5,
+									marginTop: 10,
+									fontWeight: 500,
+									marginBottom: 5
+								}}
+							>
+								Suspects:
+							</div>
+							{litigationCase.suspects &&
+								litigationCase.suspects.map((suspect, index) => (
+									<div
+										key={`suspect___${suspect.fName}`}
+										style={{ fontSize: 18, lineHeight: 1.5 }}
+									>
+										{index + 1}: {suspect.fName} {suspect.mName} {suspect.lName}{" "}
+										<br />
+										{/* NIDA Numb: {suspect.nidaNumber} */}
+									</div>
+								))}
+
+							<div
+								style={{
+									fontSize: 20,
+									lineHeight: 1.5,
+									marginTop: 15,
+									fontWeight: 500,
+									marginBottom: 5
+								}}
+							>
+								<Button onClick={this.toggleUpdateForm} variant="contained">
+									{state.showUpdateForm ? "Cancel Update" : "Add Update"}
+								</Button>
+							</div>
+						</Grid>
+					</Grid>
+				</Paper>
+
+				{state.showUpdateForm && (
+					<CaseUpdateForm
+						caseId={caseId}
+						toggleUpdateForm={this.toggleUpdateForm}
+					/>
+				)}
+
+				<Paper style={{ padding: "1em", marginTop: 25 }}>
+					<CaseUpdatesTable
+						toggleUpdateForm={this.toggleUpdateForm}
+						loadingUpdates={state.loadingUpdates}
+						updates={state.updates}
+					/>
+				</Paper>
+			</div>
+		);
 		return (
 			<div>
 				<p style={{ fontSize: 24 }}>{litigationCase.customerName}</p>
@@ -304,18 +339,213 @@ class PreLitigationCaseView extends Component {
 						</Event>
 					)}
 				</Timeline>
-
-				<input
-					type="file"
-					accept="application/pdf,application/vnd.ms-excel,application/zip,application/x-zip,application/x-zip-compressed"
-					ref={this.fileUploaderRef}
-					onChange={evt => this.uploadAttachment(evt)}
-					id="attachmentUploader"
-					className="hidden"
-				/>
 			</div>
 		);
 	}
+}
+
+function CaseUpdateForm({ toggleUpdateForm, caseId }) {
+	const [state, setstate] = useState({
+		status: "in progress",
+		comments: "",
+		attachmentURL: "",
+		uploadingAttachment: false,
+		addingUpdates: false
+	});
+	const fileUploaderRef = createRef();
+
+	function handleChange(field, evt) {
+		const { value } = evt.target;
+		setstate({ ...state, [field]: value });
+	}
+
+	function uploadAttachment(evt, key) {
+		if (state.uploadingAttachment) return;
+		const file = evt.target.files[0];
+
+		setstate({ ...state, uploadingAttachment: true });
+
+		uploadFile(file, "supporting-documents")
+			.then(res => {
+				res.ref.getDownloadURL().then(url => {
+					setstate({
+						...state,
+						uploadingAttachment: false,
+						attachmentURL: url,
+						notes: ""
+					});
+				});
+			})
+			.catch(error => {
+				alert("There was an error uploading your assets, please try again");
+				console.log(error);
+				setstate({ ...state, uploadingAttachment: false });
+			});
+	}
+
+	function saveCaseUpdate() {
+		const { uploadingAttachment, addingUpdates } = state;
+		if (uploadingAttachment || addingUpdates) return;
+		const { status, comments, attachmentURL } = omit(state, [
+			"loading",
+			"uploadingAttachment",
+			"showUpdateForm",
+			"addingUpdates",
+			"loadingUpdates"
+		]);
+
+		setstate({ ...state, addingUpdates: true });
+
+		addCaseUpdate({
+			caseId,
+			status,
+			comments,
+			attachmentURL
+		})
+			.then(res => {
+				alert("Update Added!");
+				setstate({
+					status: "",
+					comments: "",
+					attachmentURL: "",
+					uploadingAttachment: false,
+					addingUpdates: false
+				});
+				toggleUpdateForm();
+			})
+			.catch(error => {
+				alert("There was an error saving your update. Please try again.");
+				console.log("Error: ", error);
+			});
+	}
+	return (
+		<Paper style={{ padding: "1em", marginTop: 25 }}>
+			<p style={{ fontSize: 22 }}>{friendlyFormatDate(new Date())}</p>
+			<div>
+				<Grid container>
+					<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
+						<TextField
+							fullWidth
+							label="Status"
+							value={state.status}
+							onChange={evt => handleChange("status", evt)}
+							id="outlined-dense-multiline"
+							margin="dense"
+							select
+							variant="outlined"
+						>
+							<MenuItem value="pending">Pending</MenuItem>
+							<MenuItem value="in progress">In Progress</MenuItem>
+							<MenuItem value="closed">Closed</MenuItem>
+						</TextField>
+					</Grid>
+				</Grid>
+				<Grid container style={{ marginTop: 5 }}>
+					<Grid item xs={12} sm={12} md={6} style={styles.inputs}>
+						<TextField
+							fullWidth
+							multiline
+							rows={4}
+							label="Comments"
+							value={state.comments}
+							onChange={evt => handleChange("comments", evt)}
+							id="outlined-dense-multiline"
+							margin="dense"
+							variant="outlined"
+						/>
+					</Grid>
+				</Grid>
+				<Grid container>
+					<Button
+						variant={state.attachmentURL.length > 0 ? "text" : "contained"}
+						onClick={() => fileUploaderRef.current.click()}
+						color="primary"
+					>
+						{state.uploadingAttachment ? "Uploading..." : "Upload Attachments"}
+					</Button>
+				</Grid>
+				<Grid container style={{ marginTop: 25 }}>
+					<Button variant="contained" color="primary" onClick={saveCaseUpdate}>
+						{state.addingUpdates ? "Loading ..." : "Save Update"}
+					</Button>
+					<Button variant="text" color="primary" onClick={toggleUpdateForm}>
+						Cancel
+					</Button>
+				</Grid>
+			</div>
+
+			<input
+				type="file"
+				accept="application/pdf,application/vnd.ms-excel,application/zip,application/x-zip,application/x-zip-compressed"
+				ref={fileUploaderRef}
+				onChange={uploadAttachment}
+				id="attachmentUploader"
+				className="hidden"
+			/>
+		</Paper>
+	);
+}
+
+function CaseUpdatesTable({ updates = [], toggleUpdateForm, loadingUpdates }) {
+	function downloadAtt(url) {
+		window.open(url, "_blank");
+	}
+	return (
+		<Fragment>
+			<Table aria-label="simple table">
+				<TableHead>
+					<TableRow>
+						<TableCell>Date</TableCell>
+						<TableCell>Updated By</TableCell>
+						<TableCell>Status</TableCell>
+						<TableCell>Comments</TableCell>
+						<TableCell>Attachments</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{updates.map(update => (
+						<TableRow key={update.id}>
+							<TableCell component="th" scope="row">
+								{update.createdAt &&
+									friendlyFormatDate(update.createdAt.toDate())}
+							</TableCell>
+							<TableCell>{update.updatedByName}</TableCell>
+							<TableCell>{update.status}</TableCell>
+							<TableCell>{update.comments}</TableCell>
+							<TableCell>
+								{update.attachmentURL ? (
+									<Icon
+										className="pointer"
+										onClick={() => downloadAtt(update.attachmentURL)}
+									>
+										file_copy
+									</Icon>
+								) : (
+									<span style={{ fontStyle: "italic" }}>No Attachment</span>
+								)}
+							</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+			{updates.length === 0 && !loadingUpdates && (
+				<div
+					style={{
+						marginTop: 50,
+						marginBottom: 30,
+						color: "#4e4e4e",
+						fontStyle: "italic",
+						textAlign: "center"
+					}}
+				>
+					There are no updates yet! <br />
+					<Button onClick={toggleUpdateForm} type="button">
+						Create new update
+					</Button>
+				</div>
+			)}
+		</Fragment>
+	);
 }
 
 const styles = {

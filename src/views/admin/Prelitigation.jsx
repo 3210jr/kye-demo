@@ -43,7 +43,11 @@ class PreLitigation extends Component {
 				<Switch>
 					<Route path={`${match.path}`} exact component={Dashboard} />
 					<Route path={`${match.path}/new-case/`} exact component={NewCase} />
-					<Route path={`${match.path}/case/:caseId`} exact component={PreLitigationCaseView} />
+					<Route
+						path={`${match.path}/case/:caseId`}
+						exact
+						component={PreLitigationCaseView}
+					/>
 				</Switch>
 			</div>
 		);
@@ -55,16 +59,25 @@ const mapState = state => ({
 });
 
 const NewCase = connect(mapState)(function({ profile, history }) {
-    console.log(profile)
+	const suspectTmp = {
+		fName: "",
+		lName: "",
+		mName: "",
+		nidaNumber: ""
+	};
 	const [state, setstate] = useState({
 		customerName: "",
 		registrationNumber: "",
+		companyPointPerson: "",
+		MAPointPerson: "",
 		address: "",
 		telephone: "",
+		department: "",
 		description: "",
 		caseType: "other",
 		comments: "",
 		attachmentURL: "",
+		suspects: [suspectTmp],
 		loading: false,
 		uploadingAttachment: false
 	});
@@ -74,11 +87,19 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 		state[field] = value;
 		return setstate(clone(state));
 	}
+	function updateSuspect(index, field, value) {
+		state.suspects[index][field] = value;
+		return setstate({ ...state });
+	}
+	function addSuspectField() {
+		state.suspects.push(suspectTmp);
+		return setstate({ ...state });
+	}
 	function submitCase(field, value) {
 		if (state.uploadingAttachment || state.loading) return;
 		if (!profile || !profile.admin) return;
-        const caseObj = omit(state, ["uploadingAttachment", "loading"]);
-        setstate({ ...state, loading: true });
+		const caseObj = omit(state, ["uploadingAttachment", "loading"]);
+		setstate({ ...state, loading: true });
 		return createNewCase({
 			...caseObj,
 			organizationId: profile.organizationId,
@@ -176,7 +197,92 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							variant="outlined"
 						/>
 					</Grid>
+					<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
+						<TextField
+							fullWidth
+							label="Company Department"
+							value={state.department}
+							onChange={({ target }) =>
+								handleChange("department", target.value)
+							}
+							margin="dense"
+							variant="outlined"
+						/>
+					</Grid>
+					<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
+						<TextField
+							fullWidth
+							label="Company Point Person"
+							value={state.companyPointPerson}
+							onChange={({ target }) =>
+								handleChange("companyPointPerson", target.value)
+							}
+							margin="dense"
+							variant="outlined"
+						/>
+					</Grid>
 				</Grid>
+
+				<br />
+				<p style={{ fontSize: 18 }}>
+					Suspect Details{" "}
+					<Button onClick={addSuspectField} type="button">
+						<AddIcon />
+						Add Suspect
+					</Button>
+				</p>
+				{state.suspects.map((suspect, index) => (
+					<Grid container key={`suspect__${index}`} style={{ marginTop: 5 }}>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="First Name"
+								value={suspect.fName}
+								onChange={({ target }) =>
+									updateSuspect(index, "fName", target.value)
+								}
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Middle Name"
+								value={suspect.mName}
+								onChange={({ target }) =>
+									updateSuspect(index, "mName", target.value)
+								}
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Last Name"
+								value={suspect.lName}
+								onChange={({ target }) =>
+									updateSuspect(index, "lName", target.value)
+								}
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="NIDA Number"
+								value={suspect.nidaNumber}
+								onChange={({ target }) =>
+									updateSuspect(index, "nidaNumber", target.value)
+								}
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+					</Grid>
+				))}
 
 				<br />
 				<p style={{ fontSize: 18 }}>Case Specific Details</p>
@@ -187,7 +293,6 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							label="Case Type"
 							value={state.caseType}
 							onChange={({ target }) => handleChange("caseType", target.value)}
-							id="outlined-dense-multiline"
 							margin="dense"
 							select
 							variant="outlined"
@@ -199,6 +304,18 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							))}
 						</TextField>
 					</Grid>
+					<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
+						<TextField
+							fullWidth
+							label="MA Point Person"
+							value={state.MAPointPerson}
+							onChange={({ target }) =>
+								handleChange("MAPointPerson", target.value)
+							}
+							margin="dense"
+							variant="outlined"
+						/>
+					</Grid>
 					<Grid item xs={12} sm={12} style={styles.inputs}>
 						<TextField
 							fullWidth
@@ -207,7 +324,6 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							onChange={({ target }) =>
 								handleChange("description", target.value)
 							}
-							id="outlined-dense-multiline"
 							margin="dense"
 							multiline
 							rows={4}
@@ -220,7 +336,6 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							label="Comments"
 							value={state.comments}
 							onChange={({ target }) => handleChange("comments", target.value)}
-							id="outlined-dense-multiline"
 							margin="dense"
 							multiline
 							rows={4}
@@ -279,10 +394,10 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 function Dashboard({ history }) {
 	function openCaseCreate() {
 		return history.push("/admin/pre-litigation/new-case/");
-    }
-    function openCase(caseId) {
-        return history.push("/admin/pre-litigation/case/"+caseId);
-    }
+	}
+	function openCase(caseId) {
+		return history.push("/admin/pre-litigation/case/" + caseId);
+	}
 	return (
 		<div>
 			<Grid container style={{ marginBottom: "1em" }}>
