@@ -1,6 +1,7 @@
 // @ts-check
 import firebase from "./firebase";
 import uuidV1 from "uuid/v1";
+import store from "./store";
 
 export function acceptOrder(orderId) {
 	const orderRef = firebase
@@ -58,25 +59,21 @@ export function createNewCase(caseDetails) {
 		});
 }
 
-export function addCaseUpdate({
-	caseId,
-	title,
-	description,
-	comments,
-	attachmentURL
-}) {
+export function addCaseUpdate({ caseId, status, comments, attachmentURL }) {
 	const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+	const profile = store.getState().profile;
+	const userId = firebase.auth().currentUser.uid;
 	return firebase
 		.firestore()
 		.collection("preLitigationCases")
 		.doc(caseId)
 		.collection("updates")
 		.add({
-			title,
-			description,
+			status,
 			comments,
+			updatedById: userId,
+			updatedByName: profile.username,
 			attachmentURL,
-			status: "in progress",
 			createdAt: serverTime
 		});
 }
