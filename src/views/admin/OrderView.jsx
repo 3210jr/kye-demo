@@ -1,5 +1,11 @@
 // @ts-check
-import React, { Component, useState, useEffect, createRef } from "react";
+import React, {
+	Component,
+	useState,
+	useEffect,
+	createRef,
+	Fragment
+} from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { storage } from "firebase";
@@ -80,6 +86,19 @@ class OrderView extends Component {
 		}
 	};
 
+	generateAddress = ({ country, region, district, box }) => {
+		return `${
+			country
+				? country
+						.split(" ")
+						.map(c => upperFirst(c))
+						.join(" ") + ", "
+				: ""
+		}${region ? region + ", " : ""}${district ? district + ", " : ""}${
+			box ? "P.O.Box " + box : ""
+		}`;
+	};
+
 	requestChanges = orderId => {
 		//
 	};
@@ -152,7 +171,7 @@ class OrderView extends Component {
 								<p>Middle Name: {order.middleName}</p>
 								<p>Last Name: {order.lastName}</p>
 								<p>Telephone: {order.telephone}</p>
-								<p>Address: {order.address}</p>
+								<p>Address: {this.generateAddress(order)}</p>
 								<p>
 									Screening Types <br />
 									{order.screeningTypes.map(el => upperFirst(el)).join(", ")}
@@ -160,10 +179,10 @@ class OrderView extends Component {
 							</>
 						) : (
 							<>
-								<p>Customer Name: {order.customerName}</p>
+								<p>Entity under Investigation: {order.customerName}</p>
 								<p>Registration No: {order.registrationNumber}</p>
 								<p>Tin No: {order.tinNumber}</p>
-								<p>Address: {order.address}</p>
+								<p>Address: {this.generateAddress(order)}</p>
 							</>
 						)}
 
@@ -377,12 +396,20 @@ function StakeholdersAnalysis({ order }) {
 	const shareholderItem = {
 		fullName: "",
 		telephone: "",
-		nationality: "tanzania"
+		telephoneCode: "+255",
+		nationality: "tanzania",
+		idType: "",
+		idNumber: "",
+		idExpiry: ""
 	};
 	const directorItem = {
 		fullName: "",
 		telephone: "",
-		nationality: "tanzania"
+		telephoneCode: "+255",
+		nationality: "tanzania",
+		idType: "",
+		idNumber: "",
+		idExpiry: ""
 	};
 	const [state, setstate] = useState({
 		shareholders: {
@@ -469,52 +496,125 @@ function StakeholdersAnalysis({ order }) {
 			</Typography>
 
 			{map(state.shareholders, (holder, key) => (
-				<Grid key={key} container style={{ marginTop: 5 }}>
-					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
-						<TextField
-							fullWidth
-							label="Full Name"
-							value={holder.fullName}
-							onChange={evt =>
-								updateEmbeddedField("shareholders", key, "fullName", evt)
-							}
-							id="outlined-dense-multiline"
-							margin="dense"
-							variant="outlined"
-						/>
+				<div style={{ marginBottom: 5 }} key={key}>
+					<Grid container style={{ marginTop: 5 }}>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Full Name"
+								value={holder.fullName}
+								onChange={evt =>
+									updateEmbeddedField("shareholders", key, "fullName", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={4} md={2} lg={1} style={styles.inputs}>
+							<TextField
+								id="telephoneCode"
+								label="Tel. Code"
+								// className={classes.textField}
+								variant="outlined"
+								value={holder.telephoneCode}
+								fullWidth
+								onChange={evt =>
+									updateEmbeddedField("shareholders", key, "telephoneCode", evt)
+								}
+								margin="dense"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Telephone Number"
+								value={holder.telephone}
+								onChange={evt =>
+									updateEmbeddedField("shareholders", key, "telephone", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Nationality"
+								value={holder.nationality}
+								onChange={evt =>
+									updateEmbeddedField("shareholders", key, "nationality", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								select
+								variant="outlined"
+							>
+								{countries.map(country => (
+									<MenuItem key={`${key}___${country}`} value={country}>
+										{formatCountry(country)}
+									</MenuItem>
+								))}
+							</TextField>
+						</Grid>
 					</Grid>
-					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
-						<TextField
-							fullWidth
-							label="Telephone Number"
-							value={holder.telephone}
-							onChange={evt =>
-								updateEmbeddedField("shareholders", key, "telephone", evt)
-							}
-							id="outlined-dense-multiline"
-							margin="dense"
-							variant="outlined"
-						/>
-					</Grid>
-					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
-						<TextField
-							fullWidth
-							label="Nationality"
-							value={holder.nationality}
-							onChange={evt =>
-								updateEmbeddedField("shareholders", key, "nationality", evt)
-							}
-							id="outlined-dense-multiline"
-							margin="dense"
-							select
-							variant="outlined"
-						>
-							{countries.map(country => (
-								<MenuItem key={`${key}___${country}`} value={country}>
-									{formatCountry(country)}
+					<Grid key={key} container style={{ marginTop: 5 }}>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Id Type"
+								select
+								value={holder.idType}
+								onChange={evt =>
+									updateEmbeddedField("shareholders", key, "idType", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							>
+								<MenuItem value={"national-identification"}>
+									National Identification (NIDA)
 								</MenuItem>
-							))}
-						</TextField>
+								<MenuItem value={"passport"}>Passport</MenuItem>
+								<MenuItem value={"voter-id"}>Voters ID</MenuItem>
+								<MenuItem value={"birth-certificate"}>
+									Birth Certificate
+								</MenuItem>
+								<MenuItem value={"drivers-license"}>Drivers License</MenuItem>
+								<MenuItem value={"school-id"}>School ID</MenuItem>
+								<MenuItem value={"social-security"}>
+									Social Security Number
+								</MenuItem>
+							</TextField>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="ID Number"
+								value={holder.idNumber}
+								onChange={evt =>
+									updateEmbeddedField("shareholders", key, "idNumber", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="ID Expiry Date"
+								type="date"
+								value={holder.idExpiry}
+								onChange={evt =>
+									updateEmbeddedField("shareholders", key, "idExpiry", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
 					</Grid>
 					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
 						{Object.keys(state.shareholders).length > 1 && (
@@ -535,7 +635,7 @@ function StakeholdersAnalysis({ order }) {
 							</div>
 						)}
 					</Grid>
-				</Grid>
+				</div>
 			))}
 
 			<br />
@@ -548,53 +648,145 @@ function StakeholdersAnalysis({ order }) {
 			</Typography>
 
 			{map(state.directors, (director, key) => (
-				<Grid key={key} container style={{ marginTop: 5 }}>
-					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
-						<TextField
-							fullWidth
-							label="Full Name"
-							value={director.fullName}
-							onChange={evt =>
-								updateEmbeddedField("directors", key, "fullName", evt)
-							}
-							id="outlined-dense-multiline"
-							margin="dense"
-							variant="outlined"
-						/>
+				<div style={{ marginBottom: 5 }} key={key}>
+					<Grid container style={{ marginTop: 5 }}>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Full Name"
+								value={director.fullName}
+								onChange={evt =>
+									updateEmbeddedField("directors", key, "fullName", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={4} md={2} lg={1} style={styles.inputs}>
+							<TextField
+								id="telephoneCode"
+								label="Tel. Code"
+								// className={classes.textField}
+								variant="outlined"
+								value={director.telephoneCode}
+								fullWidth
+								onChange={evt =>
+									updateEmbeddedField("directors", key, "telephoneCode", evt)
+								}
+								margin="dense"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Telephone Number"
+								value={director.telephone}
+								onChange={evt =>
+									updateEmbeddedField("directors", key, "telephone", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Nationality"
+								value={director.nationality}
+								onChange={evt =>
+									updateEmbeddedField("directors", key, "nationality", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								select
+								variant="outlined"
+							>
+								{countries.map(country => (
+									<MenuItem key={`${key}___${country}`} value={country}>
+										{formatCountry(country)}
+									</MenuItem>
+								))}
+							</TextField>
+						</Grid>
 					</Grid>
-					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
-						<TextField
-							fullWidth
-							label="Telephone Number"
-							value={director.telephone}
-							onChange={evt =>
-								updateEmbeddedField("directors", key, "telephone", evt)
-							}
-							id="outlined-dense-multiline"
-							margin="dense"
-							variant="outlined"
-						/>
-					</Grid>
-					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
-						<TextField
-							fullWidth
-							label="Nationality"
-							value={director.nationality}
-							onChange={evt =>
-								updateEmbeddedField("directors", key, "nationality", evt)
-							}
-							id="outlined-dense-multiline"
-							margin="dense"
-							select
-							variant="outlined"
-						>
-							{countries.map(country => (
-								<MenuItem key={`${key}___${country}`} value={country}>
-									{formatCountry(country)}
+					<Grid key={key} container style={{ marginTop: 5 }}>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Id Type"
+								select
+								value={director.idType}
+								onChange={evt =>
+									updateEmbeddedField("directors", key, "idType", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							>
+								<MenuItem value={"national-identification"}>
+									National Identification (NIDA)
 								</MenuItem>
-							))}
-						</TextField>
+								<MenuItem value={"passport"}>Passport</MenuItem>
+								<MenuItem value={"voter-id"}>Voters ID</MenuItem>
+								<MenuItem value={"birth-certificate"}>
+									Birth Certificate
+								</MenuItem>
+								<MenuItem value={"drivers-license"}>Drivers License</MenuItem>
+								<MenuItem value={"school-id"}>School ID</MenuItem>
+								<MenuItem value={"social-security"}>
+									Social Security Number
+								</MenuItem>
+							</TextField>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="ID Number"
+								value={director.idNumber}
+								onChange={evt =>
+									updateEmbeddedField("directors", key, "idNumber", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="ID Expiry Date"
+								type="date"
+								value={director.idExpiry}
+								onChange={evt =>
+									updateEmbeddedField("directors", key, "idExpiry", evt)
+								}
+								id="outlined-dense-multiline"
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
 					</Grid>
+					{/* <Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+						{Object.keys(state.directors).length > 1 && (
+							<div
+								style={{
+									display: "flex",
+									height: "100%",
+									alignItems: "center"
+								}}
+							>
+								<Button
+									onClick={() => removeEmbeded("directors", key)}
+									size="small"
+									color="secondary"
+								>
+									- Remove
+								</Button>
+							</div>
+						)}
+					</Grid> */}
 					<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
 						{Object.keys(state.directors).length > 1 && (
 							<div
@@ -614,7 +806,7 @@ function StakeholdersAnalysis({ order }) {
 							</div>
 						)}
 					</Grid>
-				</Grid>
+				</div>
 			))}
 
 			<Grid container spacing={3} style={{ marginTop: 5 }}>

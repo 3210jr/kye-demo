@@ -26,7 +26,8 @@ const ACADEMIC_REPORTS_TEMPLATE = {
 	qualificationAndGradedAwardedCandidate: "",
 	qualificationAndGradedAwardedReference: "",
 	supportingDocsURL: "",
-	academicQualificationScore: ""
+	academicQualificationScore: "",
+	comments: ""
 };
 
 function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
@@ -187,6 +188,7 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
 								<TextField
 									id="outlined-name"
 									label="Date Supplied"
+									type="date"
 									value={result.dateSupplied}
 									onChange={({ target }) =>
 										handleChange(key, "dateSupplied", target.value)
@@ -390,6 +392,24 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
 						</Grid>
 
 						<Grid container style={{ marginTop: 5 }}>
+							<Grid xs item>
+								<TextField
+									fullWidth
+									multiline
+									rows={4}
+									label="Comments"
+									value={result.comments}
+									onChange={({ target }) =>
+										handleChange(key, "comments", target.value)
+									}
+									id="outlined-dense-multiline"
+									margin="dense"
+									variant="outlined"
+								/>
+							</Grid>
+						</Grid>
+
+						<Grid container style={{ marginTop: 5 }}>
 							<Grid
 								item
 								xs={2}
@@ -456,7 +476,4 @@ const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
 	toggleSnackBar: payload => asyncToggleSnackBar(payload)
 });
 
-export default connect(
-	mapState,
-	mapDispatch
-)(AcademicReports);
+export default connect(mapState, mapDispatch)(AcademicReports);
