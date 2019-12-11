@@ -21,6 +21,7 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "material-ui-pickers";
 import { uploadFile, createOrder, createKYCOrder } from "../utils";
+import { countryList } from "../constants/countries";
 
 const months = [
 	"january",
@@ -78,16 +79,24 @@ class NewOrder extends Component {
 		this.state = {
 			open: false,
 			openMonthPicker: false,
-			orderType: "not-set", // kyc, kye, not-set
+			orderType: "kyc", // "not-set", // kyc, kye, not-set
 			firstName: "",
 			lastName: "",
 			middleName: "",
-			telephone: "+255",
-			nidaNumber: "",
-			dateOfBirth: 1,
-			monthOfBirth: "january",
-			yearOfBirth: 1990,
-			address: "",
+			telephone: "",
+			telephoneCode: "+255",
+			// nidaNumber: "",
+			dateOfBirth: "",
+			// monthOfBirth: "january",
+			// yearOfBirth: 1990,
+			// address: "",
+			idType: "national-identification",
+			idNumber: "",
+			idExpiry: "",
+			country: "tanzania",
+			region: "",
+			box: "",
+			district: "",
 			gender: "male",
 			screeningTypes: [],
 			assetsURL: "",
@@ -99,6 +108,8 @@ class NewOrder extends Component {
 		this.fileUploaderRef = React.createRef();
 	}
 	componentDidMount() {
+		// FIXME: No longer needed because we are not going to be routing to this page
+		// with half entered details from another page
 		const { location } = this.props;
 		const routeState = !!location.state ? location.state : {};
 		console.log("Route State: ", routeState);
@@ -108,7 +119,7 @@ class NewOrder extends Component {
 			lastName: routeState.lastName || "",
 			middleName: routeState.middleName || "",
 			dateOfBirth: routeState.dateOfBirth || 1,
-			address: routeState.address || "",
+			// address: routeState.address || "",
 			gender: routeState.gender || ""
 		});
 	}
@@ -160,15 +171,22 @@ class NewOrder extends Component {
 			lastName,
 			middleName,
 			dateOfBirth,
-			monthOfBirth,
-			yearOfBirth,
-			address,
+			telephoneCode,
+			// monthOfBirth,
+			// yearOfBirth,
+			// address,
 			gender,
 			screeningTypes,
 			assetsURL,
 			loading,
 			telephone,
-			nidaNumber,
+			idType,
+			idNumber,
+			country,
+			region,
+			box,
+			district,
+			idExpiry,
 			uploadingAssets
 		} = this.state;
 		const { profile, history } = this.props;
@@ -183,7 +201,7 @@ class NewOrder extends Component {
 		}
 
 		if (
-			nidaNumber.length < 8 &&
+			idNumber.length < 8 &&
 			!window.confirm(
 				"Are you sure you want to continue without entering a valid NIDA Number?"
 			)
@@ -196,13 +214,20 @@ class NewOrder extends Component {
 			firstName,
 			lastName,
 			middleName,
+			telephoneCode,
 			telephone,
-			dateOfBirth: new Date(`${dateOfBirth}/${monthOfBirth}/${yearOfBirth}`),
-			address,
+			dateOfBirth: new Date(dateOfBirth),
+			// address,
 			gender,
 			screeningTypes,
 			assetsURL,
-			nidaNumber,
+			idType,
+			idNumber,
+			country,
+			region,
+			box,
+			district,
+			idExpiry,
 			organizationId: profile.organizationId,
 			organizationName: profile.organizationName
 		})
@@ -228,12 +253,19 @@ class NewOrder extends Component {
 			firstName,
 			lastName,
 			middleName,
+			telephoneCode,
 			telephone,
-			nidaNumber,
+			idType,
+			idNumber,
+			idExpiry,
+			country,
+			region,
+			district,
+			box,
 			dateOfBirth,
-			monthOfBirth,
-			yearOfBirth,
-			address,
+			// monthOfBirth,
+			// yearOfBirth,
+			// address,
 			gender,
 			screeningTypes,
 			uploadingAssets,
@@ -266,7 +298,7 @@ class NewOrder extends Component {
 						</InputLabel>
 
 						<Select
-							labelid="order-type-picker-label"
+							labelId="order-type-picker-label"
 							id="order-type-picker"
 							value={orderType}
 							style={{ width: 200 }}
@@ -327,32 +359,43 @@ class NewOrder extends Component {
 												margin="normal"
 											/>
 										</Grid>
-										<Grid item xs={12} md={4}>
+										<Grid item xs={4} md={2} lg={1}>
+											<TextField
+												id="telephoneCode"
+												label="Tel. Code"
+												className={classes.textField}
+												value={telephoneCode}
+												onChange={evt =>
+													this.handleChange("telephoneCode", evt)
+												}
+												margin="normal"
+											/>
+										</Grid>
+										<Grid item xs={8} md={2} lg={3}>
 											<TextField
 												id="telephone"
-												label="Telephone"
+												label="Telephone Number"
 												className={classes.textField}
 												value={telephone}
 												onChange={evt => this.handleChange("telephone", evt)}
 												margin="normal"
 											/>
 										</Grid>
-										<Grid item xs={12} md={8}>
-											<Grid container spacing={24}>
-												<Grid item xs={12} md={4}>
-													<TextField
-														id="dateOfBirth"
-														label="Date of Birth"
-														className={classes.textField}
-														value={dateOfBirth}
-														onChange={evt =>
-															this.handleChange("dateOfBirth", evt)
-														}
-														margin="normal"
-													/>
-												</Grid>
-												<Grid item xs={12} md={4}>
-													<FormControl className={classes.formControl}>
+										<Grid item xs={12} md={4}>
+											{/* <Grid container> */}
+											{/* <Grid item xs={12} md={4}> */}
+											<TextField
+												id="dateOfBirth"
+												label="Date of Birth"
+												type="date"
+												className={classes.textField}
+												value={dateOfBirth}
+												onChange={evt => this.handleChange("dateOfBirth", evt)}
+												margin="normal"
+											/>
+											{/* </Grid> */}
+											{/* <Grid item xs={12} md={4}> */}
+											{/* <FormControl className={classes.formControl}>
 														<InputLabel htmlFor="month-of-year-selector">
 															Month
 														</InputLabel>
@@ -375,8 +418,8 @@ class NewOrder extends Component {
 																</MenuItem>
 															))}
 														</Select>
-													</FormControl>
-													{/* <TextField
+													</FormControl> */}
+											{/* <TextField
 												id="monthOfBirth"
 												label="Month of Birth"
 												className={classes.textField}
@@ -384,8 +427,8 @@ class NewOrder extends Component {
 												// onChange={this.handleChange("name")}
 												margin="normal"
 											/> */}
-												</Grid>
-												<Grid item xs={12} md={4}>
+											{/* </Grid> */}
+											{/* <Grid item xs={12} md={4}>
 													<TextField
 														id="yearOfBirth"
 														label="Year of Birth"
@@ -396,28 +439,8 @@ class NewOrder extends Component {
 														}
 														margin="normal"
 													/>
-												</Grid>
-											</Grid>
-										</Grid>
-										<Grid item xs={12} md={4}>
-											<TextField
-												id="nida-number"
-												label="Nida Number"
-												className={classes.textField}
-												value={nidaNumber}
-												onChange={evt => this.handleChange("nidaNumber", evt)}
-												margin="normal"
-											/>
-										</Grid>
-										<Grid item xs={12} md={4}>
-											<TextField
-												id="last-name"
-												label="Address"
-												className={classes.textField}
-												value={address}
-												onChange={evt => this.handleChange("address", evt)}
-												margin="normal"
-											/>
+												</Grid> */}
+											{/* </Grid> */}
 										</Grid>
 										<Grid item xs={12} md={4}>
 											<FormControl className={classes.formControl}>
@@ -439,6 +462,136 @@ class NewOrder extends Component {
 													<MenuItem value={"female"}>Female</MenuItem>
 												</Select>
 											</FormControl>
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<TextField
+												onChange={evt => this.handleChange("idType", evt)}
+												label="ID Type"
+												value={idType}
+												fullWidth
+												select
+											>
+												<MenuItem value={"national-identification"}>
+													National Identification (NIDA)
+												</MenuItem>
+												<MenuItem value={"passport"}>Passport</MenuItem>
+												<MenuItem value={"voter-id"}>Voters ID</MenuItem>
+												<MenuItem value={"birth-certificate"}>
+													Birth Certificate
+												</MenuItem>
+												<MenuItem value={"drivers-license"}>
+													Drivers License
+												</MenuItem>
+												<MenuItem value={"school-id"}>School ID</MenuItem>
+												<MenuItem value={"social-security"}>
+													Social Security Number
+												</MenuItem>
+											</TextField>
+											{/* <FormControl className={classes.formControl}>
+												<InputLabel htmlFor="demo-controlled-open-select">
+													ID Type
+												</InputLabel>
+												<Select
+													open={open}
+													onClose={this.toggleGenderDropDown}
+													onOpen={this.toggleGenderDropDown}
+													value={gender}
+													onChange={evt => this.handleChange("gender", evt)}
+													inputProps={{
+														name: "gender",
+														id: "demo-controlled-open-select"
+													}}
+												>
+													<MenuItem value={"national-identification"}>
+														National Identification (NIDA)
+													</MenuItem>
+													<MenuItem value={"passport"}>Passport</MenuItem>
+													<MenuItem value={"voter-id"}>Voters ID</MenuItem>
+													<MenuItem value={"drivers-license"}>
+														Drivers License
+													</MenuItem>
+													<MenuItem value={"school-id"}>School ID</MenuItem>
+													<MenuItem value={"social-security"}>
+														Social Security Number
+													</MenuItem>
+												</Select>
+											</FormControl> */}
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<TextField
+												id="nida-number"
+												label="Identification Number"
+												className={classes.textField}
+												value={idNumber}
+												onChange={evt => this.handleChange("idNumber", evt)}
+												margin="normal"
+											/>
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<TextField
+												id="id-expiry"
+												label="Identification Expiry Date"
+												className={classes.textField}
+												type="date"
+												value={idExpiry}
+												onChange={evt => this.handleChange("idExpiry", evt)}
+												margin="normal"
+											/>
+										</Grid>
+										{/* <Grid item xs={12} md={4}>
+											<TextField
+												id="address"
+												label="Address"
+												className={classes.textField}
+												value={address}
+												onChange={evt => this.handleChange("address", evt)}
+												margin="normal"
+											/>
+										</Grid> */}
+										<Grid item xs={12} md={4}>
+											<TextField
+												onChange={evt => this.handleChange("country", evt)}
+												label="Country"
+												value={country}
+												fullWidth
+												select
+											>
+												{countryList.map(country => (
+													<MenuItem key={country} value={country.toLowerCase()}>
+														{country}
+													</MenuItem>
+												))}
+											</TextField>
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<TextField
+												id="region"
+												label="Region (optional)"
+												className={classes.textField}
+												value={region}
+												onChange={evt => this.handleChange("region", evt)}
+												margin="normal"
+											/>
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<TextField
+												id="district"
+												label="District (optional)"
+												className={classes.textField}
+												value={district}
+												onChange={evt => this.handleChange("district", evt)}
+												margin="normal"
+											/>
+										</Grid>
+										<Grid item xs={12} md={4}>
+											<TextField
+												id="pobox"
+												label="P.O.Box (optional)"
+												className={classes.textField}
+												value={box}
+												onChange={evt => this.handleChange("box", evt)}
+												margin="normal"
+											/>
 										</Grid>
 									</Grid>
 								</form>
@@ -660,6 +813,10 @@ function KYCOrderForm({ classes, profile, history }) {
 		tinNumber: "",
 		attachmentURL: "",
 		address: "",
+		country: "tanzania",
+		region: "",
+		box: "",
+		district: "",
 		uploadingAttachment: false,
 		notes: "",
 		loading: false
@@ -754,13 +911,58 @@ function KYCOrderForm({ classes, profile, history }) {
 									margin="normal"
 								/>
 							</Grid>
-							<Grid item xs={12} md={4}>
+							{/* <Grid item xs={12} md={4}>
 								<TextField
 									id="address"
 									label="Address"
 									className={classes.textField}
 									value={state.address}
 									onChange={evt => updateText("address", evt)}
+									margin="normal"
+								/>
+							</Grid> */}
+							<Grid item xs={12} md={4}>
+								<TextField
+									onChange={evt => updateText("country", evt)}
+									label="Country"
+									value={state.country}
+									fullWidth
+									select
+								>
+									{countryList.map(country => (
+										<MenuItem key={country} value={country.toLowerCase()}>
+											{country}
+										</MenuItem>
+									))}
+								</TextField>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<TextField
+									id="region"
+									label="Region (optional)"
+									className={classes.textField}
+									value={state.region}
+									onChange={evt => updateText("region", evt)}
+									margin="normal"
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<TextField
+									id="district"
+									label="District (optional)"
+									className={classes.textField}
+									value={state.district}
+									onChange={evt => updateText("district", evt)}
+									margin="normal"
+								/>
+							</Grid>
+							<Grid item xs={12} md={4}>
+								<TextField
+									id="pobox"
+									label="P.O.Box (optional)"
+									className={classes.textField}
+									value={state.box}
+									onChange={evt => updateText("box", evt)}
 									margin="normal"
 								/>
 							</Grid>

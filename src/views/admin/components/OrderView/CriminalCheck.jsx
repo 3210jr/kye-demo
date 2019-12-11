@@ -18,7 +18,7 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 		comments: "",
 		criminalAnalysisScore: "",
 		supportingDocsURL: "",
-		fingerprintDate: "",
+		reportDate: "",
 		fingerprintLocation: "",
 		uploadingAttachment: false,
 		loading: false
@@ -56,10 +56,10 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 	}
 
 	function calculateExpiryDate() {
-		const { fingerprintDate } = state;
+		const { reportDate } = state;
 
-		const date = new Date(fingerprintDate);
-		if (!date.getTime()) return "Please enter the fingerprint date";
+		const date = new Date(reportDate);
+		if (!date.getTime()) return "Please enter the fingerprint report date";
 
 		date.setMonth(date.getMonth() + 3)
 
@@ -75,6 +75,8 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 		const {
 			comments,
 			criminalAnalysisScore,
+			reportDate,
+			fingerprintLocation,
 			supportingDocsURL,
 			loading
 		} = state;
@@ -100,6 +102,8 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 		persistOrderResults(order.id, type, {
 			comments,
 			criminalAnalysisScore,
+			reportDate,
+			fingerprintLocation,
 			supportingDocsURL
 		})
 			.then(res => {
@@ -125,11 +129,11 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 				<Grid item xs md={6} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<TextField
 						id="outlined-name"
-						label="Date fingerprints taken"
-						value={state.fingerprintDate}
+						label="Generated Report Date"
+						value={state.reportDate}
 						type="date"
 						onChange={({ target }) =>
-							handleChange("fingerprintDate", target.value)
+							handleChange("reportDate", target.value)
 						}
 						fullWidth
 						margin="normal"
@@ -169,7 +173,7 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={3} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={6} sm={6}>
 					<p style={{ paddingLeft: 6 }}>Criminal Analysis - System score</p>
 				</Grid>
@@ -187,14 +191,13 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 						margin="normal"
 						variant="outlined"
 					>
-						<MenuItem value="good">Good</MenuItem>
-						<MenuItem value="normal">Normal</MenuItem>
-						<MenuItem value="bad">Bad</MenuItem>
+						<MenuItem value="positive">Positive</MenuItem>
+						<MenuItem value="negative">Negative</MenuItem>
 					</TextField>
 				</Grid>
 			</Grid>
 
-			<Grid container spacing={3} style={{ marginTop: 10, marginBottom: 10 }}>
+			<Grid container style={{ marginTop: 10, marginBottom: 10 }}>
 				<Grid>
 					<Typography component="h6">
 						NOTE: This criminal check expires on: {calculateExpiryDate()}
@@ -203,7 +206,7 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 			</Grid>
 
 
-			<Grid container spacing={3} style={{ marginTop: 5 }}>
+			<Grid container style={{ marginTop: 5 }}>
 				<Grid item xs={2} sm={2} style={{ paddingLeft: 3, paddingRight: 3 }}>
 					<Button
 						fullWidth

@@ -15,7 +15,8 @@ import {
 import { uploadFile, persistOrderEmbeddedResults } from "../../../../utils";
 
 const GAPS_REPORT_TEMPLATE = {
-	period: "",
+	from: "",
+	to: "",
 	comments: "",
 	gapInEmploymentHistoryScore: "",
 	generalComments: "",
@@ -60,7 +61,11 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 	}
 
 	function insertNewResult() {
-		state[uuidV1()] = { ...GAPS_REPORT_TEMPLATE, loading: false, uploadingAttachment: false };
+		state[uuidV1()] = {
+			...GAPS_REPORT_TEMPLATE,
+			loading: false,
+			uploadingAttachment: false
+		};
 		setState({ ...state });
 	}
 
@@ -71,7 +76,8 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 
 	function saveGapsReport(resultKey) {
 		const {
-			period,
+			from,
+			to,
 			comments,
 			gapInEmploymentHistoryScore,
 			generalComments,
@@ -79,8 +85,10 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 			loading
 		} = state[resultKey];
 		if (loading) return;
+		if (isNaN(new Date(from)) || isNaN(new Date(to))) {
+			alert("Please enter valid dates");
+		}
 		if (
-			period.length < 3 ||
 			comments.length < 5 ||
 			generalComments.length < 5 ||
 			gapInEmploymentHistoryScore.length < 3
@@ -97,7 +105,8 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 		setState(clone(state));
 
 		persistOrderEmbeddedResults(order.id, type, resultKey, {
-			period,
+			from,
+			to,
 			comments,
 			gapInEmploymentHistoryScore,
 			generalComments,
@@ -153,13 +162,14 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 						}}
 					>
 						<Grid container style={{ marginTop: 5 }}>
-							<Grid item xs style={{ paddingLeft: 3, paddingRight: 3 }}>
+							<Grid item xs lg={3} style={{ paddingLeft: 3, paddingRight: 3 }}>
 								<TextField
 									id="outlined-name"
-									label="Period"
-									value={result.period}
+									label="From"
+									type="date"
+									value={result.from}
 									onChange={({ target }) =>
-										handleChange(key, "period", target.value)
+										handleChange(key, "from", target.value)
 									}
 									fullWidth
 									margin="normal"
@@ -167,7 +177,22 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 									style={{ margin: 3 }}
 								/>
 							</Grid>
-							<Grid item xs style={{ paddingLeft: 3, paddingRight: 3 }}>
+							<Grid item xs lg={3} style={{ paddingLeft: 3, paddingRight: 3 }}>
+								<TextField
+									id="outlined-name"
+									label="To"
+									type="date"
+									value={result.to}
+									onChange={({ target }) =>
+										handleChange(key, "to", target.value)
+									}
+									fullWidth
+									margin="normal"
+									variant="outlined"
+									style={{ margin: 3 }}
+								/>
+							</Grid>
+							<Grid item xs lg={6} style={{ paddingLeft: 3, paddingRight: 3 }}>
 								<TextField
 									id="outlined-name"
 									label="Comments"
@@ -266,13 +291,16 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 							>
 								<Button
 									fullWidth
-									variant={result.supportingDocsURL.length > 0 ? "text":"contained"}
+									variant={
+										result.supportingDocsURL.length > 0 ? "text" : "contained"
+									}
 									onClick={() => fileUploaderRef.current.click()}
 									color="primary"
 								>
 									{result.uploadingAttachment
 										? "Uploading..."
-										: result.supportingDocsURL && result.supportingDocsURL.length > 0
+										: result.supportingDocsURL &&
+										  result.supportingDocsURL.length > 0
 										? "Update Supporting Documents"
 										: "Upload Supporting Documents"}
 								</Button>
@@ -302,7 +330,4 @@ const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
 	toggleSnackBar: payload => asyncToggleSnackBar(payload)
 });
 
-export default connect(
-	mapState,
-	mapDispatch
-)(GapsReports);
+export default connect(mapState, mapDispatch)(GapsReports);
