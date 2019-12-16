@@ -19,7 +19,7 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 		dateOfCheck: "",
 		result: "",
 		dateOfBirthConsisntency: "no",
-		passportScore: "risk", // risk, medium, good
+		identiScore: "risk", // risk, medium, good
 		comments: "",
 		supportingDocsURL: "",
 		uploadingAttachment: false,
@@ -78,11 +78,11 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 
 		persistOrderResults(order.id, type, { ...currentState })
 			.then(res => {
-				toggleSnackBar({ message: "Police Reports updated successfully!" });
+				toggleSnackBar({ message: "Identity Check updated successfully!" });
 			})
 			.catch(error => {
 				toggleSnackBar({
-					message: "Error. There was an error updating the police report."
+					message: "Error. There was an error updating the identity check."
 				});
 				console.log("Error: ", error);
 			})
@@ -172,13 +172,13 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 				<div style={{ flex: 1, paddingLeft: 10 }}>
 					<TextField
 						id="outlined-name"
-						label="Passport Check - System Score"
+						label="Identity Check - System Score"
 						select
 						style={{ margin: 3 }}
 						className="wide"
-						value={state.passportScore}
+						value={state.identiScore}
 						onChange={({ target }) =>
-							handleChange("passportScore", target.value)
+							handleChange("identiScore", target.value)
 						}
 						margin="normal"
 						variant="outlined"

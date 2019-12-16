@@ -107,11 +107,11 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
 			supportingDocsURL
 		})
 			.then(res => {
-				toggleSnackBar({ message: "Police Reports updated successfully!" });
+				toggleSnackBar({ message: "Criminal Check updated successfully!" });
 			})
 			.catch(error => {
 				toggleSnackBar({
-					message: "Error. There was an error updating the police report."
+					message: "Error. There was an error updating the criminal check."
 				});
 				console.log("Error: ", error);
 			})
