@@ -15,9 +15,10 @@ import {
 	TableHead,
 	TableCell,
 	TableBody,
-	TableRow
+	TableRow,
+	Collapse
 } from "@material-ui/core";
-import { upperFirst } from "lodash";
+import { upperFirst, find } from "lodash";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
 import { connect } from "react-redux";
 import { fullFormatDate } from "../utils";
@@ -99,8 +100,9 @@ class ViewOrders extends React.Component {
 			order: "asc",
 			orderBy: "name",
 			selected: [],
+			selectedRowId: "",
 			page: 0,
-			rowsPerPage: 5
+			rowsPerPage: 10
 		};
 	}
 
@@ -114,6 +116,20 @@ class ViewOrders extends React.Component {
 
 		this.setState({ order, orderBy });
 	};
+
+	selectRow = (id) => {
+		const { selectedRowId } = this.state;
+		let rowId = id
+		if (selectedRowId === id) {
+			rowId = ""
+		}
+		window.scrollTo(0, 0)
+		this.setState({ selectedRowId: rowId });
+	}
+
+	closeSummary = () => {
+		this.setState({ selectedRowId: "" })
+	}
 
 	handlePrint = item => {
 		console.log(item);
@@ -131,102 +147,182 @@ class ViewOrders extends React.Component {
 
 	render() {
 		const { classes, myOrders } = this.props;
-		const { order, orderBy, selected, rowsPerPage, page } = this.state;
+		const { order, orderBy, selected, rowsPerPage, page, selectedRowId } = this.state;
 		var reportsReferences = []; //references
 		console.log(myOrders);
+		const selectedOrder = find(myOrders, ["id", selectedRowId]);
 		const emptyRows =
 			rowsPerPage - Math.min(rowsPerPage, myOrders.length - page * rowsPerPage);
 		return (
-			<Paper className={classes.root}>
-				<div className={classes.tableWrapper}>
-					<Table className={classes.table} aria-labelledby="tableTitle">
-						<ExtendedTableHead
-							numSelected={selected.length}
-							rows={rows}
-							order={order}
-							orderBy={orderBy}
-							onRequestSort={this.handleRequestSort}
-							rowCount={myOrders.length}
-						/>
-						<TableBody>
-							{stableSort(myOrders, getSorting(order, orderBy))
-								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-								.map((n, index) => {
-									const isSelected = this.isSelected(n.id);
-									if (n.orderType === "kyc") {
-										return <KYCOrderItem order={n} index={index} />;
-									}
-									return (
-										<TableRow
-											hover
-											// onClick={event => this.handleClick(event, n.id)}
-											role="checkbox"
-											aria-checked={isSelected}
-											tabIndex={-1}
-											key={n.id}
-											// selected={isSelected}
-										>
-											<TableCell align="left">{n.referenceNumber}</TableCell>
-											<TableCell component="th" scope="row" padding="default">
-												{`${n.firstName} ${n.middleName} ${n.lastName}`}
-											</TableCell>
-											<TableCell align="left"></TableCell>
-											<TableCell align="left">
-												{n.createdAt && fullFormatDate(n.createdAt.toDate())}
-											</TableCell>
-											<TableCell align="left">{upperFirst(n.status)}</TableCell>
-											<TableCell align="left">
-												{n.status === "completed" ? (
-													<ReactToPrint
-														trigger={() => (
-															<CloudDownload
-																color="default"
-																className="pointer"
-															/>
-														)}
-														content={() => reportsReferences[index]}
-													/>
-												) : (
-													<CloudDownload color="disabled" className="pointer" />
-												)}
+			<React.Fragment>
+				{
+					selectedRowId.length > 0 && selectedOrder && (
+						<KYEOrderSummary closeSummary={this.closeSummary} order={selectedOrder} />
+					)
+				}
 
-												<ReportGenerated
-													order={n}
-													person={n.firstName + " " + n.lastName} //NB : this is test prop ony
-													reportOwner={n}
-													ref={el => (reportsReferences[index] = el)}
-												/>
-											</TableCell>
-										</TableRow>
-									);
-								})}
-							{emptyRows > 0 && (
-								<TableRow style={{ height: 49 * emptyRows }}>
-									<TableCell colSpan={6} />
-								</TableRow>
-							)}
-						</TableBody>
-					</Table>
-				</div>
-				<TablePagination
-					rowsPerPageOptions={[5, 10, 25]}
-					component="div"
-					count={myOrders.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					backIconButtonProps={{
-						"aria-label": "Previous Page"
-					}}
-					nextIconButtonProps={{
-						"aria-label": "Next Page"
-					}}
-					onChangePage={this.handleChangePage}
-					onChangeRowsPerPage={this.handleChangeRowsPerPage}
-				/>
-			</Paper>
+				<Paper className={classes.root}>
+					<div className={classes.tableWrapper}>
+						<Table className={classes.table} aria-labelledby="tableTitle">
+							<ExtendedTableHead
+								numSelected={selected.length}
+								rows={rows}
+								order={order}
+								orderBy={orderBy}
+								onRequestSort={this.handleRequestSort}
+								rowCount={myOrders.length}
+							/>
+							<TableBody>
+								{stableSort(myOrders, getSorting(order, orderBy))
+									.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+									.map((n, index) => {
+										const isSelected = this.isSelected(n.id);
+										if (n.orderType === "kyc") {
+											return <KYCOrderItem order={n} index={index} />;
+										}
+										return (
+											<TableRow
+												hover
+												// onClick={event => this.handleClick(event, n.id)}
+												role="checkbox"
+												aria-checked={isSelected}
+												className="pointer"
+												tabIndex={-1}
+												onClick={() => this.selectRow(n.id)}
+												key={n.id}
+											>
+												<TableCell align="left">{n.referenceNumber}</TableCell>
+												<TableCell component="th" scope="row" padding="default">
+													{`${n.firstName} ${n.middleName} ${n.lastName}`}
+												</TableCell>
+												<TableCell align="left"></TableCell>
+												<TableCell align="left">
+													{n.createdAt && fullFormatDate(n.createdAt.toDate())}
+												</TableCell>
+												<TableCell align="left">{upperFirst(n.status)}</TableCell>
+												<TableCell align="left">
+													{n.status === "completed" ? (
+														<ReactToPrint
+															trigger={() => (
+																<CloudDownload
+																	color="default"
+																	className="pointer"
+																/>
+															)}
+															content={() => reportsReferences[index]}
+														/>
+													) : (
+															<CloudDownload color="disabled" className="pointer" />
+														)}
+
+													<ReportGenerated
+														order={n}
+														person={n.firstName + " " + n.lastName} //NB : this is test prop ony
+														reportOwner={n}
+														ref={el => (reportsReferences[index] = el)}
+													/>
+												</TableCell>
+											</TableRow>
+										);
+									})}
+								{emptyRows > 0 && (
+									<TableRow style={{ height: 49 * emptyRows }}>
+										<TableCell colSpan={6} />
+									</TableRow>
+								)}
+							</TableBody>
+						</Table>
+					</div>
+					<TablePagination
+						rowsPerPageOptions={[5, 10, 25]}
+						component="div"
+						count={myOrders.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						backIconButtonProps={{
+							"aria-label": "Previous Page"
+						}}
+						nextIconButtonProps={{
+							"aria-label": "Next Page"
+						}}
+						onChangePage={this.handleChangePage}
+						onChangeRowsPerPage={this.handleChangeRowsPerPage}
+					/>
+				</Paper>
+			</React.Fragment>
 		);
 	}
 }
+
+function isInvestigationComplete(order = {}, investigation) {
+	return Object.keys(order[investigation]).length > 0
+}
+
+function KYEOrderSummary({ order, closeSummary }) {
+	return (
+		<Paper>
+			<div style={{ position: "relative" }}>
+				<div className="pointer" onClick={closeSummary} style={{ position: "absolute", right: 10, top: 10, padding:5 }}>
+					X
+			</div>
+			</div>
+			<div style={{ padding: 15 }}>
+				<div style={{ fontSize: 22, marginBottom: 12, marginTop: 12 }}>
+					{order.firstName} {order.middleName} {order.lastName} - {order.organizationName}
+				</div>
+
+				<div style={{ flexDirection: "row", display: "flex", fontSize: "1.2em", marginBottom: 10, paddingBottom: 5, borderBottom: "2px solid #ccc" }}>
+					<div style={{ flex: 1 }}>
+						Screening Type
+					</div>
+					<div style={{ flex: 1 }}>
+						Status
+					</div>
+					<div style={{ flex: 1 }}>
+						Report
+					</div>
+				</div>
+
+				{
+					order.screeningTypes.map(type => {
+						const complete = isInvestigationComplete(order, type)
+						return (
+							<div key={type} style={{ flexDirection: "row", display: "flex", marginBottom: 5, marginTop: 5 }}>
+								<div style={{ flex: 1, fontSize: "1.2em" }}>
+									{type.split("-").map(s => upperFirst(s)).join(" ")}
+								</div>
+								<div style={{ flex: 1 }}>
+									<div>
+										<div style={{ backgroundColor: complete ? "#505db3" : "#ccc", height: 15, width: "80%", borderRadius: 10 }}></div>
+									</div>
+								</div>
+								<div style={{ flex: 1 }}>
+									{complete ? <CloudDownload
+										color="default"
+										className="pointer"
+									/> : <CloudDownload
+											color="disabled"
+											disabled
+											className="pointer"
+										/>}
+								</div>
+							</div>
+						)
+					})
+				}
+			</div>
+		</Paper>
+	)
+}
+
+
+const collapseComponent = (props) => (
+	<td colSpan={3}> {/* put the number of col of your table in this field */}
+		<div className={props.className}>
+			{props.children}
+		</div>
+	</td>
+)
 
 function KYCOrderItem({ order, index }) {
 	var reportsReferences = []; //references
@@ -237,7 +333,7 @@ function KYCOrderItem({ order, index }) {
 			role="checkbox"
 			tabIndex={-1}
 			key={order.id}
-			// selected={isSelected}
+		// selected={isSelected}
 		>
 			<TableCell align="left">{order.referenceNumber}</TableCell>
 			<TableCell component="th" scope="row" padding="default">
@@ -257,8 +353,8 @@ function KYCOrderItem({ order, index }) {
 						content={() => reportsReferences[index]}
 					/>
 				) : (
-					<CloudDownload color="disabled" className="pointer" />
-				)}
+						<CloudDownload color="disabled" className="pointer" />
+					)}
 
 				<ReportGenerated
 					order={order}

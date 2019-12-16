@@ -20,7 +20,7 @@ import {
 	Mail as MailIcon,
 	MoveToInbox,
 	ChevronRight,
-	Menu,
+	Menu as MenuIcon,
 	ChevronLeft,
 	SupervisedUserCircle,
 	HowToReg,
@@ -42,17 +42,17 @@ const styles = theme => ({
 			duration: theme.transitions.duration.leavingScreen
 		})
 	},
-	appBarShift: {
-		marginLeft: drawerWidth,
-		width: `calc(100% - ${drawerWidth}px)`,
-		transition: theme.transitions.create(["width", "margin"], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen
-		})
-	},
-	grow: {
-		flexGrow: 1
-	},
+	// appBarShift: {
+	// 	marginLeft: drawerWidth,
+	// 	width: `calc(100% - ${drawerWidth}px)`,
+	// 	transition: theme.transitions.create(["width", "margin"], {
+	// 		easing: theme.transitions.easing.sharp,
+	// 		duration: theme.transitions.duration.enteringScreen
+	// 	})
+	// },
+	// grow: {
+	// 	flexGrow: 1
+	// },
 	menuButton: {
 		marginLeft: 12,
 		marginRight: 36
@@ -63,6 +63,7 @@ const styles = theme => ({
 	drawer: {
 		width: drawerWidth,
 		flexShrink: 0,
+		marginTop: 10,
 		whiteSpace: "nowrap"
 	},
 	drawerOpen: {
@@ -93,12 +94,15 @@ const styles = theme => ({
 	content: {
 		flexGrow: 1,
 		padding: theme.spacing.unit * 3
-	}
+	},
+	drawerPaper: {
+		width: drawerWidth,
+	},
 });
 
 class Layout extends Component {
 	state = {
-		open: false
+		open: true
 	};
 
 	handleDrawerOpen = () => {
@@ -109,6 +113,10 @@ class Layout extends Component {
 		this.setState({ open: false });
 	};
 
+	toggleDrawerState = () => {
+		this.setState({ open: !this.state.open })
+	}
+
 	render() {
 		const { classes, theme, drawerItems, history, children, title } = this.props;
 		return (
@@ -116,20 +124,15 @@ class Layout extends Component {
 				<CssBaseline />
 				<AppBar
 					position="fixed"
-					className={classNames(classes.appBar, {
-						[classes.appBarShift]: this.state.open
-					})}
+					className={classNames(classes.appBar)}
 				>
-					<Toolbar className="" disableGutters={!this.state.open}>
+					<Toolbar className="" disableGutters={true}>
 						<IconButton
-							color=""
 							aria-label="Open drawer"
-							onClick={this.handleDrawerOpen}
-							className={classNames(classes.menuButton, {
-								[classes.hide]: this.state.open
-							})}
+							onClick={this.toggleDrawerState}
+							className={classNames(classes.menuButton)}
 						>
-							<Menu />
+							<MenuIcon style={{ color: "white" }} />
 						</IconButton>
 						<Typography variant="h6" color="inherit" className={classes.grow} noWrap>
 							{title}
@@ -166,13 +169,7 @@ class Layout extends Component {
 					}}
 					open={this.state.open}
 				>
-					<div className={classes.toolbar}>
-						<IconButton onClick={this.handleDrawerClose}>
-							{theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
-						</IconButton>
-					</div>
-					<Divider />
-					<List>
+					<List style={{ marginTop: 20 }}>
 						{drawerItems.map((item, index) => (
 							<ListItem
 								onClick={() => history.push(item.path)}

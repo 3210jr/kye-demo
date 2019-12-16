@@ -60,14 +60,14 @@ const styles = theme => ({
 			duration: theme.transitions.duration.leavingScreen
 		})
 	},
-	appBarShift: {
-		marginLeft: drawerWidth,
-		width: `calc(100% - ${drawerWidth}px)`,
-		transition: theme.transitions.create(["width", "margin"], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen
-		})
-	},
+	// appBarShift: {
+	// 	marginLeft: drawerWidth,
+	// 	width: `calc(100% - ${drawerWidth}px)`,
+	// 	transition: theme.transitions.create(["width", "margin"], {
+	// 		easing: theme.transitions.easing.sharp,
+	// 		duration: theme.transitions.duration.enteringScreen
+	// 	})
+	// },
 	grow: {
 		flexGrow: 1
 	},
@@ -154,7 +154,7 @@ const drawerItems = [
 
 class Dashboard extends Component {
 	state = {
-		open: false
+		open: true
 	};
 
 	handleDrawerOpen = () => {
@@ -171,6 +171,10 @@ class Dashboard extends Component {
 		this.setState({ open: false });
 	};
 
+	toggleDrawerState = () => {
+		this.setState({ open: !this.state.open })
+	}
+
 	render() {
 		const { classes, theme, match, history } = this.props;
 		return (
@@ -178,20 +182,15 @@ class Dashboard extends Component {
 				<CssBaseline />
 				<AppBar
 					position="fixed"
-					className={classNames(classes.appBar, {
-						[classes.appBarShift]: this.state.open
-					})}
+					className={classNames(classes.appBar)}
 				>
-					<Toolbar className="" disableGutters={!this.state.open}>
+					<Toolbar className="" disableGutters={true}>
 						<IconButton
-							color="inherit"
 							aria-label="Open drawer"
-							onClick={this.handleDrawerOpen}
-							className={classNames(classes.menuButton, {
-								[classes.hide]: this.state.open
-							})}
+							onClick={this.toggleDrawerState}
+							className={classNames(classes.menuButton)}
 						>
-							<MenuIcon />
+							<MenuIcon style={{ color: "white" }} />
 						</IconButton>
 						<Typography variant="h6" color="inherit" className={classes.grow} noWrap>
 							MA Verification System
@@ -228,13 +227,7 @@ class Dashboard extends Component {
 					}}
 					open={this.state.open}
 				>
-					<div className={classes.toolbar}>
-						<IconButton onClick={this.handleDrawerClose}>
-							{theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeftIcon />}
-						</IconButton>
-					</div>
-					<Divider />
-					<List>
+					<List style={{ marginTop: 20 }}>
 						{drawerItems.map((item, index) => (
 							<ListItem
 								onClick={() => history.push(item.path)}

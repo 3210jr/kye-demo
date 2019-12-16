@@ -834,7 +834,7 @@ function CompanyAnalysis({ order }) {
 		placeOfBusiness: "",
 		shareCapital: 0,
 		registeredCharges: 0,
-		brelaCharges: 0,
+		chargeEntityNames: "",
 		overallRating: "good",
 		loading: false
 	});
@@ -982,6 +982,7 @@ function CompanyAnalysis({ order }) {
 					<TextField
 						fullWidth
 						label="Registered Charges"
+						type="number"
 						value={state.registeredCharges}
 						onChange={({ target }) =>
 							handleChange("registeredCharges", target.value)
@@ -994,10 +995,10 @@ function CompanyAnalysis({ order }) {
 				<Grid item xs={12} sm={12} md={4} style={styles.inputs}>
 					<TextField
 						fullWidth
-						label="Brella Charges"
-						value={state.brelaCharges}
+						label="Entity Names"
+						value={state.chargeEntityNames}
 						onChange={({ target }) =>
-							handleChange("brelaCharges", target.value)
+							handleChange("chargeEntityNames", target.value)
 						}
 						id="outlined-dense-multiline"
 						margin="dense"
