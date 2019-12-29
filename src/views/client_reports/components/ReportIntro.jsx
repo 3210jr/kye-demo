@@ -125,11 +125,11 @@ const ReportsHeaderDetails = ({ }) => {
 							<TableCell colSpan={4} padding="checkbox">
 								<FieldsTitle label="Date Submitted" />
 							</TableCell>
-							<TableCell colSpan={2} padding="checkbox" className="border-left">{" "}</TableCell>
-                            <TableCell colSpan={2} padding="checkbox" className="border-left">
+							<TableCell colSpan={2} padding="checkbox" className="border-left" style={{width:"20%"}}>{" "}</TableCell>
+                            <TableCell colSpan={2} padding="checkbox" className="border-left" style={{width:"20%"}}>
                                 <FieldsTitle label="Date Completed" />
                             </TableCell>
-                            <TableCell colSpan={2} padding="checkbox" className="border-left">{" "}</TableCell>
+                            <TableCell colSpan={2} padding="checkbox" className="border-left" style={{width:"20%"}}>{" "}</TableCell>
 						</TableRow>
 
 

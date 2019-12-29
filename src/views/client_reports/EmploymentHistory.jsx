@@ -183,7 +183,7 @@ const EmploymentDateConfirmation = ({}) => {
                 <Table className="border-top border-right border-left">
                     <TableBody>
                         <TableRow>
-                            <TableCell colSpan={4}>
+                            <TableCell colSpan={4} padding="checkbox">
                                 <FieldsTitle label="Organisation" />
                             </TableCell>
                             <TableCell
@@ -198,12 +198,14 @@ const EmploymentDateConfirmation = ({}) => {
                                 padding="checkbox"
                                 className="border-left"
                             >
-                                <FieldsTitle label="Employement End Date" />
+                                <FieldsTitle label="Employment End Date" />
                             </TableCell>
                         </TableRow>
 
                         <TableRow>
-                            <TableCell colSpan={4}>{"Lorem ipsum"}</TableCell>
+                            <TableCell colSpan={4}
+                                padding="checkbox"
+                            >{"Lorem ipsum"}</TableCell>
                             <TableCell
                                 colSpan={4}
                                 padding="none"
@@ -212,7 +214,7 @@ const EmploymentDateConfirmation = ({}) => {
                                 <Table>
                                     <TableBody>
                                         <TableRow>
-                                            <TableCell colSpan={6}>
+                                            <TableCell colSpan={6} padding="checkbox">
                                                 <FieldsTitle label="Candidate" />
                                             </TableCell>
                                             <TableCell
@@ -225,7 +227,7 @@ const EmploymentDateConfirmation = ({}) => {
                                         </TableRow>
 
                                         <TableRow>
-                                            <TableCell colSpan={6}>
+                                            <TableCell colSpan={6} padding="checkbox">
                                                 {"Lorem ipsum"}
                                             </TableCell>
                                             <TableCell
@@ -248,7 +250,7 @@ const EmploymentDateConfirmation = ({}) => {
                                 <Table >
                                     <TableBody>
                                         <TableRow>
-                                            <TableCell colSpan={6}>
+                                            <TableCell colSpan={6} padding="checkbox">
                                                 <FieldsTitle label="Candidate" />
                                             </TableCell>
                                             <TableCell
@@ -261,7 +263,7 @@ const EmploymentDateConfirmation = ({}) => {
                                         </TableRow>
 
                                         <TableRow>
-                                            <TableCell colSpan={6}>
+                                            <TableCell colSpan={6} padding="checkbox">
                                                 {"Lorem ipsum"}
                                             </TableCell>
                                             <TableCell

@@ -320,7 +320,7 @@ const PageDivider = () => (
 );
 const AllReports = () => {
     return (
-        <div style={{ backgroundColor: "white", padding: 15 }}>
+        <div style={{ backgroundColor: "white", padding: 15,minWidth:595 }}>
             <AcademicQualificationReport />
             <PageDivider />
             <CVReport />

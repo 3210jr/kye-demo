@@ -31,11 +31,13 @@ const ProfessionAnalysis = ({ data }) => {
             <Table className="border-top border-right border-left">
                 <TableBody>
                     <TableRow>
-                        <TableCell colSpan={6} padding="checkbox">
+                        <TableCell 
+                            // colSpan={6} 
+                            padding="checkbox">
                             <FieldsTitle label="Qualification" />
                         </TableCell>
                         <TableCell
-                            colSpan={6}
+                            // colSpan={6}
                             padding="checkbox"
                             className="border-left"
                         >
@@ -43,30 +45,34 @@ const ProfessionAnalysis = ({ data }) => {
                         </TableCell>
                     </TableRow>
 
-                    <TableRow style={{}}>
-                        <TableCell colSpan={6} padding="checkbox">
+                    <TableRow >
+                        <TableCell 
+                        // colSpan={6} 
+                        style={{width:"43.2%"}}
+                        padding="checkbox">
                             <FieldsTitle label="Did candidate study at this establishment?" />
                         </TableCell>
                         <TableCell
-                            colSpan={6}
+                            // colSpan={6}
                             padding="checkbox"
                             className="border-left"
+                           
                         >
                             <FieldsTitle label={"Lorem ipsum"} />
                         </TableCell>
                     </TableRow>
 
-                    <TableRow style={{ padding: 30 }}>
+                    <TableRow>
                         <TableCell colSpan={12} padding="none">
-                            <Table style={{ margin: "0 auto;" }}>
+                            <Table style={{ }}>
                                 <TableBody>
                                     <TableRow>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                         ></TableCell>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
@@ -74,7 +80,7 @@ const ProfessionAnalysis = ({ data }) => {
                                         </TableCell>
 
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
@@ -84,20 +90,20 @@ const ProfessionAnalysis = ({ data }) => {
 
                                     <TableRow>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                         >
                                             <FieldsTitle label="Membership no." />
                                         </TableCell>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
                                             {"Lorem ipsum"}
                                         </TableCell>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
@@ -107,20 +113,20 @@ const ProfessionAnalysis = ({ data }) => {
 
                                     <TableRow>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                         >
                                             <FieldsTitle label="Membership Current" />
                                         </TableCell>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
                                             {"Lorem ipsum"}
                                         </TableCell>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
@@ -130,20 +136,20 @@ const ProfessionAnalysis = ({ data }) => {
 
                                     <TableRow>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                         >
                                             <FieldsTitle label="Membership Type" />
                                         </TableCell>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
                                             {"Lorem ipsum"}
                                         </TableCell>
                                         <TableCell
-                                            colSpan={4}
+                                            // colSpan={4}
                                             padding="checkbox"
                                             className="border-left"
                                         >
