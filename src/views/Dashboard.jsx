@@ -46,6 +46,7 @@ import ViewOrders from "./ViewOrders";
 import PreLitigation from "./pre-litigation"
 import CompanyStaff from "./CompanyStaff";
 import Help from "./Help";
+import Report from './client_reports/AcademicQualification'
 
 const drawerWidth = 240;
 
@@ -149,6 +150,11 @@ const drawerItems = [
 		text: "References",
 		icons: <HowToReg />,
 		path: "/dashboard/"
+	},
+	{
+		text:"Report tempo",
+		icons:<HowToReg/>,
+		path:"/dashboard/report"
 	}
 ];
 
@@ -258,6 +264,7 @@ class Dashboard extends Component {
 						<Route path={`${match.url}/company-users`} component={CompanyStaff} />
 						<Route path={`${match.url}/help`} component={Help} />
 						<Route path={`${match.url}/pre-litigation`} component={PreLitigation} />
+						<Route path={`${match.url}/report`} component={Report} />
 					</Switch>
 				</main>
 			</div>
