@@ -150,11 +150,6 @@ const drawerItems = [
 		text: "References",
 		icons: <HowToReg />,
 		path: "/dashboard/"
-	},
-	{
-		text:"Report tempo",
-		icons:<HowToReg/>,
-		path:"/dashboard/report"
 	}
 ];
 

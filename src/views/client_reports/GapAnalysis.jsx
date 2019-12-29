@@ -11,7 +11,11 @@ import {
     Typography,
     Divider
 } from "@material-ui/core";
-import { FieldsTitle, SectionHeader,TableHeaderText } from "./components/Headers";
+import {
+    FieldsTitle,
+    SectionHeader,
+    TableHeaderText
+} from "./components/Headers";
 import ReportIntro from "./components/ReportIntro";
 import CheckStatus from "./components/ChecksStatus";
 import Observations from "./components/Observations";
@@ -21,30 +25,42 @@ const GapAnalysis = ({ data }) => {
     return (
         <Grid container item style={{ marginBottom: 14 }}>
             <Grid item xs={12} sm={12}>
-                <TableHeaderText label="Gap Analysis Check" />
+                <SectionHeader label="Gap Analysis Check" />
             </Grid>
             <Grid item xs={12} sm={12}>
                 <SectionHeader label="Employment Gaps" />
             </Grid>
 
-            <Grid container style={{ marginBottom: "1em" }}>
-                <Table>
+            <Grid
+                container
+                style={{ marginBottom: "1em" }}
+                className="primary-background"
+            >
+                <Table className="border-top border-right border-left">
                     <TableBody>
                         <TableRow>
-                            <TableCell colSpan={6}>
+                            <TableCell colSpan={6} padding="checkbox">
                                 <FieldsTitle label="Period" />
                             </TableCell>
-                            <TableCell colSpan={6}>
+                            <TableCell
+                                colSpan={6}
+                                padding="checkbox"
+                                className="border-left"
+                            >
                                 <FieldsTitle label="Comments" />
                             </TableCell>
                         </TableRow>
                         {data.map((item, index) => {
                             return (
                                 <TableRow key={index}>
-                                    <TableCell colSpan={6}>
+                                    <TableCell colSpan={6} padding="checkbox">
                                         {"Lorem ipsum"}
                                     </TableCell>
-                                    <TableCell colSpan={6}>
+                                    <TableCell
+                                        colSpan={6}
+                                        padding="checkbox"
+                                        className="border-left"
+                                    >
                                         {"Lorem ipsum"}
                                     </TableCell>
                                 </TableRow>
@@ -79,7 +95,7 @@ const GapAnalysisReport = () => {
             <ReportIntro />
             <Observations data={observationsData} />
             <CheckStatus data={analysisData} />
-            <GapAnalysis data={additionInfoData}/>
+            <GapAnalysis data={additionInfoData} />
         </>
     );
 };

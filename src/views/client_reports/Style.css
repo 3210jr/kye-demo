@@ -1,0 +1,54 @@
+.section-header{
+    font-size: 16px;
+    font-weight: 500;
+    margin: 12px 0;
+}
+
+.border-top{
+    border-top: 1px solid rgba(224, 224, 224, 1);;
+}
+
+.border-right{
+    border-right: 1px solid rgba(224, 224, 224, 1);;
+}
+.border-bottom{
+    border-bottom: 1px solid rgba(224, 224, 224, 1);;
+}
+.border-left{
+    border-left: 1px solid rgba(224, 224, 224, 1);;
+}
+
+.border-none{
+    border: none;
+}
+
+.table-cell-padding{
+    padding: none; 
+ 
+}
+
+.analysis-checks{
+    background-color: #F3F3F3;
+    padding-left:15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+}
+
+.analysis-checks-clear{
+    padding-top: -10px;
+    padding-bottom: -10px;
+}
+
+.observations-container{
+    background-color: #F3F3F3;
+    padding:15px;
+}
+
+.primary-background{
+    background-color: #F3F3F3;
+}
+
+.white-background{
+    background-color: #ffffff;
+}

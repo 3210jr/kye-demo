@@ -8,19 +8,19 @@ import { Grid, Typography } from "@material-ui/core";
 
 const Note = ({ data }) => {
     return (
-        <>
+        <Grid container  className="observations-container">
             {data.map((text, index) => {
                 return (
-                    <Grid container key={index} style={{ marginBottom: "1em" }}>
-                        <Grid item xs={12} sm={12}>
+                   
+                        <Grid item xs={12} sm={12} key={index}>
                             <Typography variant="body1" component="body1">
                                 {text}
                             </Typography>
                         </Grid>
-                    </Grid>
+                    
                 );
             })}
-        </>
+        </Grid>
     );
 };
 

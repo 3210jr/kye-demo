@@ -14,17 +14,18 @@ const AdditionInformation = ({ data }) => {
                     <SectionHeader label="Additional Information" />
                 </Grid>
             </Grid>
-            {data.map((text, index) => {
-                return (
-                    <Grid container key={index} style={{ marginBottom: "1em" }}>
-                        <Grid item xs={12} sm={12}>
+
+            <Grid container style={{ marginBottom: "1em" }} className="observations-container">
+                {data.map((text, index) => {
+                    return (
+                        <Grid item xs={12} sm={12} key={index}>
                             <Typography variant="body1" component="body1">
                                 {text}
                             </Typography>
                         </Grid>
-                    </Grid>
-                );
-            })}
+                    );
+                })}
+            </Grid>
         </>
     );
 };

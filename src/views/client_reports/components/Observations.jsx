@@ -16,16 +16,17 @@ const Observations = ({ data}) => {
  
 
 	return (
-        <>
-            <Grid container style={{marginBottom:14}}>
+        <Grid container >
+            <Grid container item style={{marginBottom:14}}>
                 <Grid item xs={12} sm={12}>
                    <SectionHeader label="Observations" />
                 </Grid>
 
             </Grid>
+            <Grid container className="observations-container">
                 {data.map((text,index)=>{
                      return(
-                        <Grid container key={index} style={{ marginBottom: "1em" }}>
+                        <Grid container item key={index} style={{ marginBottom: "1em" }}>
                             <Grid item xs={12} sm={12}>
                              
                                 <Typography variant="body1" component="body1">
@@ -36,7 +37,8 @@ const Observations = ({ data}) => {
                         </Grid>                       
                      )
                 })}
-        </>
+            </Grid>
+        </Grid>
 	);
 };
 

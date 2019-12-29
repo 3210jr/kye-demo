@@ -6,15 +6,14 @@ import {
     Typography,
 } from "@material-ui/core";
 
+import '../Style.css'
 
 const FieldsTitle = ({ label }) => (
 	<Typography variant="subtitle2">{label}</Typography>
 );
 
 const SectionHeader = ({ label }) => (
-	<Typography variant="h5" align="left">
-		{label}
-	</Typography>
+	<h3 variant="subtitle2" className="section-header">{label}</h3>
 );
 const TableHeaderText = ({ label }) => (
 	<Typography variant="h6" align="left">

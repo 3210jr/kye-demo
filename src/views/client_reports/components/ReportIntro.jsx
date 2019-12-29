@@ -11,8 +11,8 @@ import {
     Typography,
 } from "@material-ui/core";
 
+import {SectionHeader,TableHeaderText,FieldsTitle} from './Headers'
 import * as logoImg from "../../../assets/mwema_logo.png";
-import "../../ClientReport.css";
 
 const borders = {
 	left: {
@@ -45,6 +45,8 @@ const Logo = () => (
 	</div>
 );
 
+
+
 const LogoSection=({})=>{
     return(
         <div>
@@ -57,29 +59,35 @@ const CandidateHeaderDetails = ({ }) => {
 	return (
 		<div>
             <SectionHeader label="Candidate Details"/>
-			<Grid container style={{ marginBottom: "1em" }}>
-				<Table>
+			<Grid container style={{ marginBottom: "1em" }} className="primary-background">
+				<Table className="border-top border-right border-left">
 					<TableBody>
 
 						<TableRow>
-							<TableCell colSpan={4}>
+							<TableCell colSpan={1}  className="table-cell-padding" padding="checkbox">
 								<FieldsTitle label="Candidate Full Name" />
 							</TableCell>
-							<TableCell  colSpan={6}>{" "}</TableCell>
+							<TableCell  colSpan={2} className="border-left table-cell-padding" padding="checkbox">
+                                <p>{"Lorem ipsum "}</p>
+                            </TableCell>
 						</TableRow>
 
 						<TableRow>
-							<TableCell colSpan={4} >
+							<TableCell colSpan={1} className="table-cell-padding" padding="checkbox">
 								<FieldsTitle label="Date Of Birth" />
 							</TableCell>
-							<TableCell  colSpan={6}>{" "}</TableCell>
+							<TableCell  colSpan={2} className="border-left table-cell-padding" padding="checkbox">
+                                 <p>{"Lorem ipsum "}</p>
+                            </TableCell>
 						</TableRow>
 
                         <TableRow>
-							<TableCell colSpan={4}>
+							<TableCell colSpan={1} padding="checkbox">
 								<FieldsTitle label="Address" />
 							</TableCell>
-							<TableCell colSpan={6}>{" "}</TableCell>
+							<TableCell colSpan={2} className="border-left table-cell-padding" padding="checkbox">
+                                <p>{"Lorem ipsum "}</p>
+                            </TableCell>
 						</TableRow>
 
 
@@ -95,33 +103,33 @@ const ReportsHeaderDetails = ({ }) => {
 	return (
 		<div>
             <SectionHeader label="Report Details"/>
-			<Grid container style={{ marginBottom: "1em" }}>
-				<Table>
+			<Grid container style={{ marginBottom: "1em" }} className="primary-background">
+				<Table className="border-top border-right border-left">
 					<TableBody>
 
 						<TableRow>
-							<TableCell colSpan={4}>
+							<TableCell colSpan={4} padding="checkbox">
 								<FieldsTitle label="Report Prepared For" />
 							</TableCell>
-							<TableCell  colSpan={6}>{" "}</TableCell>
+							<TableCell  colSpan={6} className="border-left" padding="checkbox">{" "}</TableCell>
 						</TableRow>
 
 						<TableRow>
-							<TableCell colSpan={4} >
+							<TableCell colSpan={4} padding="checkbox">
 								<FieldsTitle label="MWEMA Reference Number" />
 							</TableCell>
-							<TableCell  colSpan={6}>{" "}</TableCell>
+							<TableCell  colSpan={6} className="border-left" padding="checkbox">{" "}</TableCell>
 						</TableRow>
 
                         <TableRow>
-							<TableCell colSpan={4}>
+							<TableCell colSpan={4} padding="checkbox">
 								<FieldsTitle label="Date Submitted" />
 							</TableCell>
-							<TableCell colSpan={2}>{" "}</TableCell>
-                            <TableCell colSpan={2}>
+							<TableCell colSpan={2} padding="checkbox" className="border-left">{" "}</TableCell>
+                            <TableCell colSpan={2} padding="checkbox" className="border-left">
                                 <FieldsTitle label="Date Completed" />
                             </TableCell>
-                            <TableCell colSpan={2}>{" "}</TableCell>
+                            <TableCell colSpan={2} padding="checkbox" className="border-left">{" "}</TableCell>
 						</TableRow>
 
 
@@ -133,20 +141,7 @@ const ReportsHeaderDetails = ({ }) => {
 };
 
 
-const FieldsTitle = ({ label }) => (
-	<Typography variant="subtitle2">{label}</Typography>
-);
 
-const SectionHeader = ({ label }) => (
-	<Typography variant="h5" align="left" style={headers.marginTopBottom}>
-		{label}
-	</Typography>
-);
-const TableHeaderText = ({ label }) => (
-	<Typography variant="h6" align="left">
-		{label}
-	</Typography>
-);
 
 const ReportIntro= ({  }) => (
     <>  

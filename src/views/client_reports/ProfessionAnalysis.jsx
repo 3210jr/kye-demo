@@ -23,74 +23,130 @@ import Observations from "./components/Observations";
 
 const ProfessionAnalysis = ({ data }) => {
     return (
-        <Grid container style={{ marginBottom: "1em" }}>
-            <Table>
+        <Grid
+            container
+            style={{ marginBottom: "1em" }}
+            className="primary-background"
+        >
+            <Table className="border-top border-right border-left">
                 <TableBody>
                     <TableRow>
-                        <TableCell colSpan={6}>
-                        <FieldsTitle label="Qualification" />
+                        <TableCell colSpan={6} padding="checkbox">
+                            <FieldsTitle label="Qualification" />
                         </TableCell>
-                        <TableCell colSpan={6}>
+                        <TableCell
+                            colSpan={6}
+                            padding="checkbox"
+                            className="border-left"
+                        >
                             <FieldsTitle label={"Lorem ipsum"} />
                         </TableCell>
                     </TableRow>
 
                     <TableRow style={{}}>
-                        <TableCell colSpan={6}>
+                        <TableCell colSpan={6} padding="checkbox">
                             <FieldsTitle label="Did candidate study at this establishment?" />
                         </TableCell>
-                        <TableCell colSpan={6}>
+                        <TableCell
+                            colSpan={6}
+                            padding="checkbox"
+                            className="border-left"
+                        >
                             <FieldsTitle label={"Lorem ipsum"} />
                         </TableCell>
                     </TableRow>
 
                     <TableRow style={{ padding: 30 }}>
-                        <TableCell colSpan={12}>
+                        <TableCell colSpan={12} padding="none">
                             <Table style={{ margin: "0 auto;" }}>
                                 <TableBody>
                                     <TableRow>
-                                        <TableCell colSpan={4}></TableCell>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                        ></TableCell>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             <FieldsTitle label="Candidate" />
                                         </TableCell>
 
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             <FieldsTitle label="Referee" />
                                         </TableCell>
                                     </TableRow>
 
                                     <TableRow>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                        >
                                             <FieldsTitle label="Membership no." />
                                         </TableCell>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             {"Lorem ipsum"}
                                         </TableCell>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             {"Lorem ipsum"}
                                         </TableCell>
                                     </TableRow>
 
                                     <TableRow>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                        >
                                             <FieldsTitle label="Membership Current" />
                                         </TableCell>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             {"Lorem ipsum"}
                                         </TableCell>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             {"Lorem ipsum"}
                                         </TableCell>
                                     </TableRow>
 
                                     <TableRow>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                        >
                                             <FieldsTitle label="Membership Type" />
                                         </TableCell>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             {"Lorem ipsum"}
                                         </TableCell>
-                                        <TableCell colSpan={4}>
+                                        <TableCell
+                                            colSpan={4}
+                                            padding="checkbox"
+                                            className="border-left"
+                                        >
                                             {"Lorem ipsum"}
                                         </TableCell>
                                     </TableRow>
@@ -106,40 +162,65 @@ const ProfessionAnalysis = ({ data }) => {
 
 const ProfessionAnalysisSummary = ({ data }) => {
     return (
-        <Grid container style={{ marginBottom: 14 }}>
-            <Grid container item style={{ marginBottom: "1em" }}>
-                <Table>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell colSpan={6}>
-                                <FieldsTitle label="Establish Name" />
-                            </TableCell>
-                            <TableCell colSpan={3}>
-                                <FieldsTitle label="Reference Method" />
-                            </TableCell>
-                            <TableCell colSpan={3}>
-                                <FieldsTitle label="Date Supplied" />
-                            </TableCell>
-                        </TableRow>
+        <Grid
+            container
+            item
+            style={{ marginBottom: 14,marginTop:15 }}
+            className="primary-background"
+        >
+            <Table className="border-top border-right border-left">
+                <TableBody>
+                    <TableRow>
+                        <TableCell
+                            colSpan={6}
+                            padding="checkbox"
+                        >
+                            <FieldsTitle label="Establish Name" />
+                        </TableCell>
+                        <TableCell
+                            colSpan={3}
+                            padding="checkbox"
+                            className="border-left"
+                        >
+                            <FieldsTitle label="Reference Method" />
+                        </TableCell>
+                        <TableCell
+                            colSpan={3}
+                            padding="checkbox"
+                            className="border-left"
+                        >
+                            <FieldsTitle label="Date Supplied" />
+                        </TableCell>
+                    </TableRow>
 
-                        {data.map((item, index) => {
-                            return (
-                                <TableRow key={index}>
-                                    <TableCell colSpan={6}>
-                                        {"Lorem ipsum"}
-                                    </TableCell>
-                                    <TableCell colSpan={3}>
-                                        {"Lorem ipsum"}
-                                    </TableCell>
-                                    <TableCell colSpan={3}>
-                                        {"Lorem ipsum"}
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </Grid>
+                    {data.map((item, index) => {
+                        return (
+                            <TableRow key={index}>
+                                <TableCell
+                                    colSpan={6}
+                                    padding="checkbox"
+                                >
+                                    {"Lorem ipsum"}
+                                </TableCell>
+                                <TableCell
+                                    colSpan={3}
+                                    padding="checkbox"
+                                    className="border-left"
+                                >
+                                    {"Lorem ipsum"}
+                                </TableCell>
+                                <TableCell
+                                    colSpan={3}
+                                    padding="checkbox"
+                                    className="border-left"
+                                >
+                                    {"Lorem ipsum"}
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
         </Grid>
     );
 };

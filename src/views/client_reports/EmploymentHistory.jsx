@@ -15,32 +15,62 @@ import { FieldsTitle, SectionHeader } from "./components/Headers";
 import ReportIntro from "./components/ReportIntro";
 import CheckStatus from "./components/ChecksStatus";
 import Observations from "./components/Observations";
-import AdditionInformation from './components/AdditionInformation'
+import AdditionInformation from "./components/AdditionInformation";
 
 const EmploymentSummary = ({ data }) => {
     return (
-        <Grid container style={{ marginBottom: "1em" }}>
-            <Table>
+        <Grid
+            container
+            style={{ marginBottom: 30 }}
+            className="primary-background"
+        >
+            <Table className="border-top border-right border-left">
                 <TableBody>
                     <TableRow>
-                        <TableCell colSpan={8}>
+                        <TableCell
+                            colSpan={8}
+                            padding="checkbox"
+                            className="border-left"
+                        >
                             <FieldsTitle label="Organisation" />
                         </TableCell>
-                        <TableCell colSpan={2}>
+                        <TableCell
+                            colSpan={2}
+                            padding="checkbox"
+                            className="border-left"
+                        >
                             <FieldsTitle label="Reference Method" />
                         </TableCell>
-                        <TableCell colSpan={2}>
+                        <TableCell
+                            colSpan={2}
+                            padding="checkbox"
+                            className="border-left"
+                        >
                             <FieldsTitle label="Date Produced" />
                         </TableCell>
                     </TableRow>
                     {data.map((item, index) => {
                         return (
                             <TableRow key={index}>
-                                <TableCell colSpan={8}>{item.name}</TableCell>
-                                <TableCell colSpan={2}>
+                                <TableCell
+                                    colSpan={8}
+                                    padding="checkbox"
+                                    className="border-left"
+                                >
+                                    {item.name}
+                                </TableCell>
+                                <TableCell
+                                    colSpan={2}
+                                    padding="checkbox"
+                                    className="border-left"
+                                >
                                     {item.referenceMethod}
                                 </TableCell>
-                                <TableCell colSpan={2}>
+                                <TableCell
+                                    colSpan={2}
+                                    padding="checkbox"
+                                    className="border-left"
+                                >
                                     {item.dataProduced}
                                 </TableCell>
                             </TableRow>
@@ -59,66 +89,70 @@ const JobRoleConfimation = ({ data }) => {
                 <SectionHeader label="Job Role Confirmation" />
             </Grid>
 
-            <Grid container item>
-                <Table>
+            <Grid container item className="primary-background">
+                <Table className="border-top border-right border-left">
                     <TableBody>
                         <TableRow>
-                            <TableCell colSpan={6}>
+                            <TableCell
+                                colSpan={6}
+                                padding="checkbox"
+                                className="border-left"
+                            >
                                 <FieldsTitle label="Organisation" />
                             </TableCell>
-                            <TableCell colSpan={6}>
+                            <TableCell
+                                colSpan={6}
+                                padding="checkbox"
+                                className="border-left"
+                            >
                                 <FieldsTitle label="Position Held" />
                             </TableCell>
                         </TableRow>
 
                         <TableRow>
-                            <TableCell colSpan={6}>{"Lorem ipsum"}</TableCell>
-
-                            <TableCell colSpan={6}>
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell colSpan={6}>
-                                                <FieldsTitle label="Candidate" />
-                                            </TableCell>
-                                            <TableCell colSpan={6}>
-                                                <FieldsTitle label="Referee" />
-                                            </TableCell>
-                                        </TableRow>
-
-                                        <TableRow>
-                                            <TableCell colSpan={6}>
-                                                {}
-                                            </TableCell>
-                                            <TableCell colSpan={6}>
-                                                {}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
+                            <TableCell
+                                colSpan={6}
+                                padding="checkbox"
+                                className="border-left"
+                            >
+                                {"Lorem ipsum"}
                             </TableCell>
-                        </TableRow>
 
-                        <TableRow>
-                            <TableCell colSpan={6}>{"Lorem ipsum"}</TableCell>
-
-                            <TableCell colSpan={6}>
+                            <TableCell
+                                colSpan={6}
+                                padding="none"
+                                className="border-left"
+                            >
                                 <Table>
                                     <TableBody>
                                         <TableRow>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                            >
                                                 <FieldsTitle label="Candidate" />
                                             </TableCell>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                                className="border-left"
+                                            >
                                                 <FieldsTitle label="Referee" />
                                             </TableCell>
                                         </TableRow>
 
                                         <TableRow>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                            >
                                                 {}
                                             </TableCell>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                                className="border-left"
+                                            >
                                                 {}
                                             </TableCell>
                                         </TableRow>
@@ -133,38 +167,59 @@ const JobRoleConfimation = ({ data }) => {
     );
 };
 
-const EmploymentDateConfirmation = ({  }) => {
+const EmploymentDateConfirmation = ({}) => {
     return (
         <Grid container style={{ marginBottom: "1em" }}>
             <Grid container item xs>
-                <SectionHeader label="Job Role Confirmation" />
+                <SectionHeader label="Confirmation of Employement Date" />
             </Grid>
 
-            <Grid container item style={{ marginBottom: "1em" }}>
-                <Table>
+            <Grid
+                container
+                item
+                style={{ marginBottom: "1em" }}
+                className="primary-background"
+            >
+                <Table className="border-top border-right border-left">
                     <TableBody>
                         <TableRow>
                             <TableCell colSpan={4}>
                                 <FieldsTitle label="Organisation" />
                             </TableCell>
-                            <TableCell colSpan={4}>
+                            <TableCell
+                                colSpan={4}
+                                padding="checkbox"
+                                className="border-left"
+                            >
                                 <FieldsTitle label="Employement Start Date" />
                             </TableCell>
-                            <TableCell colSpan={4}>
+                            <TableCell
+                                colSpan={4}
+                                padding="checkbox"
+                                className="border-left"
+                            >
                                 <FieldsTitle label="Employement End Date" />
                             </TableCell>
                         </TableRow>
 
                         <TableRow>
                             <TableCell colSpan={4}>{"Lorem ipsum"}</TableCell>
-                            <TableCell colSpan={4}>
+                            <TableCell
+                                colSpan={4}
+                                padding="none"
+                                className="border-left"
+                            >
                                 <Table>
                                     <TableBody>
                                         <TableRow>
                                             <TableCell colSpan={6}>
                                                 <FieldsTitle label="Candidate" />
                                             </TableCell>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                                className="border-left"
+                                            >
                                                 <FieldsTitle label="Referee" />
                                             </TableCell>
                                         </TableRow>
@@ -173,7 +228,11 @@ const EmploymentDateConfirmation = ({  }) => {
                                             <TableCell colSpan={6}>
                                                 {"Lorem ipsum"}
                                             </TableCell>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                                className="border-left"
+                                            >
                                                 {"Lorem ipsum"}
                                             </TableCell>
                                         </TableRow>
@@ -181,14 +240,22 @@ const EmploymentDateConfirmation = ({  }) => {
                                 </Table>
                             </TableCell>
 
-                            <TableCell colSpan={4}>
-                                <Table>
+                            <TableCell
+                                colSpan={4}
+                                padding="none"
+                                className="border-left"
+                            >
+                                <Table >
                                     <TableBody>
                                         <TableRow>
                                             <TableCell colSpan={6}>
                                                 <FieldsTitle label="Candidate" />
                                             </TableCell>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                                className="border-left"
+                                            >
                                                 <FieldsTitle label="Referee" />
                                             </TableCell>
                                         </TableRow>
@@ -197,7 +264,11 @@ const EmploymentDateConfirmation = ({  }) => {
                                             <TableCell colSpan={6}>
                                                 {"Lorem ipsum"}
                                             </TableCell>
-                                            <TableCell colSpan={6}>
+                                            <TableCell
+                                                colSpan={6}
+                                                padding="checkbox"
+                                                className="border-left"
+                                            >
                                                 {"Lorem ipsum"}
                                             </TableCell>
                                         </TableRow>
@@ -205,7 +276,6 @@ const EmploymentDateConfirmation = ({  }) => {
                                 </Table>
                             </TableCell>
                         </TableRow>
-
                     </TableBody>
                 </Table>
             </Grid>
@@ -235,10 +305,10 @@ const EmploymentHistoryReport = () => {
         "From the HR reference, Damian’s Title reads as Industrial Hygienist Coordinator while that on his CV is Health, Safety and Hygiene Coordinator."
     ];
 
-    const additionInfoData=[
-        'Overview of his performance: Damian has been a key person in the safety department and is among the dependable employees.',
-        'Attendance & reliability: He is always on time and all his duties are world class. Loosing Damian will be a big blow to the company.'
-    ]
+    const additionInfoData = [
+        "Overview of his performance: Damian has been a key person in the safety department and is among the dependable employees.",
+        "Attendance & reliability: He is always on time and all his duties are world class. Loosing Damian will be a big blow to the company."
+    ];
 
     return (
         <>
@@ -247,8 +317,8 @@ const EmploymentHistoryReport = () => {
             <CheckStatus data={analysisData} />
             <EmploymentSummary data={analysisData} />
             <JobRoleConfimation data={[]} />
-            <EmploymentDateConfirmation/>
-            <AdditionInformation data={additionInfoData}/>
+            <EmploymentDateConfirmation />
+            <AdditionInformation data={additionInfoData} />
         </>
     );
 };

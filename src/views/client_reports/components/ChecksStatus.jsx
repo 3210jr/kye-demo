@@ -19,7 +19,7 @@ const CheckStatus= ({data }) => {
                    <SectionHeader label="Report Details" />
                 </Grid>
                 <Grid item xs={10} sm={10}>
-                   <FieldsTitle label="Background Check Included Within This Report" />
+                   <SectionHeader label="Background Check Included Within This Report" />
                 </Grid>
                 <Grid item xs={2} sm={2}>
                    <FieldsTitle label="Status"/>
@@ -28,11 +28,11 @@ const CheckStatus= ({data }) => {
                 {data.map((item,index)=>{
                      return(
 
-                        <Grid container key={index} style={{ marginBottom: "1em" }}>
+                        <Grid container key={index} className="analysis-checks">
                             <Grid item xs={12} sm={10}>
                                 <FieldsTitle label={item.name} />
                             </Grid>
-                            <Grid item xs={12} sm={2} style={{backgroundColor:item.color}}>
+                            <Grid item xs={12} sm={2} style={{backgroundColor:item.color,marginTop:-10,marginBottom:-10}} className="analysis-checks-clear">
                                 
                             </Grid>
                         </Grid>
