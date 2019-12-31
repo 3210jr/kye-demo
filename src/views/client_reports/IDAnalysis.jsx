@@ -1,125 +1,78 @@
-// @ts-check
-
-//codes in this file are to be moved to different files in later commits
 import React from "react";
-import {
-    Grid,
-    TableRow,
-    TableCell,
-    TableBody,
-    Table,
-    Typography,
-    Divider
-} from "@material-ui/core";
-import {
-    FieldsTitle,
-    SectionHeader,
-    TableHeaderText
-} from "./components/Headers";
-import Note from "./components/Note";
+import { Page, Text, View, Document } from "@react-pdf/renderer";
+
+import styles from "./styles";
+
 import ReportIntro from "./components/ReportIntro";
-import CheckStatus from "./components/ChecksStatus";
+import CheckStatus from "./components/CheckStatus";
 import Observations from "./components/Observations";
-import AdditionInformation from "./components/AdditionInformation";
+import Note from "./components/Note";
 
-const IDAnalysis = ({ data }) => {
-    return (
-        <Grid container item style={{ marginBottom: 14 }}>
-            <Grid item xs={12} sm={12}>
-                <SectionHeader label="Document Checked" />
-            </Grid>
+const IDAnalysis = () => (
+    <View style={styles.section} break>
+        <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.subtitle}>Document Checked</Text>
+            </View>
+        </View>
+        <View style={styles.table}>
+            <View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Type of Document Provided
+                    </Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Country of Issue
+                    </Text>
+                </View>
 
-            <Grid
-                container
-                style={{ marginBottom: "1em" }}
-                className="primary-background"
-            >
-                <Table className="border-top border-right border-left">
-                    <TableBody>
-                        <TableRow>
-                            <TableCell colSpan={3} padding="checkbox">
-                                <FieldsTitle label="Type of Document Provided" />
-                            </TableCell>
-                            <TableCell
-                                colSpan={3}
-                                padding="checkbox"
-                                className="border-left"
-                            >
-                                <FieldsTitle label="Country of Issue" />
-                            </TableCell>
-                            <TableCell
-                                colSpan={3}
-                                padding="checkbox"
-                                className="border-left"
-                            >
-                                <FieldsTitle label="Date of Check" />
-                            </TableCell>
-                            <TableCell
-                                colSpan={3}
-                                padding="checkbox"
-                                className="border-left"
-                            >
-                                <FieldsTitle label="Result" />
-                            </TableCell>
-                        </TableRow>
-                        {data.map((item, index) => {
-                            return (
-                                <TableRow key={index}>
-                                    <TableCell colSpan={3} padding="checkbox">
-                                        {"Lorem ipsum"}
-                                    </TableCell>
-                                    <TableCell
-                                        colSpan={3}
-                                        padding="checkbox"
-                                        className="border-left"
-                                    >
-                                        {"Lorem ipsum"}
-                                    </TableCell>
-                                    <TableCell
-                                        colSpan={3}
-                                        padding="checkbox"
-                                        className="border-left"
-                                    >
-                                        {"Lorem ipsum"}
-                                    </TableCell>
-                                    <TableCell
-                                        colSpan={3}
-                                        padding="checkbox"
-                                        className="border-left"
-                                    >
-                                        {"Lorem ipsum"}
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </Grid>
-        </Grid>
-    );
-};
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Date of Check
+                    </Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>Result</Text>
+                </View>
+            </View>
 
-const IDAnalysisReport = () => {
-    const analysisData = [
-        {
-            name: "Passport Check",
-            color: "#00ff00"
-        }
-    ];
+            <View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
 
-    const observationsData = ["None"];
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
+            </View>
+        </View>
+    </View>
+);
 
-    const additionInfoData = ["Note Hello Hlorem upsms"];
-
-    return (
-        <>
-            <ReportIntro />
-            <Observations data={observationsData} />
-            <CheckStatus data={analysisData} />
-            <IDAnalysis data={additionInfoData} />
-            <Note data={additionInfoData} />
-        </>
-    );
-};
+const IDAnalysisReport = () => (
+    // <Document style={{ height: "400px" }}>
+    <Page style={styles.body}>
+        <ReportIntro />
+        <CheckStatus />
+        <Observations />
+        <IDAnalysis />
+        <Note />
+        <Text
+            style={styles.pageNumber}
+            render={({ pageNumber, totalPages }) =>
+                `${pageNumber} / ${totalPages}`
+            }
+            fixed
+        />
+    </Page>
+);
 
 export default IDAnalysisReport;

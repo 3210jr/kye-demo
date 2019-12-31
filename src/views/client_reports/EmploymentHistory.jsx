@@ -1,328 +1,203 @@
-// @ts-check
-
-//codes in this file are to be moved to different files in later commits
 import React from "react";
-import {
-    Grid,
-    TableRow,
-    TableCell,
-    TableBody,
-    Table,
-    Typography,
-    Divider
-} from "@material-ui/core";
-import { FieldsTitle, SectionHeader } from "./components/Headers";
+import { Page, Text, View, Document } from "@react-pdf/renderer";
+
+import styles from "./styles";
+
 import ReportIntro from "./components/ReportIntro";
-import CheckStatus from "./components/ChecksStatus";
+import CheckStatus from "./components/CheckStatus";
 import Observations from "./components/Observations";
 import AdditionInformation from "./components/AdditionInformation";
 
-const EmploymentSummary = ({ data }) => {
-    return (
-        <Grid
-            container
-            style={{ marginBottom: 30 }}
-            className="primary-background"
-        >
-            <Table className="border-top border-right border-left">
-                <TableBody>
-                    <TableRow>
-                        <TableCell
-                            colSpan={8}
-                            padding="checkbox"
-                            className="border-left"
-                        >
-                            <FieldsTitle label="Organisation" />
-                        </TableCell>
-                        <TableCell
-                            colSpan={2}
-                            padding="checkbox"
-                            className="border-left"
-                        >
-                            <FieldsTitle label="Reference Method" />
-                        </TableCell>
-                        <TableCell
-                            colSpan={2}
-                            padding="checkbox"
-                            className="border-left"
-                        >
-                            <FieldsTitle label="Date Produced" />
-                        </TableCell>
-                    </TableRow>
-                    {data.map((item, index) => {
-                        return (
-                            <TableRow key={index}>
-                                <TableCell
-                                    colSpan={8}
-                                    padding="checkbox"
-                                    className="border-left"
-                                >
-                                    {item.name}
-                                </TableCell>
-                                <TableCell
-                                    colSpan={2}
-                                    padding="checkbox"
-                                    className="border-left"
-                                >
-                                    {item.referenceMethod}
-                                </TableCell>
-                                <TableCell
-                                    colSpan={2}
-                                    padding="checkbox"
-                                    className="border-left"
-                                >
-                                    {item.dataProduced}
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </Grid>
-    );
-};
+const JobRoleConfirmation = () => (
+    <View style={styles.section} break>
+        <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+                <Text style={[styles.tableCell, styles.bold]}>
+                    Job Role Confirmation
+                </Text>
+            </View>
+        </View>
+        <View style={styles.table}>
+            <View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Organisation
+                    </Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Position Held
+                    </Text>
+                </View>
+            </View>
 
-const JobRoleConfimation = ({ data }) => {
-    return (
-        <Grid container style={{ marginBottom: "1em" }}>
-            <Grid container item xs>
-                <SectionHeader label="Job Role Confirmation" />
-            </Grid>
+            <View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <View style={styles.tableRow}>
+                        <View style={styles.tableCol}>
+                            <Text style={[styles.tableCell, styles.bold]}>
+                                Candidate
+                            </Text>
+                        </View>
+                        <View style={styles.tableCol}>
+                            <Text style={[styles.tableCell, styles.bold]}>
+                                Reference
+                            </Text>
+                        </View>
+                    </View>
 
-            <Grid container item className="primary-background">
-                <Table className="border-top border-right border-left">
-                    <TableBody>
-                        <TableRow>
-                            <TableCell
-                                colSpan={6}
-                                padding="checkbox"
-                                className="border-left"
-                            >
-                                <FieldsTitle label="Organisation" />
-                            </TableCell>
-                            <TableCell
-                                colSpan={6}
-                                padding="checkbox"
-                                className="border-left"
-                            >
-                                <FieldsTitle label="Position Held" />
-                            </TableCell>
-                        </TableRow>
-
-                        <TableRow>
-                            <TableCell
-                                colSpan={6}
-                                padding="checkbox"
-                                className="border-left"
-                            >
+                    <View style={styles.tableRow}>
+                        <View style={styles.tableCol}>
+                            <Text style={styles.tableCell}>
                                 {"Lorem ipsum"}
-                            </TableCell>
+                            </Text>
+                        </View>
+                        <View style={styles.tableCol}>
+                            <Text style={styles.tableCell}>
+                                {"Lorem ipsum"}
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        </View>
+    </View>
+);
 
-                            <TableCell
-                                colSpan={6}
-                                padding="none"
-                                className="border-left"
-                            >
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                            >
-                                                <FieldsTitle label="Candidate" />
-                                            </TableCell>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                                className="border-left"
-                                            >
-                                                <FieldsTitle label="Referee" />
-                                            </TableCell>
-                                        </TableRow>
+const EmploymentDateConfirmation = () => (
+    <View style={styles.section} break>
+        <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.subtitle}>
+                    Confirmation of Employment Date
+                </Text>
+            </View>
+        </View>
+        <View style={styles.table}>
+            <View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Organisation
+                    </Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Employment Start Date
+                    </Text>
+                </View>
 
-                                        <TableRow>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                            >
-                                                {}
-                                            </TableCell>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                                className="border-left"
-                                            >
-                                                {}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Grid>
-        </Grid>
-    );
-};
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Employment Start Date
+                    </Text>
+                </View>
+            </View>
 
-const EmploymentDateConfirmation = ({}) => {
-    return (
-        <Grid container style={{ marginBottom: "1em" }}>
-            <Grid container item xs>
-                <SectionHeader label="Confirmation of Employement Date" />
-            </Grid>
+            <View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
 
-            <Grid
-                container
-                item
-                style={{ marginBottom: "1em" }}
-                className="primary-background"
-            >
-                <Table className="border-top border-right border-left">
-                    <TableBody>
-                        <TableRow>
-                            <TableCell colSpan={4} padding="checkbox">
-                                <FieldsTitle label="Organisation" />
-                            </TableCell>
-                            <TableCell
-                                colSpan={4}
-                                padding="checkbox"
-                                className="border-left"
-                            >
-                                <FieldsTitle label="Employement Start Date" />
-                            </TableCell>
-                            <TableCell
-                                colSpan={4}
-                                padding="checkbox"
-                                className="border-left"
-                            >
-                                <FieldsTitle label="Employment End Date" />
-                            </TableCell>
-                        </TableRow>
+                <View style={styles.tableCol}>
+                    <View style={styles.tableRow}>
+                        <View style={styles.tableRow}>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>
+                                    {"Lorem ipsum"}
+                                </Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>
+                                    {"Lorem ipsum"}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
 
-                        <TableRow>
-                            <TableCell colSpan={4}
-                                padding="checkbox"
-                            >{"Lorem ipsum"}</TableCell>
-                            <TableCell
-                                colSpan={4}
-                                padding="none"
-                                className="border-left"
-                            >
-                                <Table>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell colSpan={6} padding="checkbox">
-                                                <FieldsTitle label="Candidate" />
-                                            </TableCell>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                                className="border-left"
-                                            >
-                                                <FieldsTitle label="Referee" />
-                                            </TableCell>
-                                        </TableRow>
+                <View style={styles.tableCol}>
+                    <View style={styles.tableRow}>
+                        <View style={styles.tableRow}>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>
+                                    {"Lorem ipsum"}
+                                </Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text style={styles.tableCell}>
+                                    {"Lorem ipsum"}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        </View>
+    </View>
+);
 
-                                        <TableRow>
-                                            <TableCell colSpan={6} padding="checkbox">
-                                                {"Lorem ipsum"}
-                                            </TableCell>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                                className="border-left"
-                                            >
-                                                {"Lorem ipsum"}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableCell>
+const EmploymentHistoryAnalysisSummary = () => (
+    <View style={styles.section} break>
+        <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.subtitle}>
+                    Employment history references included Within this Report
+                </Text>
+            </View>
+        </View>
+        <View style={styles.table}>
+            <View style={styles.tableRow}>
+                <View style={styles.tableColOneThird}>
+                <Text style={[styles.tableCell, styles.bold]}>
+                        Employment history references included Within this
+                        Report
+                    </Text>
+                </View>
+                <View style={styles.tableCol}>
+                <Text style={[styles.tableCell, styles.bold]}>Reference Method</Text>
+                </View>
+                <View style={styles.tableCol}>
+                <Text style={[styles.tableCell, styles.bold]}>Date Produced</Text>
+                </View>
+            </View>
 
-                            <TableCell
-                                colSpan={4}
-                                padding="none"
-                                className="border-left"
-                            >
-                                <Table >
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell colSpan={6} padding="checkbox">
-                                                <FieldsTitle label="Candidate" />
-                                            </TableCell>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                                className="border-left"
-                                            >
-                                                <FieldsTitle label="Referee" />
-                                            </TableCell>
-                                        </TableRow>
+            <View style={styles.tableRow}>
+                <View style={styles.tableColOneThird}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
+                <View style={styles.tableCol}>
+                    <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
+                </View>
+            </View>
+        </View>
+    </View>
+);
 
-                                        <TableRow>
-                                            <TableCell colSpan={6} padding="checkbox">
-                                                {"Lorem ipsum"}
-                                            </TableCell>
-                                            <TableCell
-                                                colSpan={6}
-                                                padding="checkbox"
-                                                className="border-left"
-                                            >
-                                                {"Lorem ipsum"}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Grid>
-        </Grid>
-    );
-};
 
-const EmploymentHistoryReport = () => {
-    const analysisData = [
-        {
-            name:
-                "Employment reference 1: Barrick Gold Mine – Bulyanhulu Gold Mine",
-            color: "#00ff00",
-            referenceMethod: "Email",
-            dataProduced: "6 Oct 2019"
-        },
-        {
-            name:
-                "Employment reference 1: Barrick Gold Mine – Bulyanhulu Gold Mine",
-            color: "#a22201",
-            referenceMethod: "Email",
-            dataProduced: "6 Oct 2019"
-        }
-    ];
-
-    const observationsData = [
-        "From the HR reference, Damian’s Title reads as Industrial Hygienist Coordinator while that on his CV is Health, Safety and Hygiene Coordinator."
-    ];
-
-    const additionInfoData = [
-        "Overview of his performance: Damian has been a key person in the safety department and is among the dependable employees.",
-        "Attendance & reliability: He is always on time and all his duties are world class. Loosing Damian will be a big blow to the company."
-    ];
-
-    return (
-        <>
-            <ReportIntro />
-            <Observations data={observationsData} />
-            <CheckStatus data={analysisData} />
-            <EmploymentSummary data={analysisData} />
-            <JobRoleConfimation data={[]} />
-            <EmploymentDateConfirmation />
-            <AdditionInformation data={additionInfoData} />
-        </>
-    );
-};
+const EmploymentHistoryReport = () => (
+    // <Document style={{ height: "400px" }}>
+    <Page style={styles.body}>
+        <ReportIntro />
+        <CheckStatus />
+        <Observations />
+        <EmploymentHistoryAnalysisSummary />
+        <JobRoleConfirmation />
+        <EmploymentDateConfirmation />
+        <AdditionInformation />
+        <Text
+            style={styles.pageNumber}
+            render={({ pageNumber, totalPages }) =>
+                `${pageNumber} / ${totalPages}`
+            }
+            fixed
+        />
+    </Page>
+);
 
 export default EmploymentHistoryReport;

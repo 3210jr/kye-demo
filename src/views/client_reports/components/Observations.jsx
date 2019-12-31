@@ -1,48 +1,33 @@
-// @ts-check
-
-//codes in this file are to be moved to different files in later commits
 import React from "react";
 import {
-	Grid,
-    Typography,
-} from "@material-ui/core";
+    Text,
+    View,
 
-import {SectionHeader} from './Headers'
+} from "@react-pdf/renderer";
+import styles from '../styles'
 
 
+const Observations = () => (
+    <View style={styles.section}>
+        <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.subtitle}>Observations</Text>
+            </View>
+        </View>
 
-const Observations = ({ data}) => {
-
- 
-
-	return (
-        <Grid container >
-            <Grid container item style={{marginBottom:14}}>
-                <Grid item xs={12} sm={12}>
-                   <SectionHeader label="Observations" />
-                </Grid>
-
-            </Grid>
-            <Grid container className="observations-container">
-                {data.map((text,index)=>{
-                     return(
-                        <Grid container item key={index} style={{ marginBottom: "1em" }}>
-                            <Grid item xs={12} sm={12}>
-                             
-                                <Typography variant="body1">
-                                  {index+1} . {text} 
-                                </Typography>
-                     
-                            </Grid>
-                        </Grid>                       
-                     )
-                })}
-            </Grid>
-        </Grid>
-	);
-};
+        <View>
+            <View
+                style={[
+                    styles.bodyPrimaryBackground,
+                    styles.nonTableContentPadding
+                ]}
+            >
+                <Text style={styles.text}>{"Lorem ipsum"}</Text>
+            </View>
+        </View>
+    </View>
+);
 
 
 
-
-export default Observations;
+export default Observations

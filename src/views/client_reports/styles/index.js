@@ -1,6 +1,8 @@
 import {
     StyleSheet,
+    Font
 } from "@react-pdf/renderer";
+
 
 const styles = StyleSheet.create({
     body: {
@@ -23,9 +25,13 @@ const styles = StyleSheet.create({
         marginBottom: 40
     },
     subtitle: {
-        fontSize: 16,
-        marginVertical: 8
-        //   fontFamily: 'Oswald'
+        fontSize: 14,
+        marginVertical: 8,
+        fontFamily:"Times-Bold"
+
+    },
+    bold:{
+        fontFamily:"Times-Bold"
     },
     text: {
         // margin: 12,
@@ -36,8 +42,8 @@ const styles = StyleSheet.create({
     image: {
         marginVertical: 15,
         marginHorizontal: 15,
-        width: 248,
-        height: 95
+        width: "124",
+        height: "auto"
     },
     header: {
         fontSize: 12,
@@ -97,10 +103,11 @@ const styles = StyleSheet.create({
         borderTopWidth: 0
     },
     tableCell: {
-        margin: "auto",
-        marginTop: 5,
-        fontSize: 10,
-        textAlign:"left"
+        // margin: "auto",
+        marginHorizontal:8,
+        marginVertical: 5,
+        fontSize: 12,
+        alignSelf:"left"
     },
     nonTableContentPadding: {
         padding: 15

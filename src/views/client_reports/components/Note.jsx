@@ -1,27 +1,33 @@
-// @ts-check
-
-//codes in this file are to be moved to different files in later commits
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import {
+    Text,
+    View,
+
+} from "@react-pdf/renderer";
+import styles from '../styles'
+
+
+const Note = () => (
+    <View style={styles.section}>
+        <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.subtitle}>Note</Text>
+            </View>
+        </View>
+
+        <View>
+            <View
+                style={[
+                    styles.bodyPrimaryBackground,
+                    styles.nonTableContentPadding
+                ]}
+            >
+                <Text style={styles.text}>{"Lorem ipsum"}</Text>
+            </View>
+        </View>
+    </View>
+);
 
 
 
-const Note = ({ data }) => {
-    return (
-        <Grid container  className="observations-container">
-            {data.map((text, index) => {
-                return (
-                   
-                        <Grid item xs={12} sm={12} key={index}>
-                            <Typography variant="body1">
-                                {text}
-                            </Typography>
-                        </Grid>
-                    
-                );
-            })}
-        </Grid>
-    );
-};
-
-export default Note;
+export default Note

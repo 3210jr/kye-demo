@@ -15,7 +15,8 @@ import AcademicAnalysisReport from './AcademicAnalysis'
 
 
 const Quixote = () => (
-    <Document style={{ height: "400px" }}>
+    
+    <Document style={{ height: "100%" }}>
         <AcademicAnalysisReport/>
         <CVAnalysisReport/>
         <EmploymentHistoryReport/>

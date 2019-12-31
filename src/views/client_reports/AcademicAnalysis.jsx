@@ -1,21 +1,16 @@
 import React from "react";
-import {
-    Page,
-    Text,
-    View,
-} from "@react-pdf/renderer";
+import { Page, Text, View } from "@react-pdf/renderer";
 
-import styles from './styles'
-
+import styles from "./styles";
 
 //importing components
-import ReportIntro from './components/ReportIntro'
-import CheckStatus from './components/CheckStatus'
-import Observations from './components/Observations'
+import ReportIntro from "./components/ReportIntro";
+import CheckStatus from "./components/CheckStatus";
+import Observations from "./components/Observations";
 
 //importing other reports
 
-const ProfessionAnalysisSummary = () => (
+const AcademicAnalysisSummary = () => (
     <View style={styles.section} break>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1 }}>
@@ -27,13 +22,19 @@ const ProfessionAnalysisSummary = () => (
         <View style={styles.table}>
             <View style={styles.tableRow}>
                 <View style={styles.tableColOneThird}>
-                    <Text style={styles.tableCell}>Establish Name</Text>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Establish Name
+                    </Text>
                 </View>
                 <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>Reference Method</Text>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Reference Method
+                    </Text>
                 </View>
                 <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>Date Supplied</Text>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Date Supplied
+                    </Text>
                 </View>
             </View>
 
@@ -52,12 +53,14 @@ const ProfessionAnalysisSummary = () => (
     </View>
 );
 
-const ProfessionAnalysis = () => (
+const AcademicAnalysis = () => (
     <View style={styles.section} break>
         <View style={styles.table}>
             <View style={styles.tableRow}>
                 <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>Qualification</Text>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Qualification
+                    </Text>
                 </View>
                 <View style={styles.tableCol}>
                     <Text style={styles.tableCell}>{"Lorem ipsum"}</Text>
@@ -66,7 +69,7 @@ const ProfessionAnalysis = () => (
 
             <View style={styles.tableRow}>
                 <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>
+                    <Text style={[styles.tableCell, styles.bold]}>
                         Did candidate study at this establishment?
                     </Text>
                 </View>
@@ -85,29 +88,14 @@ const ProfessionAnalysis = () => (
                                 <Text style={styles.tableCell}>{}</Text>
                             </View>
                             <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>Candidate</Text>
-                            </View>
-
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>Referee</Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.tableRow}>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>
-                                 Membership no.
-                                </Text>
-                            </View>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>
-                                    {"Lorem ipsum"}
+                                <Text style={[styles.tableCell, styles.bold]}>
+                                    Candidate
                                 </Text>
                             </View>
 
                             <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>
-                                    {"Lorem ipsum"}
+                                <Text style={[styles.tableCell, styles.bold]}>
+                                    Referee
                                 </Text>
                             </View>
                         </View>
@@ -115,7 +103,7 @@ const ProfessionAnalysis = () => (
                         <View style={styles.tableRow}>
                             <View style={styles.tableCol}>
                                 <Text style={styles.tableCell}>
-                                Membership Current
+                                    {"Lorem ipsum"}
                                 </Text>
                             </View>
                             <View style={styles.tableCol}>
@@ -130,27 +118,6 @@ const ProfessionAnalysis = () => (
                                 </Text>
                             </View>
                         </View>
-
-                        <View style={styles.tableRow}>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>
-                                Membership Type
-                                </Text>
-                            </View>
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>
-                                    {"Lorem ipsum"}
-                                </Text>
-                            </View>
-
-                            <View style={styles.tableCol}>
-                                <Text style={styles.tableCell}>
-                                    {"Lorem ipsum"}
-                                </Text>
-                            </View>
-                        </View>
-
-
                     </View>
                 </View>
             </View>
@@ -158,21 +125,20 @@ const ProfessionAnalysis = () => (
     </View>
 );
 const Quixote = () => (
-        <Page style={styles.body}>
-            <ReportIntro/>
-            <CheckStatus />
-            <Observations />
-            <ProfessionAnalysisSummary />
-            <ProfessionAnalysis />
-            <Text
-                style={styles.pageNumber}
-                render={({ pageNumber, totalPages }) =>
-                    `${pageNumber} / ${totalPages}`
-                }
-                fixed
-            />
-        </Page>     
-)
-
+    <Page style={styles.body}>
+        <ReportIntro />
+        <CheckStatus />
+        <Observations />
+        <AcademicAnalysisSummary />
+        <AcademicAnalysis />
+        <Text
+            style={styles.pageNumber}
+            render={({ pageNumber, totalPages }) =>
+                `${pageNumber} / ${totalPages}`
+            }
+            fixed
+        />
+    </Page>
+);
 
 export default Quixote;
