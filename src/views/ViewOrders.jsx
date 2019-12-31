@@ -32,9 +32,7 @@ import {
 
 
 //	packages for generating PDF to replace previous modules for working with pdf
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import domtoimage from 'dom-to-image';
+
 
 import ReportGenerated from "./ClientReport";
 
@@ -289,80 +287,7 @@ function KYEOrderSummary({ order, closeSummary }) {
 
 	const handleOpen = () => {
 		setOpen(true);
-		// const node=myRef.current;
-		
-		// var myCanvas = document.getElementById("report");
-		
-	
-
-		// domtoimage.toJpeg(myCanvas)
-		// 	.then(function (dataUrl) {
-		// 		console.log("Data ",dataUrl)
-		// 		// console.log("data URL",dataURL)
-				
-		// 		var pdf = new jsPDF('p','px','a4');
-		// 		pdf.addImage(dataUrl, 'JPEG', 0,0); 
-		// 		setPdfSrc(pdf.output("datauristring"))
-			
-		// 	})
-		// 	.catch(function (error) {
-		// 		console.error('oops, something went wrong!', error);
-		// 	});
-	
-
-
-		// html2canvas(myCanvas).then(canvas => {  
-		// 	// var imgData = canvas.toDataURL('image/png');
-		// 	// var pdf = new jsPDF('p','px','a4');
-		// 	// pdf.addImage(imgData, 'PNG', 0,0); 
-		// 	// setPdfSrc(pdf.output("datauristring"))
-
-
-		// 	//! MAKE YOUR PDF
-        // var pdf = new jsPDF('p', 'px', 'letter');
-		// console.log(" Canvas size ",myCanvas.clientHeight)
-        // for (var i = 0; i <=myCanvas.clientHeight/980; i++) {
-        //     //! This is all just html2canvas stuff
-        //     var srcImg  = canvas;
-        //     var sX      = 0;
-        //     var sY      = 980*i; // start 980 pixels down for every new page
-        //     var sWidth  = 900;
-        //     var sHeight = 980;
-        //     var dX      = 0;
-        //     var dY      = 0;
-        //     var dWidth  = 900;
-        //     var dHeight = 980;
-
-        //     var onePageCanvas = document.createElement("canvas");
-        //     onePageCanvas.setAttribute('width', 900);
-        //     onePageCanvas.setAttribute('height', 980);
-        //     var ctx = onePageCanvas.getContext('2d');
-        //     // details on this usage of this function: 
-        //     // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Using_images#Slicing
-        //     ctx.drawImage(srcImg,sX,sY,sWidth,sHeight,dX,dY,dWidth,dHeight);
-
-        //     // document.body.appendChild(canvas);
-        //     var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
-
-        //     var width         = onePageCanvas.width;
-        //     var height        = onePageCanvas.clientHeight;
-
-        //     //! If we're on anything other than the first page,
-        //     // add another page
-        //     if (i > 0) {
-        //         pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
-        //     }
-        //     //! now we declare that we're working on that page
-        //     pdf.setPage(i+1);
-        //     //! now we add content to that page!
-        //     pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width*.62), (height*.62));
-
-        // }
-        // //! after the for loop is finished running, we save the pdf.
-        // pdf.save('Test.pdf');
-		// });
-
-    	
+	 	
 	}
 	
 	  const handleClose = () => {
@@ -389,7 +314,7 @@ function KYEOrderSummary({ order, closeSummary }) {
 				}}
 			>
 				<div style={{backgroundColor:"white",minWidth:600,minHeight:"80vh",maxWidth:800,marginLeft:"auto",marginRight:"auto"}}>
-					<PDFViewer style={{height:"100%",width:"100%"}} height="400">
+					<PDFViewer style={{ width:"100%"}} height="400">
 						<NewReport />
 					</PDFViewer>
 				</div>
