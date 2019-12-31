@@ -19,7 +19,7 @@ const AdditionInformation = ({ data }) => {
                 {data.map((text, index) => {
                     return (
                         <Grid item xs={12} sm={12} key={index}>
-                            <Typography variant="body1" component="body1">
+                            <Typography variant="body1">
                                 {text}
                             </Typography>
                         </Grid>

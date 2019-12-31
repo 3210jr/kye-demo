@@ -29,7 +29,7 @@ const Observations = ({ data}) => {
                         <Grid container item key={index} style={{ marginBottom: "1em" }}>
                             <Grid item xs={12} sm={12}>
                              
-                                <Typography variant="body1" component="body1">
+                                <Typography variant="body1">
                                   {index+1} . {text} 
                                 </Typography>
                      

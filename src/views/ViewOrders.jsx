@@ -1,5 +1,6 @@
 // @ts-check
 import React from "react";
+import {renderToString} from 'react-dom/server'
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { withStyles,makeStyles } from "@material-ui/core/styles";
@@ -29,11 +30,23 @@ import {
 	FilterList as FilterListIcon
 } from "@material-ui/icons";
 
+
+//	packages for generating PDF to replace previous modules for working with pdf
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
+
 import ReportGenerated from "./ClientReport";
 
 import ReactToPrint from "react-to-print";
 import { ExtendedTableHead } from "../components/Table";
 
+import EmploymentHistoryReport from "./client_reports/EmploymentHistory";
+
+// new report styling and everything
+import { PDFViewer } from '@react-pdf/renderer';
+
+import NewReport from './new_report/Report'
 
 // const useStyles = makeStyles(theme => ({
 // 	modal: {
@@ -271,10 +284,86 @@ function isInvestigationComplete(order = {}, investigation) {
 function KYEOrderSummary({ order, closeSummary }) {
 	// const classes = useStyles();
 	const [open, setOpen] = React.useState(false);
+	const [pdfSrc,setPdfSrc]=React.useState('')
+	let myRef = React.createRef();
 
 	const handleOpen = () => {
 		setOpen(true);
-	  };
+		// const node=myRef.current;
+		
+		// var myCanvas = document.getElementById("report");
+		
+	
+
+		// domtoimage.toJpeg(myCanvas)
+		// 	.then(function (dataUrl) {
+		// 		console.log("Data ",dataUrl)
+		// 		// console.log("data URL",dataURL)
+				
+		// 		var pdf = new jsPDF('p','px','a4');
+		// 		pdf.addImage(dataUrl, 'JPEG', 0,0); 
+		// 		setPdfSrc(pdf.output("datauristring"))
+			
+		// 	})
+		// 	.catch(function (error) {
+		// 		console.error('oops, something went wrong!', error);
+		// 	});
+	
+
+
+		// html2canvas(myCanvas).then(canvas => {  
+		// 	// var imgData = canvas.toDataURL('image/png');
+		// 	// var pdf = new jsPDF('p','px','a4');
+		// 	// pdf.addImage(imgData, 'PNG', 0,0); 
+		// 	// setPdfSrc(pdf.output("datauristring"))
+
+
+		// 	//! MAKE YOUR PDF
+        // var pdf = new jsPDF('p', 'px', 'letter');
+		// console.log(" Canvas size ",myCanvas.clientHeight)
+        // for (var i = 0; i <=myCanvas.clientHeight/980; i++) {
+        //     //! This is all just html2canvas stuff
+        //     var srcImg  = canvas;
+        //     var sX      = 0;
+        //     var sY      = 980*i; // start 980 pixels down for every new page
+        //     var sWidth  = 900;
+        //     var sHeight = 980;
+        //     var dX      = 0;
+        //     var dY      = 0;
+        //     var dWidth  = 900;
+        //     var dHeight = 980;
+
+        //     var onePageCanvas = document.createElement("canvas");
+        //     onePageCanvas.setAttribute('width', 900);
+        //     onePageCanvas.setAttribute('height', 980);
+        //     var ctx = onePageCanvas.getContext('2d');
+        //     // details on this usage of this function: 
+        //     // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Using_images#Slicing
+        //     ctx.drawImage(srcImg,sX,sY,sWidth,sHeight,dX,dY,dWidth,dHeight);
+
+        //     // document.body.appendChild(canvas);
+        //     var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+
+        //     var width         = onePageCanvas.width;
+        //     var height        = onePageCanvas.clientHeight;
+
+        //     //! If we're on anything other than the first page,
+        //     // add another page
+        //     if (i > 0) {
+        //         pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
+        //     }
+        //     //! now we declare that we're working on that page
+        //     pdf.setPage(i+1);
+        //     //! now we add content to that page!
+        //     pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width*.62), (height*.62));
+
+        // }
+        // //! after the for loop is finished running, we save the pdf.
+        // pdf.save('Test.pdf');
+		// });
+
+    	
+	}
 	
 	  const handleClose = () => {
 		setOpen(false);
@@ -299,8 +388,10 @@ function KYEOrderSummary({ order, closeSummary }) {
 					
 				}}
 			>
-				<div style={{backgroundColor:"white",minWidth:700,maxWidth:800,marginLeft:"auto",marginRight:"auto"}}>
-					<embed  src="data:application/pdf;filename=generated.pdf;base64,JVBERi0xLjMKJbrfrOAKMyAwIG9iago8PC9UeXBlIC9QYWdlCi9QYXJlbnQgMSAwIFIKL1Jlc291cmNlcyAyIDAgUgovTWVkaWFCb3ggWzAgMCA1OTUuMjggODQxLjg5XQovQ29udGVudHMgNCAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0xlbmd0aCA4MQo+PgpzdHJlYW0KMC41NyB3CjAgRwpCVAovRjEgNDAgVGYKNDYuMDAgVEwKMCBnCjk5LjIxIDc3MS4wMiBUZAooT2N0b255YW4gbG92ZXMganNQREYpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iago8PC9UeXBlIC9QYWdlcwovS2lkcyBbMyAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKNSAwIG9iago8PAovVHlwZSAvRm9udAovQmFzZUZvbnQgL0hlbHZldGljYQovU3VidHlwZSAvVHlwZTEKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL0ZpcnN0Q2hhciAzMgovTGFzdENoYXIgMjU1Cj4+CmVuZG9iago2IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQKL1N1YnR5cGUgL1R5cGUxCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9GaXJzdENoYXIgMzIKL0xhc3RDaGFyIDI1NQo+PgplbmRvYmoKNyAwIG9iago8PAovVHlwZSAvRm9udAovQmFzZUZvbnQgL0hlbHZldGljYS1PYmxpcXVlCi9TdWJ0eXBlIC9UeXBlMQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovRmlyc3RDaGFyIDMyCi9MYXN0Q2hhciAyNTUKPj4KZW5kb2JqCjggMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZE9ibGlxdWUKL1N1YnR5cGUgL1R5cGUxCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9GaXJzdENoYXIgMzIKL0xhc3RDaGFyIDI1NQo+PgplbmRvYmoKOSAwIG9iago8PAovVHlwZSAvRm9udAovQmFzZUZvbnQgL0NvdXJpZXIKL1N1YnR5cGUgL1R5cGUxCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9GaXJzdENoYXIgMzIKL0xhc3RDaGFyIDI1NQo+PgplbmRvYmoKMTAgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL0Jhc2VGb250IC9Db3VyaWVyLUJvbGQKL1N1YnR5cGUgL1R5cGUxCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9GaXJzdENoYXIgMzIKL0xhc3RDaGFyIDI1NQo+PgplbmRvYmoKMTEgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL0Jhc2VGb250IC9Db3VyaWVyLU9ibGlxdWUKL1N1YnR5cGUgL1R5cGUxCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9GaXJzdENoYXIgMzIKL0xhc3RDaGFyIDI1NQo+PgplbmRvYmoKMTIgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL0Jhc2VGb250IC9Db3VyaWVyLUJvbGRPYmxpcXVlCi9TdWJ0eXBlIC9UeXBlMQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovRmlyc3RDaGFyIDMyCi9MYXN0Q2hhciAyNTUKPj4KZW5kb2JqCjEzIDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9CYXNlRm9udCAvVGltZXMtUm9tYW4KL1N1YnR5cGUgL1R5cGUxCi9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nCi9GaXJzdENoYXIgMzIKL0xhc3RDaGFyIDI1NQo+PgplbmRvYmoKMTQgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL0Jhc2VGb250IC9UaW1lcy1Cb2xkCi9TdWJ0eXBlIC9UeXBlMQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovRmlyc3RDaGFyIDMyCi9MYXN0Q2hhciAyNTUKPj4KZW5kb2JqCjE1IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9CYXNlRm9udCAvVGltZXMtSXRhbGljCi9TdWJ0eXBlIC9UeXBlMQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwovRmlyc3RDaGFyIDMyCi9MYXN0Q2hhciAyNTUKPj4KZW5kb2JqCjE2IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9CYXNlRm9udCAvVGltZXMtQm9sZEl0YWxpYwovU3VidHlwZSAvVHlwZTEKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKL0ZpcnN0Q2hhciAzMgovTGFzdENoYXIgMjU1Cj4+CmVuZG9iagoxNyAwIG9iago8PAovVHlwZSAvRm9udAovQmFzZUZvbnQgL1phcGZEaW5nYmF0cwovU3VidHlwZSAvVHlwZTEKL0ZpcnN0Q2hhciAzMgovTGFzdENoYXIgMjU1Cj4+CmVuZG9iagoxOCAwIG9iago8PAovVHlwZSAvRm9udAovQmFzZUZvbnQgL1N5bWJvbAovU3VidHlwZSAvVHlwZTEKL0ZpcnN0Q2hhciAzMgovTGFzdENoYXIgMjU1Cj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9Qcm9jU2V0IFsvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJXQovRm9udCA8PAovRjEgNSAwIFIKL0YyIDYgMCBSCi9GMyA3IDAgUgovRjQgOCAwIFIKL0Y1IDkgMCBSCi9GNiAxMCAwIFIKL0Y3IDExIDAgUgovRjggMTIgMCBSCi9GOSAxMyAwIFIKL0YxMCAxNCAwIFIKL0YxMSAxNSAwIFIKL0YxMiAxNiAwIFIKL0YxMyAxNyAwIFIKL0YxNCAxOCAwIFIKPj4KL1hPYmplY3QgPDwKPj4KPj4KZW5kb2JqCjE5IDAgb2JqCjw8Ci9Qcm9kdWNlciAoanNQREYgMS41LjMpCi9DcmVhdGlvbkRhdGUgKEQ6MjAxOTEyMjkyMTM4MjYrMDMnMDAnKQo+PgplbmRvYmoKMjAgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEgMCBSCi9PcGVuQWN0aW9uIFszIDAgUiAvRml0SCBudWxsXQovUGFnZUxheW91dCAvT25lQ29sdW1uCj4+CmVuZG9iagp4cmVmCjAgMjEKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMjU1IDAwMDAwIG4gCjAwMDAwMDIwNzIgMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMTI0IDAwMDAwIG4gCjAwMDAwMDAzMTIgMDAwMDAgbiAKMDAwMDAwMDQzNyAwMDAwMCBuIAowMDAwMDAwNTY3IDAwMDAwIG4gCjAwMDAwMDA3MDAgMDAwMDAgbiAKMDAwMDAwMDgzNyAwMDAwMCBuIAowMDAwMDAwOTYwIDAwMDAwIG4gCjAwMDAwMDEwODkgMDAwMDAgbiAKMDAwMDAwMTIyMSAwMDAwMCBuIAowMDAwMDAxMzU3IDAwMDAwIG4gCjAwMDAwMDE0ODUgMDAwMDAgbiAKMDAwMDAwMTYxMiAwMDAwMCBuIAowMDAwMDAxNzQxIDAwMDAwIG4gCjAwMDAwMDE4NzQgMDAwMDAgbiAKMDAwMDAwMTk3NiAwMDAwMCBuIAowMDAwMDAyMzIwIDAwMDAwIG4gCjAwMDAwMDI0MDYgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSAyMQovUm9vdCAyMCAwIFIKL0luZm8gMTkgMCBSCi9JRCBbIDwwQjZEOTExNzM5MTVEOTlDQUZBMzNFRkFFRUJGNERDRj4gPDBCNkQ5MTE3MzkxNUQ5OUNBRkEzM0VGQUVFQkY0RENGPiBdCj4+CnN0YXJ0eHJlZgoyNTEwCiUlRU9G" type="application/pdf" style={{overflow: "show", width: "100%", height: '80vh'}}></embed>
+				<div style={{backgroundColor:"white",minWidth:600,minHeight:"80vh",maxWidth:800,marginLeft:"auto",marginRight:"auto"}}>
+					<PDFViewer style={{height:"100%",width:"100%"}} height="400">
+						<NewReport />
+					</PDFViewer>
 				</div>
 			</Modal>
  
@@ -356,6 +447,9 @@ function KYEOrderSummary({ order, closeSummary }) {
 						)
 					})
 				}
+			</div>
+			<div style={{display:"hidden",backgroundColor:"white",width:"793.706667px",height:"auto",padding:"30px"}} ref={myRef} id="report">
+				<EmploymentHistoryReport/>
 			</div>
 		</Paper>
 	)

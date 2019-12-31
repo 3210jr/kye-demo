@@ -20,15 +20,8 @@ import {
 
 // other reports
 // for temporarily viewing only
-import ReportIntro from "./components/ReportIntro";
-import CheckStatus from "./components/ChecksStatus";
-import Observations from "./components/Observations";
-
-import CVReport from "./CVAnalysis";
-import EmploymentHistoryReport from "./EmploymentHistory";
-import GapAnalysisReport from "./GapAnalysis";
-import IDAnalysisReport from "./IDAnalysis";
-import ProfessionAnalysisReport from "./ProfessionAnalysis";
+import { PDFViewer } from '@react-pdf/renderer';
+import NewReport from '../new_report/Report'
 
 const InstitutionDetailSummary = ({}) => {
     const institutions = [
@@ -296,9 +289,9 @@ const AcademicQualificationReport = ({}) => {
 
     return (
         <>
-            <ReportIntro />
+            {/* <ReportIntro />
             <CheckStatus data={institutions} />
-            <Observations data={observations} />
+            <Observations data={observations} /> */}
             <InstitutionDetailSummary />
             <InstitutionDetails />
         </>
@@ -318,20 +311,13 @@ const PageDivider = () => (
         }}
     />
 );
+
 const AllReports = () => {
     return (
         <div style={{ backgroundColor: "white", padding: 15,minWidth:595 }}>
-            <AcademicQualificationReport />
-            <PageDivider />
-            <CVReport />
-            <PageDivider />
-            <EmploymentHistoryReport />
-            <PageDivider />
-            <GapAnalysisReport />
-            <PageDivider />
-            <IDAnalysisReport />
-            <PageDivider />
-            <ProfessionAnalysisReport />
+            <PDFViewer style={{ width:"100%"}} height="600">
+				<NewReport />
+			</PDFViewer>
         </div>
     );
 };

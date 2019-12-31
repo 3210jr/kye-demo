@@ -13,7 +13,7 @@ const FieldsTitle = ({ label }) => (
 );
 
 const SectionHeader = ({ label }) => (
-	<h3 variant="subtitle2" className="section-header">{label}</h3>
+	<h3 className="section-header">{label}</h3>
 );
 const TableHeaderText = ({ label }) => (
 	<Typography variant="h6" align="left">
