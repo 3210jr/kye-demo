@@ -5,7 +5,7 @@ import styles from "./styles";
 
 //importing components
 import ReportIntro from "./components/ReportIntro";
-import CheckStatus from "./components/CheckStatus";
+import CheckStatus from "./components/EducationStatus";
 import Observations from "./components/Observations";
 
 //importing other reports
@@ -196,8 +196,8 @@ const Quixote = () => {
     return (
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={["Hello world"]} />
-            <Observations observations={[]} />
+            <CheckStatus academicQualifications={academicQualifications}/>
+            <Observations  />
             <AcademicAnalysisSummary
                 academicQualifications={academicQualifications}
             />

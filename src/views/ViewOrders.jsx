@@ -342,13 +342,13 @@ function KYEOrderSummary({ order, closeSummary }) {
                     style={{
                         backgroundColor: "white",
                         minWidth: 800,
-                        minHeight: "80vh",
+                        height: "80%",
                         maxWidth: 900,
                         marginLeft: "auto",
                         marginRight: "auto"
                     }}
                 >
-                    <PDFViewer style={{ width: "100%",height:600 }}>
+                    <PDFViewer style={{ width: "100%",height:'100%' }}>
                         <NewReport screeningType={screeningType} order={currentOrder}/>
                     </PDFViewer>
                 </div>
