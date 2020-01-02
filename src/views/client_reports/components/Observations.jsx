@@ -7,7 +7,7 @@ import {
 import styles from '../styles'
 
 
-const Observations = () => (
+const Observations = ({observations}) => (
     <View style={styles.section}>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1 }}>

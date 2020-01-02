@@ -1,18 +1,13 @@
 import React from "react";
-import {
-    Page,
-    Text,
-    View,
-    Document,
+import { Page, Text, View, Document } from "@react-pdf/renderer";
 
-} from "@react-pdf/renderer";
+import { useSelector } from "react-redux";
 
-import styles from './styles'
+import styles from "./styles";
 
-
-import ReportIntro from './components/ReportIntro'
-import CheckStatus from './components/CheckStatus'
-import Observations from './components/Observations'
+import ReportIntro from "./components/ReportIntro";
+import CheckStatus from "./components/CheckStatus";
+import Observations from "./components/Observations";
 
 const CVAnalysisSummary = () => (
     <View style={styles.section} break>
@@ -116,12 +111,17 @@ const CVAnalysis = () => (
         </View>
     </View>
 );
-const CVAnalysisReport = () => (
-    // <Document style={{ height: "400px" }}>
+const CVAnalysisReport = () => {
+    const polieReports = useSelector(
+        state => state.orders.currentOrder["police-reports"]
+    );
+
+    return (
+        // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
-            <ReportIntro/>
-            <CheckStatus />
-            <Observations />
+            <ReportIntro />
+            <CheckStatus statuses={["Hello World"]}/>
+            <Observations observations={[]}/>
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>
@@ -130,8 +130,8 @@ const CVAnalysisReport = () => (
                 fixed
             />
         </Page>
-    // </Document>
-);
-
+        // </Document>
+    );
+};
 
 export default CVAnalysisReport;

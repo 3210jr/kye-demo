@@ -22,7 +22,7 @@ import {
 } from "@material-ui/core";
 import { upperFirst, find } from "lodash";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
-import { connect } from "react-redux";
+import { connect,useDispatch } from "react-redux";
 import { fullFormatDate } from "../utils";
 import {
     CloudDownload,
@@ -30,6 +30,7 @@ import {
     FilterList as FilterListIcon
 } from "@material-ui/icons";
 
+import store from '../store'
 //	packages for generating PDF to replace previous modules for working with pdf
 
 import { ExtendedTableHead } from "../components/Table";
@@ -166,8 +167,10 @@ class ViewOrders extends React.Component {
             page,
             selectedRowId
         } = this.state;
-        var reportsReferences = []; //references
-        console.log(myOrders);
+
+
+        // console.log(myOrders);
+        
         const selectedOrder = find(myOrders, ["id", selectedRowId]);
         const emptyRows =
             rowsPerPage -
@@ -304,10 +307,14 @@ function isInvestigationComplete(order = {}, investigation) {
 function KYEOrderSummary({ order, closeSummary }) {
     // const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [pdfSrc, setPdfSrc] = React.useState("");
-    let myRef = React.createRef();
+    
+    const [screeningType,setScreeningType]=React.useState("")
+    const [currentOrder,setCurrentOrder]=React.useState(null)
 
-    const handleOpen = () => {
+    const handleOpen = (type,order) => {
+        store.dispatch.orders.setCurrentOrder(order);
+        setCurrentOrder(order)
+        setScreeningType(type)
         setOpen(true);
     };
 
@@ -315,7 +322,7 @@ function KYEOrderSummary({ order, closeSummary }) {
         setOpen(false);
     };
     const generateReport = () => {};
-    console.log("Show the order from here", order);
+    // console.log("Show the order from here", order);
     return (
         <Paper>
             <Modal
@@ -342,7 +349,7 @@ function KYEOrderSummary({ order, closeSummary }) {
                     }}
                 >
                     <PDFViewer style={{ width: "100%",height:600 }}>
-                        <NewReport />
+                        <NewReport screeningType={screeningType} order={currentOrder}/>
                     </PDFViewer>
                 </div>
             </Modal>
@@ -417,7 +424,9 @@ function KYEOrderSummary({ order, closeSummary }) {
                             <div style={{ flex: 1 }}>
                                 {complete ? (
                                     <CloudDownload
-                                        onClick={handleOpen}
+                                        onClick={()=>{
+                                            handleOpen(type,order)
+                                        }}
                                         color="default"
                                         className="pointer"
                                     />
@@ -446,7 +455,7 @@ const collapseComponent = props => (
 );
 
 function KYCOrderItem({ order, index }) {
-    var reportsReferences = []; //references
+    
     return (
         <TableRow
             hover

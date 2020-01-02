@@ -1,13 +1,8 @@
 import React from "react";
-import {
-    Text,
-    View,
+import { Text, View } from "@react-pdf/renderer";
+import styles from "../styles";
 
-} from "@react-pdf/renderer";
-import styles from '../styles'
-
-
-const AdditionInformation = () => (
+const AdditionInformation = ({ infos }) => (
     <View style={styles.section} break>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1 }}>
@@ -15,19 +10,21 @@ const AdditionInformation = () => (
             </View>
         </View>
 
-        <View>
-            <View
-                style={[
-                    styles.bodyPrimaryBackground,
-                    styles.nonTableContentPadding
-                ]}
-            >
-                <Text style={styles.text}>{"Lorem ipsum"}</Text>
-            </View>
+        <View
+            style={[
+                styles.bodyPrimaryBackground,
+                styles.nonTableContentPadding
+            ]}
+        >
+            {infos.map((employmentHistory, index) => (
+                <View key={index}>
+                    <Text style={styles.text}>
+                        {employmentHistory.additionalInformation}
+                    </Text>
+                </View>
+            ))}
         </View>
     </View>
 );
 
-
-
-export default AdditionInformation
+export default AdditionInformation;

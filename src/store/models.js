@@ -45,7 +45,8 @@ export const orders = {
 	state: {
 		loading: true,
 		orders: [],
-		myOrders: []
+		myOrders: [],
+		currentOrder:{},
 	},
 	reducers: {
 		setMyOrders(state, payload) {
@@ -54,7 +55,12 @@ export const orders = {
 
 		setRecentOrders(state, payload) {
 			return { ...state, orders: payload, loading: false };
+		},
+
+		setCurrentOrder(state, payload) {
+			return { ...state, currentOrder: payload };
 		}
+
 	},
 	effects: dispatch => ({
 		// handle state changes with impure functions.
@@ -81,7 +87,8 @@ export const orders = {
 					snap.forEach(doc => orders.push({ ...doc.data(), id: doc.id }));
 					dispatch.orders.setRecentOrders(orders);
 				});
-		}
+		},
+		
 	})
 };
 
