@@ -18,11 +18,14 @@ import {
     TableBody,
     TableRow,
     Collapse,
-    Modal
+    Modal,
+    Button,
+    LinearProgress,
+    Grid
 } from "@material-ui/core";
 import { upperFirst, find } from "lodash";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
-import { connect,useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { fullFormatDate } from "../utils";
 import {
     CloudDownload,
@@ -30,13 +33,13 @@ import {
     FilterList as FilterListIcon
 } from "@material-ui/icons";
 
-import store from '../store'
+import store from "../store";
 //	packages for generating PDF to replace previous modules for working with pdf
 
 import { ExtendedTableHead } from "../components/Table";
 
 // new report styling and everything
-import { PDFViewer } from "@react-pdf/renderer";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
 import NewReport from "./client_reports/Report";
 
@@ -168,9 +171,8 @@ class ViewOrders extends React.Component {
             selectedRowId
         } = this.state;
 
-
         // console.log(myOrders);
-        
+
         const selectedOrder = find(myOrders, ["id", selectedRowId]);
         const emptyRows =
             rowsPerPage -
@@ -307,14 +309,26 @@ function isInvestigationComplete(order = {}, investigation) {
 function KYEOrderSummary({ order, closeSummary }) {
     // const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    
-    const [screeningType,setScreeningType]=React.useState("")
-    const [currentOrder,setCurrentOrder]=React.useState(null)
+    const [reportName,setReportName]=React.useState("")
+    const [screeningType, setScreeningType] = React.useState("");
 
-    const handleOpen = (type,order) => {
+    const getReportName = () => {
+        if (screeningType && order) {
+            const type = screeningType
+                .split("-")
+                .map(s => upperFirst(s))
+                .join(" ");
+            const name = upperFirst(
+                `${order.firstName} ${order.middleName} ${order.lastName}`
+            );
+            return name + " - " + type + ".pdf";
+        }
+    };
+
+    const handleOpen = (type, order) => {
         store.dispatch.orders.setCurrentOrder(order);
-        setCurrentOrder(order)
-        setScreeningType(type)
+        setScreeningType(type);
+        setReportName(getReportName())
         setOpen(true);
     };
 
@@ -330,17 +344,18 @@ function KYEOrderSummary({ order, closeSummary }) {
                 aria-describedby="simple-modal-description"
                 open={open}
                 onClose={handleClose}
+                disableAutoFocus={true}
                 style={{
                     // width:"800px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: "rgba(0,0,0,0.3)"
+                    backgroundColor: "rgba(0,0,0,0.7)"
                 }}
             >
                 <div
                     style={{
-                        backgroundColor: "white",
+                        
                         minWidth: 800,
                         height: "80%",
                         maxWidth: 900,
@@ -348,8 +363,46 @@ function KYEOrderSummary({ order, closeSummary }) {
                         marginRight: "auto"
                     }}
                 >
-                    <PDFViewer style={{ width: "100%",height:'100%' }}>
-                        <NewReport screeningType={screeningType} order={currentOrder}/>
+                    <PDFDownloadLink
+                        document={<NewReport screeningType={screeningType} />}
+                        fileName={getReportName()}
+                        style={{ textDecoration: "none" }}
+                    >
+                        {({ blob, url, loading, error }) =>
+                            loading ? (
+                                <LinearProgress />
+                            ) : (
+                                <Grid
+                                    container
+                                    // direction="row-reverse"
+                                    // justify="center"
+                                    alignItems="baseline"
+                                    style={{
+                                        paddingLeft: 8,
+                                        backgroundColor:"#323639"
+                                    }}
+                                >
+                                    <Grid item xs={9}>
+                                    <Typography variant="h5" component="h5" style={{color:"white"}}>
+                                            {getReportName()}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            fullWidth
+                                            style={{height:"100%"}}
+                                        >
+                                            Download Report
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            )
+                        }
+                    </PDFDownloadLink>
+                    <PDFViewer style={{ width: "100%", height: "100%",border:"none" }}>
+                        <NewReport screeningType={screeningType} />
                     </PDFViewer>
                 </div>
             </Modal>
@@ -424,8 +477,8 @@ function KYEOrderSummary({ order, closeSummary }) {
                             <div style={{ flex: 1 }}>
                                 {complete ? (
                                     <CloudDownload
-                                        onClick={()=>{
-                                            handleOpen(type,order)
+                                        onClick={() => {
+                                            handleOpen(type, order);
                                         }}
                                         color="default"
                                         className="pointer"
@@ -455,7 +508,6 @@ const collapseComponent = props => (
 );
 
 function KYCOrderItem({ order, index }) {
-    
     return (
         <TableRow
             hover

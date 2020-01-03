@@ -49,12 +49,12 @@ const GapAnalysis = ({ gaps }) => {
         </View>
     );
 };
-const GapAnalysisReport = ({ data }) => {
+const GapAnalysisReport = ({  }) => {
     let gaps = useSelector(
         state => state.orders.currentOrder["gaps-reports"]
     );
     gaps=Object.values(gaps)
-    console.log("Set the gaps to ",gaps)
+
     return (
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>

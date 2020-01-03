@@ -10,7 +10,7 @@ import IDAnalysisReport from "./IDAnalysis";
 import ProfessionAnalysisReport from "./ProfessionAnalysis";
 import AcademicAnalysisReport from "./AcademicAnalysis";
 
-const Quixote = ({ screeningType, order }) => {
+const Quixote = ({ screeningType }) => {
     console.log("Current Screening type :", screeningType);
     return (
         <Provider store={store}>
@@ -23,7 +23,7 @@ const Quixote = ({ screeningType, order }) => {
                     <EmploymentHistoryReport />
                 )}
                 {screeningType === "gaps-reports" && (
-                    <GapAnalysisReport data={order} />
+                    <GapAnalysisReport  />
                 )}
                 {screeningType === "identification" && <IDAnalysisReport />}
                 {screeningType === "" && <ProfessionAnalysisReport />}
