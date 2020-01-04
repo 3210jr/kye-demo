@@ -154,7 +154,7 @@ export const snackbar = {
 	},
 	effects: dispatch => ({
 		asyncToggleSnackBar(payload, rootState) {
-			console.log("PAYLOAD:", payload, rootState)
+			// console.log("PAYLOAD:", payload, rootState)
 			if (!rootState.snackbar.open) {
 				setTimeout(() => dispatch.snackbar.toggleSnackBar(payload), 3000)
 			}
