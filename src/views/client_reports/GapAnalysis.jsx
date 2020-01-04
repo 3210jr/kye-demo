@@ -53,6 +53,9 @@ const GapAnalysisReport = ({  }) => {
     let gaps = useSelector(
         state => state.orders.currentOrder["gaps-reports"]
     );
+    if (gaps=== null || gaps === undefined) {
+        return null;
+    }
     gaps=Object.values(gaps)
 
     return (

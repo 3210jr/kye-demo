@@ -65,6 +65,10 @@ const IDAnalysisReport = () => {
         state => state.orders.currentOrder["identification"]
     );
 
+    if (identifications=== null || identifications === undefined) {
+        return null;
+    }
+
     return (
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>

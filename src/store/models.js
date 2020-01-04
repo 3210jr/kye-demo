@@ -47,6 +47,7 @@ export const orders = {
 		orders: [],
 		myOrders: [],
 		currentOrder:{},
+		currentOrderScreeningType:""
 	},
 	reducers: {
 		setMyOrders(state, payload) {
@@ -60,7 +61,6 @@ export const orders = {
 		setCurrentOrder(state, payload) {
 			return { ...state, currentOrder: payload };
 		}
-
 	},
 	effects: dispatch => ({
 		// handle state changes with impure functions.

@@ -130,13 +130,17 @@ const AcademicAnalysis = ({ academicQualifications }) => (
                                 </View>
                                 <View style={styles.tableCol}>
                                     <Text style={styles.tableCell}>
-                                        {academicQualification.attendanceDateCandidate}
+                                        {
+                                            academicQualification.attendanceDateCandidate
+                                        }
                                     </Text>
                                 </View>
 
                                 <View style={styles.tableCol}>
                                     <Text style={styles.tableCell}>
-                                        {academicQualification.attendanceDateReference}
+                                        {
+                                            academicQualification.attendanceDateReference
+                                        }
                                     </Text>
                                 </View>
                             </View>
@@ -149,13 +153,17 @@ const AcademicAnalysis = ({ academicQualifications }) => (
                                 </View>
                                 <View style={styles.tableCol}>
                                     <Text style={styles.tableCell}>
-                                        {academicQualification.nameOfCourseStudiedCandidate}
+                                        {
+                                            academicQualification.nameOfCourseStudiedCandidate
+                                        }
                                     </Text>
                                 </View>
 
                                 <View style={styles.tableCol}>
                                     <Text style={styles.tableCell}>
-                                        {academicQualification.nameOfCourseStudiedReference}
+                                        {
+                                            academicQualification.nameOfCourseStudiedReference
+                                        }
                                     </Text>
                                 </View>
                             </View>
@@ -168,18 +176,20 @@ const AcademicAnalysis = ({ academicQualifications }) => (
                                 </View>
                                 <View style={styles.tableCol}>
                                     <Text style={styles.tableCell}>
-                                        {academicQualification.qualificationAndGradedAwardedCandidate}
+                                        {
+                                            academicQualification.qualificationAndGradedAwardedCandidate
+                                        }
                                     </Text>
                                 </View>
 
                                 <View style={styles.tableCol}>
                                     <Text style={styles.tableCell}>
-                                        {academicQualification.qualificationAndGradedAwardedReference}
+                                        {
+                                            academicQualification.qualificationAndGradedAwardedReference
+                                        }
                                     </Text>
                                 </View>
                             </View>
-
-                      
                         </View>
                     </View>
                 </View>
@@ -187,17 +197,23 @@ const AcademicAnalysis = ({ academicQualifications }) => (
         ))}
     </View>
 );
-const Quixote = () => {
+const AcademicAnalysisReport = () => {
     let academicQualifications = useSelector(
         state => state.orders.currentOrder["academic-qualifications"]
     );
-    academicQualifications = Object.values(academicQualifications);
 
+    if (
+        academicQualifications === null ||
+        academicQualifications === undefined
+    ) {
+        return null;
+    }
+    academicQualifications = Object.values(academicQualifications);
     return (
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus academicQualifications={academicQualifications}/>
-            <Observations  />
+            <CheckStatus academicQualifications={academicQualifications} />
+            <Observations />
             <AcademicAnalysisSummary
                 academicQualifications={academicQualifications}
             />
@@ -212,4 +228,4 @@ const Quixote = () => {
         </Page>
     );
 };
-export default Quixote;
+export default AcademicAnalysisReport;

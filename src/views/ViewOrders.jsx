@@ -1,5 +1,5 @@
 // @ts-check
-import React from "react";
+import React,{Suspense} from "react";
 import { renderToString } from "react-dom/server";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -42,6 +42,8 @@ import { ExtendedTableHead } from "../components/Table";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
 import NewReport from "./client_reports/Report";
+// const NewReport=React.lazy(() => import('./client_reports/Report'));
+
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -306,10 +308,13 @@ function isInvestigationComplete(order = {}, investigation) {
     return Object.keys(order[investigation]).length > 0;
 }
 
+
+
+
 function KYEOrderSummary({ order, closeSummary }) {
-    // const classes = useStyles();
+    // const LazyReport = React.lazy(() => import("./client_reports/Report"));
+
     const [open, setOpen] = React.useState(false);
-    const [reportName,setReportName]=React.useState("")
     const [screeningType, setScreeningType] = React.useState("");
 
     const getReportName = () => {
@@ -326,9 +331,9 @@ function KYEOrderSummary({ order, closeSummary }) {
     };
 
     const handleOpen = (type, order) => {
+        console.log("Change order : ",order)
         store.dispatch.orders.setCurrentOrder(order);
-        setScreeningType(type);
-        setReportName(getReportName())
+        setScreeningType(type);  
         setOpen(true);
     };
 
@@ -353,6 +358,9 @@ function KYEOrderSummary({ order, closeSummary }) {
                     backgroundColor: "rgba(0,0,0,0.7)"
                 }}
             >
+           
+
+   
                 <div
                     style={{
                         
@@ -363,6 +371,7 @@ function KYEOrderSummary({ order, closeSummary }) {
                         marginRight: "auto"
                     }}
                 >
+            
                     <PDFDownloadLink
                         document={<NewReport screeningType={screeningType} />}
                         fileName={getReportName()}
@@ -404,7 +413,9 @@ function KYEOrderSummary({ order, closeSummary }) {
                     <PDFViewer style={{ width: "100%", height: "100%",border:"none" }}>
                         <NewReport screeningType={screeningType} />
                     </PDFViewer>
+                
                 </div>
+                
             </Modal>
 
             <div style={{ position: "relative" }}>

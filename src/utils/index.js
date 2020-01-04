@@ -1,5 +1,4 @@
 const getLocalDate=(dateString)=>{
-    console.log("String normal",dateString)
     if(dateString){
         try{
             var date = new Date(0); 

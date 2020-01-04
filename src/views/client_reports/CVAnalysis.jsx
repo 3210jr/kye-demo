@@ -116,12 +116,16 @@ const CVAnalysisReport = () => {
         state => state.orders.currentOrder["police-reports"]
     );
 
+    if (polieReports === null || polieReports === undefined) {
+        return null;
+    }
+
     return (
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={["Hello World"]}/>
-            <Observations observations={[]}/>
+            <CheckStatus statuses={["Hello World"]} />
+            <Observations observations={[]} />
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>

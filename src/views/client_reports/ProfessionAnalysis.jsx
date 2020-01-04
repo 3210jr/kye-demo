@@ -156,7 +156,7 @@ const ProfessionAnalysis = () => (
         </View>
     </View>
 );
-const Quixote = () => (
+const ProfessionAnalysisReport = () => (
     <Page style={styles.body}>
         <ReportIntro />
         <CheckStatus />
@@ -173,4 +173,4 @@ const Quixote = () => (
     </Page>
 );
 
-export default Quixote;
+export default ProfessionAnalysisReport;

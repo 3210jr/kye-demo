@@ -207,6 +207,13 @@ const EmploymentHistoryReport = () => {
     let employmentHistories = useSelector(
         state => state.orders.currentOrder["employment-history"]
     );
+
+    if (
+        employmentHistories === null ||
+        employmentHistories === undefined
+    ) {
+        return null;
+    }
     employmentHistories = Object.values(employmentHistories);
 
     return (
