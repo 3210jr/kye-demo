@@ -387,7 +387,8 @@ function KYEOrderSummary({ order, closeSummary }) {
                                     // justify="center"
                                     alignItems="baseline"
                                     style={{
-                                        paddingLeft: 8,
+                                        // paddingLeft: 8,
+                                        padding: 20,
                                         backgroundColor:"#323639"
                                     }}
                                 >
