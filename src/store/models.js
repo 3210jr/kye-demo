@@ -45,7 +45,9 @@ export const orders = {
 	state: {
 		loading: true,
 		orders: [],
-		myOrders: []
+		myOrders: [],
+		currentOrder:{},
+		currentOrderScreeningType:""
 	},
 	reducers: {
 		setMyOrders(state, payload) {
@@ -54,6 +56,10 @@ export const orders = {
 
 		setRecentOrders(state, payload) {
 			return { ...state, orders: payload, loading: false };
+		},
+
+		setCurrentOrder(state, payload) {
+			return { ...state, currentOrder: payload };
 		}
 	},
 	effects: dispatch => ({
@@ -81,7 +87,8 @@ export const orders = {
 					snap.forEach(doc => orders.push({ ...doc.data(), id: doc.id }));
 					dispatch.orders.setRecentOrders(orders);
 				});
-		}
+		},
+		
 	})
 };
 
@@ -147,7 +154,7 @@ export const snackbar = {
 	},
 	effects: dispatch => ({
 		asyncToggleSnackBar(payload, rootState) {
-			console.log("PAYLOAD:", payload, rootState)
+			// console.log("PAYLOAD:", payload, rootState)
 			if (!rootState.snackbar.open) {
 				setTimeout(() => dispatch.snackbar.toggleSnackBar(payload), 3000)
 			}

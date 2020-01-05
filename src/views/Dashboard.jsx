@@ -47,6 +47,16 @@ import PreLitigation from "./pre-litigation"
 import CompanyStaff from "./CompanyStaff";
 import Help from "./Help";
 
+// new report styling and everything
+import { PDFViewer } from "@react-pdf/renderer";
+
+import Report from './client_reports/Report'
+
+const NewReport=()=>(
+	<PDFViewer style={{ width: "100%",height:600 }}>
+		<Report />
+	</PDFViewer>
+)
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -258,6 +268,7 @@ class Dashboard extends Component {
 						<Route path={`${match.url}/company-users`} component={CompanyStaff} />
 						<Route path={`${match.url}/help`} component={Help} />
 						<Route path={`${match.url}/pre-litigation`} component={PreLitigation} />
+						<Route path={`${match.url}/report`} component={NewReport} />
 					</Switch>
 				</main>
 			</div>
