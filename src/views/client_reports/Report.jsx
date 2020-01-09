@@ -9,10 +9,12 @@ import GapAnalysisReport from "./GapAnalysis";
 import IDAnalysisReport from "./IDAnalysis";
 import ProfessionAnalysisReport from "./ProfessionAnalysis";
 import AcademicAnalysisReport from "./AcademicAnalysis";
+import LitigationReport from "./Litigation";
+import SocialMediaReport from './SocialMedia'
 
 const Report = ({screeningType}) => {
     
-    // console.log("Current  :",screeningType);
+    // conesole.log("Current  :",screeningType);
 
     return (
         <Provider store={store}>
@@ -26,6 +28,8 @@ const Report = ({screeningType}) => {
                 )}
                 {screeningType === "gaps-reports" && <GapAnalysisReport />}
                 {screeningType === "identification" && <IDAnalysisReport />}
+                {screeningType === "civil-litigation" && <LitigationReport/>}
+                {screeningType === "social-media" && <SocialMediaReport/>}
                 {screeningType === "" && <ProfessionAnalysisReport />}
             </Document>
          </Provider>
