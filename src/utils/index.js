@@ -1,12 +1,10 @@
+import moment from 'moment'
+
 const getLocalDate=(dateString)=>{
     if(dateString){
         try{
-            var date = new Date(0); 
-            date.setUTCSeconds(dateString);
-            const year=date.getFullYear()
-            const month=date.getMonth()
-            const day=date.getDate()                
-            return year+"-"+month+"-"+day;
+            const localDate=moment.unix(dateString).format('YYYY-MM-DD')            
+            return localDate
         }catch(e){
             return "Exception"
         }
