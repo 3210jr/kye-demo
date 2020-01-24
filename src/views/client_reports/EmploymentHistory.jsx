@@ -2,6 +2,7 @@ import React from "react";
 import { Page, Text, View, Document } from "@react-pdf/renderer";
 
 import { useSelector } from "react-redux";
+import _ from "lodash";
 import styles from "./styles";
 
 import ReportIntro from "./components/ReportIntro";
@@ -35,7 +36,9 @@ const JobRoleConfirmation = ({ employmentHistories }) => (
             {employmentHistories.map((employmentHistory, index) => (
                 <View style={styles.tableRow} key={index}>
                     <View style={styles.tableCol}>
-                        <Text style={styles.tableCell}>{employmentHistory.organization}</Text>
+                        <Text style={styles.tableCell}>
+                            {employmentHistory.organization}
+                        </Text>
                     </View>
                     <View style={styles.tableCol}>
                         <View style={styles.tableRow}>
@@ -204,23 +207,30 @@ const EmploymentHistoryAnalysisSummary = ({ employmentHistories }) => (
 );
 
 const EmploymentHistoryReport = () => {
-    let employmentHistories = useSelector(
+    let historyReport = useSelector(
         state => state.orders.currentOrder["employment-history"]
     );
 
-    if (
-        employmentHistories === null ||
-        employmentHistories === undefined
-    ) {
+    if (historyReport === null || historyReport === undefined) {
         return null;
     }
-    employmentHistories = Object.values(employmentHistories);
+    const employmentHistories = Object.values(
+        _.omit(historyReport, "comments")
+    );
+
+    // calculate the "average" of the scores of the different reports
+    const scores = employmentHistories.map(hr => hr.employmentHistoryScore);
+    let scoresAvg = "risk";
+    if (_.uniq(scores).length === 1 && scores.includes("good"))
+        scoresAvg = "good";
+    if (_.uniq(scores).length === 2 && scores.includes("good"))
+        scoresAvg = "medium";
 
     return (
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={["Hello"]} />
-            <Observations observations={[]} />
+            <CheckStatus score={scoresAvg} statuses={["Hello"]} />
+            <Observations observations={historyReport.comments} />
             <EmploymentHistoryAnalysisSummary
                 employmentHistories={employmentHistories}
             />
@@ -228,7 +238,7 @@ const EmploymentHistoryReport = () => {
             <EmploymentDateConfirmation
                 employmentHistories={employmentHistories}
             />
-            <AdditionInformation  infos={employmentHistories} />
+            <AdditionInformation infos={employmentHistories} />
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>

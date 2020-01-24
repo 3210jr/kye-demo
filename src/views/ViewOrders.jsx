@@ -331,7 +331,6 @@ function KYEOrderSummary({ order, closeSummary }) {
     };
 
     const handleOpen = (type, order) => {
-        console.log("Change order : ",order)
         store.dispatch.orders.setCurrentOrder(order);
         setScreeningType(type);  
         setOpen(true);
@@ -341,7 +340,6 @@ function KYEOrderSummary({ order, closeSummary }) {
         setOpen(false);
     };
     const generateReport = () => {};
-    // console.log("Show the order from here", order);
     return (
         <Paper>
             <Modal

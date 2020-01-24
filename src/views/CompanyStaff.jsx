@@ -1,108 +1,230 @@
 // @ts-check
 import React, { Component } from "react";
-import { Grid, Typography, Fab, TextField, Button, Paper } from "@material-ui/core";
+import {
+    Grid,
+    Typography,
+    Fab,
+    TextField,
+    Button,
+    FormControlLabel,
+    FormControl,
+    Switch as SwitchButton,
+    FormLabel,
+    Paper
+} from "@material-ui/core";
 import { Add as AddIcon, Close as CloseIcon } from "@material-ui/icons";
 import SimpleTable from "../components/SimpleTable";
 
+const permissionsList = ["kyc", "kye", "legal"];
+
 export default class CompanyStaff extends Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		this.state = {
-			addStaffForm: false,
-			fullName: "",
-			email: "",
-			password: "",
-			telephone: "+255"
-		};
+        this.state = {
+            addStaffForm: false,
+            fullName: "",
+            email: "",
+            password: "",
+            permissions: [],
+            telephone: "+255",
+            loading: false
+        };
 
-		this.toggleRegistrationForm = this.toggleRegistrationForm.bind(this);
-	}
-	toggleRegistrationForm() {
-		this.setState(prevState => ({ addStaffForm: !prevState.addStaffForm }));
-	}
-	render() {
-		const { fullName, email, password, telephone, addStaffForm } = this.state;
-		return (
-			<div>
-				<Grid container>
-					<Grid item xs={12} md={12}>
-						<Typography variant="h4" component="h5">
-							Company Staff
-						</Typography>
+        this.toggleRegistrationForm = this.toggleRegistrationForm.bind(this);
+    }
+    toggleRegistrationForm() {
+        this.setState(prevState => ({ addStaffForm: !prevState.addStaffForm }));
+    }
+    registerPerson() {
+        if (this.state.loading) return;
+        // const {...state} = _.omit(this.state, ["loading", "addStaffForm"]);
+        // registerOrganizationMember()
+    }
+    togglePermissions(permission) {
+        const { permissions } = { ...this.state };
+        if (permissions.includes(permission)) {
+            permissions.splice(permissions.indexOf(permission), 1);
+        } else {
+            permissions.push(permission);
+        }
+        this.setState({ permissions });
+    }
+    render() {
+        const {
+            fullName,
+            email,
+            password,
+            telephone,
+            loading,
+            addStaffForm,
+            permissions
+        } = this.state;
+        return (
+            <div>
+                <Grid container>
+                    <Grid item xs={12} md={12}>
+                        <Typography variant="h4" component="h5">
+                            Company Staff
+                        </Typography>
 
-						<div style={{ height: 10 }} />
+                        <div style={{ height: 10 }} />
 
-						<SimpleTable titles={["Full Name", "Telephone", "Email"]} data={userData} />
-					</Grid>
+                        <SimpleTable
+                            titles={["Full Name", "Telephone", "Email"]}
+                            data={userData}
+                        />
+                    </Grid>
 
-					{addStaffForm && (
-						<Grid item xs={12} md={12} style={{ marginTop: "2em" }}>
-							<Paper style={{ padding: 15 }}>
-								<Typography variant="h6" component="h6">
-									New user registration
-								</Typography>
-								<Grid container spacing={24}>
-									<Grid item xs={12} md={4}>
-										<TextField
-											id="full-name"
-											label="First Name"
-											className="wide"
-											variant="outlined"
-											value={fullName}
-											autoFocus
-											// onChange={this.handleChange("name")}
-											margin="normal"
-										/>
-									</Grid>
-									<Grid item xs={12} md={4}>
-										<TextField
-											id="email"
-											label="Email"
-											className="wide"
-											variant="outlined"
-											value={email}
-											// onChange={this.handleChange("name")}
-											margin="normal"
-										/>
-									</Grid>
-									<Grid item xs={12} md={4}>
-										<TextField
-											id="telephone"
-											label="Telephone"
-											className="wide"
-											variant="outlined"
-											value={telephone}
-											// onChange={this.handleChange("name")}
-											margin="normal"
-										/>
-									</Grid>
-								</Grid>
-								<div style={{ textAlign: "right" }}>
-									<Button variant="contained" color="primary">
-										Register new user
-									</Button>
-								</div>
-							</Paper>
-						</Grid>
-					)}
-				</Grid>
-				<Fab
-					style={{ position: "fixed", bottom: 35, right: 35 }}
-					color="primary"
-					aria-label="Add"
-					className="primary"
-					onClick={this.toggleRegistrationForm}
-				>
-					{ addStaffForm ? <CloseIcon /> : <AddIcon /> }
-				</Fab>
-			</div>
-		);
-	}
+                    {addStaffForm && (
+                        <Grid item xs={12} md={12} style={{ marginTop: "2em" }}>
+                            <Paper style={{ padding: 15 }}>
+                                <Typography variant="h6" component="h6">
+                                    New user registration
+                                </Typography>
+                                <Grid container spacing={24}>
+                                    <Grid item xs={12} md={4}>
+                                        <TextField
+                                            id="full-name"
+                                            label="Full Name"
+                                            className="wide"
+                                            variant="outlined"
+                                            value={fullName}
+                                            autoFocus
+                                            onChange={evt => this.setState({ fullName: evt.target.value })}
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={4}>
+                                        <TextField
+                                            id="email"
+                                            label="Email"
+                                            className="wide"
+                                            variant="outlined"
+                                            value={email}
+                                            onChange={evt => this.setState({ email: evt.target.value })}
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={4}>
+                                        <TextField
+                                            id="telephone"
+                                            label="Telephone"
+                                            className="wide"
+                                            variant="outlined"
+                                            value={telephone}
+                                            onChange={evt => this.setState({ telephone: evt.target.value })}
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <div style={{ marginTop: 20 }}>
+                                    <Typography variant="h6" component="h5">
+                                        Permission Information
+                                    </Typography>
+                                    <Grid container>
+                                        <Grid
+                                            item
+                                            style={{
+                                                padding: "0 0.5em 0.5em 0"
+                                            }}
+                                            xs={12}
+                                            md={4}
+                                        >
+                                            <FormControlLabel
+                                                control={
+                                                    <SwitchButton
+                                                        checked={permissions.includes(
+                                                            "kye"
+                                                        )}
+                                                        onChange={() =>
+                                                            this.togglePermissions(
+                                                                "kye"
+                                                            )
+                                                        }
+                                                        value="kye"
+                                                    />
+                                                }
+                                                label="Know Your Employee (KYE)"
+                                            />
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            style={{
+                                                padding: "0 0.5em 0.5em 0"
+                                            }}
+                                            xs={12}
+                                            md={4}
+                                        >
+                                            <FormControlLabel
+                                                control={
+                                                    <SwitchButton
+                                                        checked={permissions.includes(
+                                                            "kyc"
+                                                        )}
+                                                        onChange={() =>
+                                                            this.togglePermissions(
+                                                                "kyc"
+                                                            )
+                                                        }
+                                                        value="kyc"
+                                                    />
+                                                }
+                                                label="Know Your Customer (KYC)"
+                                            />
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            style={{
+                                                padding: "0 0.5em 0.5em 0"
+                                            }}
+                                            xs={12}
+                                            md={4}
+                                        >
+                                            <FormControlLabel
+                                                control={
+                                                    <SwitchButton
+                                                        checked={permissions.includes(
+                                                            "legan"
+                                                        )}
+                                                        onChange={() =>
+                                                            this.togglePermissions(
+                                                                "legan"
+                                                            )
+                                                        }
+                                                        value="legan"
+                                                    />
+                                                }
+                                                label="Legal Team"
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                                <div style={{ textAlign: "right" }}>
+                                    <Button variant="contained" onClick={this.registerPerson} color="primary">
+                                        {loading ? "Loading ...":"Register new user"}
+                                    </Button>
+                                </div>
+                            </Paper>
+                        </Grid>
+                    )}
+                </Grid>
+                <Fab
+                    style={{ position: "fixed", bottom: 35, right: 35 }}
+                    color="primary"
+                    aria-label="Add"
+                    className="primary"
+                    onClick={this.toggleRegistrationForm}
+                >
+                    {addStaffForm ? <CloseIcon /> : <AddIcon />}
+                </Fab>
+            </div>
+        );
+    }
 }
 
 const userData = [
-	["Ally Jr Salim", "+255 766 439 764", "ally@inspiredideas.io"],
-	["Edgar Mboki", "+255 686 349 661", "ally@inspiredideas.io"],
-	["Fred Taton", "+255 754 640 731", "ally@inspiredideas.io"]
+    ["Ally Jr Salim", "+255 766 439 764", "ally@inspiredideas.io"],
+    ["Edgar Mboki", "+255 686 349 661", "ally@inspiredideas.io"],
+    ["Fred Taton", "+255 754 640 731", "ally@inspiredideas.io"]
 ];

@@ -29,7 +29,6 @@ function createData(titles, rows) {
 function SimpleTable(props) {
 	const { classes, titles, data = [] } = props;
 	const rows = data.map(d => createData(titles, d));
-	console.log("ROWS: ", rows);
 	return (
 		<Paper className={classes.root}>
 			<Table className={classes.table}>

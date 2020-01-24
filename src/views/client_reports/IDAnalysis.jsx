@@ -1,6 +1,7 @@
 import React from "react";
 import { Page, Text, View, Document } from "@react-pdf/renderer";
-import { useSelector } from "react-redux";
+import { useSelector, useStore } from "react-redux";
+import _ from "lodash";
 
 import styles from "./styles";
 
@@ -9,7 +10,7 @@ import CheckStatus from "./components/CheckStatus";
 import Observations from "./components/Observations";
 import Note from "./components/Note";
 
-const IDAnalysis = ({ identifications }) => (
+const IDAnalysis = ({ identification }) => (
     <View style={styles.section} break>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1 }}>
@@ -39,20 +40,31 @@ const IDAnalysis = ({ identifications }) => (
                 </View>
             </View>
 
-            {identifications.map((identification, index) => (
+            {identification.map((id, index) => (
                 <View style={styles.tableRow} key={index}>
                     <View style={styles.tableCol}>
-                        <Text style={styles.tableCell}>{identification.documentType}</Text>
+                        <Text style={styles.tableCell}>
+                            {_.upperFirst(id.documentType)}
+                        </Text>
                     </View>
                     <View style={styles.tableCol}>
-                        <Text style={styles.tableCell}>{identification.countryOfIssue}</Text>
+                        <Text style={styles.tableCell}>
+                            {id.countryOfIssue
+                                .split(" ")
+                                .map(word => _.upperFirst(word))
+                                .join(" ")}
+                        </Text>
                     </View>
 
                     <View style={styles.tableCol}>
-                        <Text style={styles.tableCell}>{identification.dateOfCheck}</Text>
+                        <Text style={styles.tableCell}>
+                            {id.dateOfCheck}
+                        </Text>
                     </View>
                     <View style={styles.tableCol}>
-                        <Text style={styles.tableCell}>{identification.result}</Text>
+                        <Text style={styles.tableCell}>
+                            {id.result}
+                        </Text>
                     </View>
                 </View>
             ))}
@@ -61,22 +73,27 @@ const IDAnalysis = ({ identifications }) => (
 );
 
 const IDAnalysisReport = () => {
-    const identifications = useSelector(
-        state => state.orders.currentOrder["identification"]
-    );
+    const order = useSelector(state => state.orders.currentOrder);
+    // const identification = useSelector(
+    //     state => state.orders.currentOrder["identification"]
+    // );
+    const {identification, address} = order;
+    // console.log(order)
 
-    if (identifications=== null || identifications === undefined) {
+    if (identification === null || identification === undefined) {
         return null;
     }
+
+    // console.log("ID: ", identification)
 
     return (
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={[]} />
-            <Observations />
-            <IDAnalysis identifications={[identifications]} />
-            <Note />
+            <CheckStatus score={identification.identityScore} />
+            <IDAnalysis identification={[identification]} />
+            <Observations observations={identification.comments} />
+            {/* <Note /> */}
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>

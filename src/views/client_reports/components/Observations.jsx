@@ -22,7 +22,7 @@ const Observations = ({observations}) => (
                     styles.nonTableContentPadding
                 ]}
             >
-                <Text style={styles.text}>{"Lorem ipsum"}</Text>
+                <Text style={styles.text}>{observations}</Text>
             </View>
         </View>
     </View>

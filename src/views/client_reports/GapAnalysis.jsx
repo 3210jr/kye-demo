@@ -2,6 +2,7 @@ import React from "react";
 import { Page, Text, View, Document } from "@react-pdf/renderer";
 
 import { useSelector } from "react-redux";
+import _ from "lodash";
 import styles from "./styles";
 
 import ReportIntro from "./components/ReportIntro";
@@ -9,7 +10,6 @@ import CheckStatus from "./components/CheckStatus";
 import Observations from "./components/Observations";
 
 const GapAnalysis = ({ gaps }) => {
-    console.log("The  gaps : ", gaps);
     return (
         <View style={styles.section} break>
             <View style={{ flexDirection: "row" }}>
@@ -35,13 +35,11 @@ const GapAnalysis = ({ gaps }) => {
                     <View style={styles.tableRow} key={index}>
                         <View style={styles.tableCol}>
                             <Text style={styles.tableCell}>
-                                {gap.period}
+                                {gap.from} - {gap.to}
                             </Text>
                         </View>
                         <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>
-                                {gap.comments}
-                            </Text>
+                            <Text style={styles.tableCell}>{gap.comments}</Text>
                         </View>
                     </View>
                 ))}
@@ -49,22 +47,31 @@ const GapAnalysis = ({ gaps }) => {
         </View>
     );
 };
-const GapAnalysisReport = ({  }) => {
-    let gaps = useSelector(
+const GapAnalysisReport = ({}) => {
+    const gapsReport = useSelector(
         state => state.orders.currentOrder["gaps-reports"]
     );
-    if (gaps=== null || gaps === undefined) {
+    if (gapsReport === null || gapsReport === undefined) {
         return null;
     }
-    gaps=Object.values(gaps)
+    const gaps = Object.values(gapsReport);
+
+    // calculate the "average" of the scores of the different reports
+    const scores = gaps.map(g => g.gapInEmploymentHistoryScore);
+    let scoresAvg = "risk";
+    if (_.uniq(scores).length === 1 && scores.includes("good"))
+        scoresAvg = "good";
+    if (_.uniq(scores).length === 2 && scores.includes("good"))
+        scoresAvg = "medium";
 
     return (
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={["Gap Analysis"]} />
-            <Observations />
+            <CheckStatus score={scoresAvg} statuses={["Gap Analysis"]} />
             <GapAnalysis gaps={gaps} />
+            {/* Gaps Report doesnt have general observations */}
+            {/* <Observations observations={gaps.generalComments} /> */}
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>
