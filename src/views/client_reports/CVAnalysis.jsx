@@ -112,20 +112,23 @@ const CVAnalysis = () => (
     </View>
 );
 const CVAnalysisReport = () => {
-    const polieReports = useSelector(
+    const policeReports = useSelector(
         state => state.orders.currentOrder["police-reports"]
     );
 
-    if (polieReports === null || polieReports === undefined) {
+    if (policeReports === null || policeReports === undefined) {
         return null;
     }
+
+    const score =
+        policeReports.criminalAnalysisScore === "positive" ? "good" : "bad";
 
     return (
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={["Hello World"]} />
-            <Observations observations={[]} />
+            <CheckStatus score={score} statuses={["Hello World"]} />
+            <Observations observations={policeReports.comments} />
             <Text
                 style={styles.pageNumber}
                 render={({ pageNumber, totalPages }) =>

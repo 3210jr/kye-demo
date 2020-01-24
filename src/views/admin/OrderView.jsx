@@ -99,6 +99,24 @@ class OrderView extends Component {
 		}`;
 	};
 
+	isReadyToComplete = () => {
+		const { orders, match } = this.props;
+		const { orderId } = match.params;
+
+		const order = orders.find(order => order.id === orderId);
+		let complete = true;
+		if (order) {
+			order.screeningTypes.forEach(type => {
+				if (!order[type] || Object.keys(order[type]).length === 0) {
+					complete = false;
+				}
+			});
+		}
+
+		console.log("Completed: ", complete)
+		return complete
+	}
+
 	requestChanges = orderId => {
 		//
 	};
@@ -154,6 +172,7 @@ class OrderView extends Component {
 									color="primary"
 									style={{ marginRight: 5 }}
 									onClick={this.completeOrder}
+									disabled={!this.isReadyToComplete()}
 									// className=""
 								>
 									Complete Order
@@ -311,7 +330,7 @@ function KYCAddidionalInformation({ order, downloadAttachment }) {
 						onChange={({ target }) =>
 							handleChange("remarksAndAnomalies", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						multiline
 						rows={5}
@@ -326,7 +345,7 @@ function KYCAddidionalInformation({ order, downloadAttachment }) {
 						onChange={({ target }) =>
 							handleChange("complianceNotes", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						multiline
 						rows={5}
@@ -506,7 +525,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("shareholders", key, "fullName", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -533,7 +552,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("shareholders", key, "telephone", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -546,7 +565,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("shareholders", key, "nationality", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								select
 								variant="outlined"
@@ -569,7 +588,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("shareholders", key, "idType", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							>
@@ -596,7 +615,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("shareholders", key, "idNumber", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -610,7 +629,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("shareholders", key, "idExpiry", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -658,7 +677,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("directors", key, "fullName", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -685,7 +704,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("directors", key, "telephone", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -698,7 +717,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("directors", key, "nationality", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								select
 								variant="outlined"
@@ -721,7 +740,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("directors", key, "idType", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							>
@@ -748,7 +767,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("directors", key, "idNumber", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -762,7 +781,7 @@ function StakeholdersAnalysis({ order }) {
 								onChange={evt =>
 									updateEmbeddedField("directors", key, "idExpiry", evt)
 								}
-								id="outlined-dense-multiline"
+								id=""
 								margin="dense"
 								variant="outlined"
 							/>
@@ -864,7 +883,6 @@ function CompanyAnalysis({ order }) {
 			2,
 			"0"
 		)}-${padStart(dateObj.getDate().toString(), 2, "0")}`;
-		console.log("DATE: ", strDate);
 		return strDate;
 	}
 
@@ -898,7 +916,7 @@ function CompanyAnalysis({ order }) {
 						label="Company Name"
 						value={state.companyName}
 						onChange={({ target }) => handleChange("companyName", target.value)}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						variant="outlined"
 					/>
@@ -911,7 +929,7 @@ function CompanyAnalysis({ order }) {
 						onChange={({ target }) =>
 							handleChange("registrationNumber", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						variant="outlined"
 					/>
@@ -927,7 +945,7 @@ function CompanyAnalysis({ order }) {
 								new Date(target.value).getTime()
 							)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						type="date"
 						variant="outlined"
@@ -944,7 +962,7 @@ function CompanyAnalysis({ order }) {
 						onChange={({ target }) =>
 							handleChange("shareCapital", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						variant="outlined"
 					/>
@@ -957,7 +975,7 @@ function CompanyAnalysis({ order }) {
 						onChange={({ target }) =>
 							handleChange("annualReturns", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						variant="outlined"
 					/>
@@ -970,7 +988,7 @@ function CompanyAnalysis({ order }) {
 						onChange={({ target }) =>
 							handleChange("placeOfBusiness", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						variant="outlined"
 					/>
@@ -987,7 +1005,7 @@ function CompanyAnalysis({ order }) {
 						onChange={({ target }) =>
 							handleChange("registeredCharges", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						variant="outlined"
 					/>
@@ -1000,7 +1018,7 @@ function CompanyAnalysis({ order }) {
 						onChange={({ target }) =>
 							handleChange("chargeEntityNames", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						variant="outlined"
 					/>
@@ -1013,7 +1031,7 @@ function CompanyAnalysis({ order }) {
 						onChange={({ target }) =>
 							handleChange("overallRating", target.value)
 						}
-						id="outlined-dense-multiline"
+						id=""
 						margin="dense"
 						select
 						variant="outlined"

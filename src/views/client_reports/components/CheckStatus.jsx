@@ -11,7 +11,7 @@ import {
 
 import styles from "../styles";
 
-const CheckStatus = ({ statuses }) => (
+const CheckStatus = ({ score }) => (
     <View style={styles.section}>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 3 }}>
@@ -19,12 +19,21 @@ const CheckStatus = ({ statuses }) => (
                     Background Check Included in this Report
                 </Text>
             </View>
-            <View style={{ flex: 1 }}>
-                <Text style={styles.subtitle}>Status :</Text>
+            <View
+                style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    alignContent: "center"
+                }}
+            >
+                <Text style={styles.subtitle}>Status : </Text>
+                <ColorBlock score={score} />
             </View>
         </View>
 
-        {statuses.map((status,index) => (
+        {/* QUESTION: Why is the statuses an array? */}
+        {/* {statuses.map((status,index) => (
             <View
                 style={[
                     {
@@ -46,8 +55,20 @@ const CheckStatus = ({ statuses }) => (
                     ></View>
                 </View>
             </View>
-        ))}
+        ))} */}
     </View>
 );
 
 export default CheckStatus;
+
+function ColorBlock({ score }) {
+    let color = score === "bad" ? "red" : "white";
+    if (score && score.length > 0 && color === "white") {
+        color =
+            score === "risk" ? "red" : score === "medium" ? "orange" : "green";
+    }
+
+    // console.log("Color: ", color, score)
+
+    return <View style={{ height: 25, backgroundColor: color, flex: 1 }} />;
+}

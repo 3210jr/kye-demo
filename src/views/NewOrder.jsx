@@ -112,7 +112,7 @@ class NewOrder extends Component {
 		// with half entered details from another page
 		const { location } = this.props;
 		const routeState = !!location.state ? location.state : {};
-		console.log("Route State: ", routeState);
+		// console.log("Route State: ", routeState);
 
 		this.setState({
 			firstName: routeState.firstName || "",
@@ -153,7 +153,6 @@ class NewOrder extends Component {
 		// if (field === "dateOfBirth") {
 		// 	return this.setState(prevState => (prevState[field] = evt));
 		// }
-		console.log(field, evt.target.value);
 		const update = evt.target.value;
 		this.setState(prevState => (prevState[field] = update));
 	}
@@ -651,6 +650,23 @@ class NewOrder extends Component {
 												/>
 											}
 											label="Academic Qualifications"
+										/>
+									</Grid>
+									<Grid item xs={12} md={3}>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={screeningTypes.includes(
+														"professional-qualifications"
+													)}
+													onChange={evt =>
+														this.toggleScreeningType("professional-qualifications")
+													}
+													value="checkedB"
+													color="primary"
+												/>
+											}
+											label="Professional Qualifications"
 										/>
 									</Grid>
 									<Grid item xs={12} md={3}>

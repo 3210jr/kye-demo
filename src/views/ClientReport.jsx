@@ -10,7 +10,7 @@ import {
 	Table,
 	Typography
 } from "@material-ui/core";
-import { map } from "lodash";
+import _, { map } from "lodash";
 
 import * as logoImg from "../assets/mwema_logo.png";
 import "./ClientReport.css";
@@ -115,13 +115,13 @@ const FirstPage = ({ person }) => {
 								<FieldsTitle label="Document Type" />
 							</TableCell>
 							<TableCell style={borders.left}>
-								{person.identification.documentType}
+								{_.upperFirst(person.identification.documentType)}
 							</TableCell>
 							<TableCell style={borders.left}>
 								<FieldsTitle label="Country of Issue" />
 							</TableCell>
 							<TableCell style={borders.left_right}>
-								{person.identification.countryOfIssue}
+								{person.identification.countryOfIssue.split(" ").map(word => _.upperFirst(word)).join(" ")}
 							</TableCell>
 						</TableRow>
 

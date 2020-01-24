@@ -127,7 +127,6 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 			});
 	}
 
-	console.log("STATE: ", state);
 
 	return (
 		<Paper style={{ padding: "1em", marginTop: 15 }}>
@@ -233,7 +232,7 @@ function GapsReports({ order, type, snackbar, toggleSnackBar }) {
 									variant="outlined"
 								>
 									<MenuItem value="good">Good</MenuItem>
-									<MenuItem value="average">Average</MenuItem>
+									{/* <MenuItem value="average">Average</MenuItem> */}
 									<MenuItem value="bar">Bad</MenuItem>
 								</TextField>
 							</Grid>

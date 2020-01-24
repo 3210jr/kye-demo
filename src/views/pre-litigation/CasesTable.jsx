@@ -103,7 +103,7 @@ class CasesList extends React.Component {
 	};
 
 	handlePrint = item => {
-		console.log(item);
+		// console.log(item);
 	};
 
 	handleChangePage = (event, page) => {
@@ -118,7 +118,6 @@ class CasesList extends React.Component {
 
 	render() {
         const { classes, cases, onClickCase = () => {} } = this.props;
-        console.log("Cases: ", cases);
 		const { order, orderBy, selected, rowsPerPage, page } = this.state;
 		var reportsReferences = []; //references
 		const emptyRows =

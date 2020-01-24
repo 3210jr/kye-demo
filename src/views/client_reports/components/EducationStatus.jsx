@@ -1,12 +1,9 @@
 import React from "react";
-import {
-    Text,
-    View,
-} from "@react-pdf/renderer";
-
+import { Text, View } from "@react-pdf/renderer";
+import _ from "lodash";
 import styles from "../styles";
 
-const CheckStatus = ({ academicQualifications}) => (
+const CheckStatus = ({ academicQualifications }) => (
     <View style={styles.section}>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 3 }}>
@@ -33,7 +30,9 @@ const CheckStatus = ({ academicQualifications}) => (
                 key={index}
             >
                 <View style={{ flex: 3 }}>
-                    <Text style={styles.text}>{academicQualification.establishmentName}</Text>
+                    <Text style={styles.text}>
+                        {_.upperFirst(academicQualification.establishmentName)}
+                    </Text>
                 </View>
                 <View style={{ flex: 1, marginVertical: -8, marginLeft: 2 }}>
                     <View

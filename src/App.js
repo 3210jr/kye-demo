@@ -1,7 +1,6 @@
 // @ts-check
 import React, { Component } from "react";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { black } from "@material-ui/core/colors";
 import { Provider, connect } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./firebase";
@@ -27,9 +26,9 @@ const theme = createMuiTheme({
 		// 	// contrastText: will be calculated to contrast with palette.primary.main
 		// }
 	},
-	status: {
-		danger: "orange"
-	}
+	// status: {
+	// 	danger: "orange"
+	// }
 });
 
 class ScrollToTop extends React.Component {
@@ -75,8 +74,8 @@ const mapState = state => ({
 	snackbar: state.snackbar
 });
 
+// @ts-ignore
 const SnackbarContainer = connect(mapState)(({snackbar}) => {
-	console.log(snackbar)
 	return (
 	<Snackbar
 		anchorOrigin={{ vertical: snackbar.vertical, horizontal: snackbar.horizontal }}

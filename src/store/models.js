@@ -41,6 +41,26 @@ export const profile = {
 	})
 };
 
+export const organizations = {
+	state: {
+		loading: true,
+		organizations: []
+	},
+	reducers: {
+		setOrganizationsList(state, payload = []) {
+			return { ...state, organizations: payload, loading: false }
+		}
+	},
+	effects: dispatch => ({
+		async loadOrganizationsList(payload, rootState) {
+			await firebase.firestore().collection("organizations").get().then(res => {
+				const orgs = res.docs.map(org => ({ ...org.data(), id: org.id }));
+				dispatch.organizations.setOrganizationsList(orgs);
+			})
+		}
+	})
+}
+
 export const orders = {
 	state: {
 		loading: true,

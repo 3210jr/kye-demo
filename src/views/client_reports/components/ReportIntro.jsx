@@ -2,13 +2,12 @@ import React from "react";
 import { Text, View, Image } from "@react-pdf/renderer";
 
 import { useSelector } from "react-redux";
-import {getLocalDate} from '../../../utils/index'
+import { getLocalDate } from "../../../utils/index";
+import _ from "lodash";
 import styles from "../styles";
 import * as logoImg from "../../../assets/mwema_logo.png";
 
-
 const ReportIntro = () => {
-
     const currentOrder = useSelector(state => state.orders.currentOrder);
     const {
         firstName,
@@ -19,10 +18,11 @@ const ReportIntro = () => {
         organizationName,
         referenceNumber,
         createdAt,
-        updatedAt
-
+        updatedAt,
+        country,
+        box,
+        region
     } = currentOrder;
-    console.log("Current order : ",currentOrder)
     return (
         <View style={styles.section}>
             <View style={{ flexDirection: "row-reverse" }}>
@@ -41,7 +41,9 @@ const ReportIntro = () => {
                         </View>
 
                         <View style={styles.tableColOneThird}>
-                            <Text style={[styles.tableCell]}>{firstName+" "+middleName+" "+lastName}</Text>
+                            <Text style={[styles.tableCell]}>
+                                {firstName + " " + middleName + " " + lastName}
+                            </Text>
                         </View>
                     </View>
 
@@ -66,7 +68,12 @@ const ReportIntro = () => {
                         </View>
                         <View style={styles.tableColOneThird}>
                             <Text style={styles.tableCell}>
-                                {address}
+                                {`${
+                                    box && box.length > 0 ? box + " " : ""
+                                }${_.upperFirst(region)}, ${country
+                                    .split(" ")
+                                    .map(c => _.upperFirst(c))
+                                    .join(" ")}`}
                             </Text>
                         </View>
                     </View>
@@ -87,7 +94,9 @@ const ReportIntro = () => {
                         </View>
 
                         <View style={styles.tableColOneThird}>
-                            <Text style={styles.tableCell}>{organizationName}</Text>
+                            <Text style={styles.tableCell}>
+                                {organizationName}
+                            </Text>
                         </View>
                     </View>
 
@@ -113,7 +122,9 @@ const ReportIntro = () => {
                         <View style={styles.tableColOneThird}>
                             <View style={styles.tableRow}>
                                 <View style={styles.tableCol}>
-                                    <Text style={styles.tableCell}>{getLocalDate(createdAt.seconds)}</Text>
+                                    <Text style={styles.tableCell}>
+                                        {getLocalDate(createdAt.seconds)}
+                                    </Text>
                                 </View>
                                 <View style={styles.tableCol}>
                                     <Text
@@ -123,7 +134,9 @@ const ReportIntro = () => {
                                     </Text>
                                 </View>
                                 <View style={styles.tableCol}>
-                                    <Text style={styles.tableCell}>{getLocalDate(updatedAt.seconds)}</Text>
+                                    <Text style={styles.tableCell}>
+                                        {getLocalDate(updatedAt.seconds)}
+                                    </Text>
                                 </View>
                             </View>
                         </View>

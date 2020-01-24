@@ -37,7 +37,6 @@ import PreLitigationCaseView from "../pre-litigation/PreLitigationCaseView";
 class PreLitigation extends Component {
 	render() {
 		const { match, history } = this.props;
-		console.log("DAY!!", match);
 		return (
 			<div className="App">
 				<Switch>
@@ -63,7 +62,10 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 		fName: "",
 		lName: "",
 		mName: "",
-		nidaNumber: ""
+		nidaNumber: "",
+		votersIdNumber: "",
+		passportNumber: "",
+		telephone: "",
 	};
 	const [state, setstate] = useState({
 		customerName: "",
@@ -77,7 +79,7 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 		caseType: "other",
 		comments: "",
 		attachmentURL: "",
-		suspects: [suspectTmp],
+		suspects: [{...suspectTmp}],
 		loading: false,
 		uploadingAttachment: false
 	});
@@ -157,7 +159,7 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							onChange={({ target }) =>
 								handleChange("customerName", target.value)
 							}
-							id="outlined-dense-multiline"
+							id=""
 							margin="dense"
 							variant="outlined"
 						/>
@@ -170,7 +172,7 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							onChange={({ target }) =>
 								handleChange("registrationNumber", target.value)
 							}
-							id="outlined-dense-multiline"
+							id=""
 							margin="dense"
 							variant="outlined"
 						/>
@@ -181,7 +183,7 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							label="Telephone Number"
 							value={state.telephone}
 							onChange={({ target }) => handleChange("telephone", target.value)}
-							id="outlined-dense-multiline"
+							id=""
 							margin="dense"
 							variant="outlined"
 						/>
@@ -192,7 +194,7 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 							label="Address"
 							value={state.address}
 							onChange={({ target }) => handleChange("address", target.value)}
-							id="outlined-dense-multiline"
+							id=""
 							margin="dense"
 							variant="outlined"
 						/>
@@ -272,10 +274,46 @@ const NewCase = connect(mapState)(function({ profile, history }) {
 						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
 							<TextField
 								fullWidth
+								label="Telephone Number"
+								value={suspect.telephone}
+								onChange={({ target }) =>
+									updateSuspect(index, "telephone", target.value)
+								}
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
 								label="NIDA Number"
 								value={suspect.nidaNumber}
 								onChange={({ target }) =>
 									updateSuspect(index, "nidaNumber", target.value)
+								}
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Passport Number"
+								value={suspect.passportNumber}
+								onChange={({ target }) =>
+									updateSuspect(index, "passportNumber", target.value)
+								}
+								margin="dense"
+								variant="outlined"
+							/>
+						</Grid>
+						<Grid item xs={12} sm={12} md={3} style={styles.inputs}>
+							<TextField
+								fullWidth
+								label="Voters ID Number"
+								value={suspect.votersIdNumber}
+								onChange={({ target }) =>
+									updateSuspect(index, "votersIdNumber", target.value)
 								}
 								margin="dense"
 								variant="outlined"

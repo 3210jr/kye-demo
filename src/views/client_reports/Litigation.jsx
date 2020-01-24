@@ -3,17 +3,18 @@ import { Page, Text, View } from "@react-pdf/renderer";
 import { useSelector } from "react-redux";
 
 import styles from "./styles";
+import _ from "lodash";
 
 import ReportIntro from "./components/ReportIntro";
 import CheckStatus from "./components/CheckStatus";
 import Observations from "./components/Observations";
 import Note from "./components/Note";
 
-const LitigationAnalysis = ({ litigations}) => (
+const LitigationAnalysis = ({ litigations }) => (
     <View style={styles.section} break>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1 }}>
-                <Text style={styles.subtitle}>Check</Text>
+                <Text style={styles.subtitle}>Litigation Check Results</Text>
             </View>
         </View>
         <View style={styles.table}>
@@ -49,7 +50,9 @@ const LitigationAnalysis = ({ litigations}) => (
                 </View>
 
                 <View style={[styles.tableCol]}>
-                    <Text style={[styles.tableCell]}>{litigations.caseNature}</Text>
+                    <Text style={[styles.tableCell]}>
+                        {_.upperFirst(litigations.caseNature)}
+                    </Text>
                 </View>
 
                 <View style={styles.tableCol}>
@@ -57,7 +60,6 @@ const LitigationAnalysis = ({ litigations}) => (
                         Case Number: {litigations.caseNumber}
                     </Text>
                 </View>
-
             </View>
 
             <View style={styles.tableRow}>
@@ -68,7 +70,9 @@ const LitigationAnalysis = ({ litigations}) => (
                 </View>
 
                 <View style={[styles.tableColOneThird]}>
-                    <Text style={[styles.tableCell]}>{litigations.partiesInvolved}</Text>
+                    <Text style={[styles.tableCell]}>
+                        {litigations.partiesInvolved}
+                    </Text>
                 </View>
             </View>
 
@@ -80,7 +84,9 @@ const LitigationAnalysis = ({ litigations}) => (
                 </View>
 
                 <View style={[styles.tableColOneThird]}>
-                    <Text style={[styles.tableCell]}>{litigations.rullingComments}</Text>
+                    <Text style={[styles.tableCell]}>
+                        {litigations.rullingComments}
+                    </Text>
                 </View>
             </View>
 
@@ -92,7 +98,9 @@ const LitigationAnalysis = ({ litigations}) => (
                 </View>
 
                 <View style={[styles.tableColOneThird]}>
-                    <Text style={[styles.tableCell]}>{litigations.comments}</Text>
+                    <Text style={[styles.tableCell]}>
+                        {litigations.comments}
+                    </Text>
                 </View>
             </View>
         </View>
@@ -104,7 +112,7 @@ const LitigationReport = () => {
         state => state.orders.currentOrder["civil-litigation"]
     );
 
-    if (litigations=== null ||litigations === undefined) {
+    if (litigations === null || litigations === undefined) {
         return null;
     }
 
@@ -112,9 +120,12 @@ const LitigationReport = () => {
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={[]} />
-            <Observations />
-            <LitigationAnalysis litigations={litigations}/>
+            <CheckStatus
+                score={litigations.score}
+                statuses={litigations.score}
+            />
+            {/* <Observations /> */}
+            <LitigationAnalysis litigations={litigations} />
             {/* <Note /> */}
             <Text
                 style={styles.pageNumber}

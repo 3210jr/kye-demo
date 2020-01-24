@@ -91,7 +91,6 @@ const rows = [
 ];
 
 function AdminOrdersTable({ orders, history }) {
-	console.log(orders, history);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
 

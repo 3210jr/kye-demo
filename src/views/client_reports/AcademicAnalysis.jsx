@@ -2,6 +2,7 @@ import React from "react";
 import { Page, Text, View } from "@react-pdf/renderer";
 import { useSelector } from "react-redux";
 import styles from "./styles";
+import _ from "lodash";
 
 //importing components
 import ReportIntro from "./components/ReportIntro";
@@ -198,22 +199,21 @@ const AcademicAnalysis = ({ academicQualifications }) => (
     </View>
 );
 const AcademicAnalysisReport = () => {
-    let academicQualifications = useSelector(
+    let academicReport = useSelector(
         state => state.orders.currentOrder["academic-qualifications"]
     );
 
-    if (
-        academicQualifications === null ||
-        academicQualifications === undefined
-    ) {
+    if (academicReport === null || academicReport === undefined) {
         return null;
     }
-    academicQualifications = Object.values(academicQualifications);
+    const academicQualifications = Object.values(
+        _.omit(academicReport, ["comments"])
+    );
     return (
         <Page style={styles.body}>
             <ReportIntro />
             <CheckStatus academicQualifications={academicQualifications} />
-            <Observations />
+            <Observations observations={academicReport.comments} />
             <AcademicAnalysisSummary
                 academicQualifications={academicQualifications}
             />
