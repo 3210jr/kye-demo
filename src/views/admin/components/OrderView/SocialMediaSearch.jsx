@@ -141,7 +141,7 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
                             Networks searched
                         </InputLabel>
                         <Select
-                            labelId="demo-mutiple-name-label"
+                            // labelid="demo-mutiple-name-label"
                             id="demo-mutiple-name"
                             variant="outlined"
                             multiple

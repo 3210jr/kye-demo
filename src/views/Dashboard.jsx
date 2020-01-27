@@ -46,6 +46,7 @@ import ViewOrders from "./ViewOrders";
 import PreLitigation from "./pre-litigation";
 import CompanyStaff from "./CompanyStaff";
 import Help from "./Help";
+import EditOrder from "./EditOrder";
 
 // new report styling and everything
 import { PDFViewer } from "@react-pdf/renderer";
@@ -279,6 +280,10 @@ class Dashboard extends Component {
                             component={ViewOrders}
                         />
                         <Route
+                            path={`${match.url}/edit-order/:orderId`}
+                            component={EditOrder}
+                        />
+                        <Route
                             path={`${match.url}/company-users`}
                             component={CompanyStaff}
                         />
@@ -347,7 +352,7 @@ function ClientDashboard(props) {
 			</Grid> */}
             <Grid container style={{ marginBottom: "1em" }}>
                 <Grid item sm>
-                    <ViewOrders />
+                    <ViewOrders match={props.match} history={props.history} />
                 </Grid>
             </Grid>
         </div>

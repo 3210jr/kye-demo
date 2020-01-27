@@ -27,7 +27,8 @@ import {
     persistOrderEmbeddedResults,
     uploadFile,
     isCompleteForm,
-    updateOrderFields
+    updateOrderFields,
+    isValidDate
 } from "../../../../utils";
 
 const EMPLOYMENT_HISTORY_TEMPLATE = {
@@ -130,6 +131,19 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
             });
     }
 
+    function removeReport(key) {
+        const stateClone = { ...state };
+        if (
+            window.confirm(
+                "Are you sure you want to delete this part of the report? This action is IRREVERSIBLE."
+            )
+        ) {
+            delete stateClone[key];
+            setState({ ...stateClone });
+        }
+        return;
+    }
+
     function handleChange(key, field, value) {
         state[key][field] = value;
         return setState({ ...state });
@@ -142,6 +156,18 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
             "uploadingAttachment"
         ]);
         if (loading || uploadingAttachment) return;
+
+        if (
+            !isValidDate([
+                currentState.dateProduced,
+                currentState.employmentStartDateCandidate,
+                currentState.employmentEndDateReferee,
+                currentState.employmentEndDateCandidate,
+                currentState.employmentStartDateReferee
+            ])
+        ) {
+            return alert("Please verify the dates you have entered.");
+        }
 
         if (
             !currentState.supportingDocsURL ||
@@ -877,6 +903,23 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                         : "Upload Supporting Documents"}
                                 </Button>
                             </Grid>
+                            {keys(_.omit(state, ["comments"])).length > 1 && (
+                                <Grid
+                                    item
+                                    xs={2}
+                                    sm={2}
+                                    style={{ paddingLeft: 3, paddingRight: 3 }}
+                                >
+                                    <Button
+                                        fullWidth
+                                        variant="text"
+                                        color="secondary"
+                                        onClick={() => removeReport(key)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </Grid>
+                            )}
                         </Grid>
 
                         <input

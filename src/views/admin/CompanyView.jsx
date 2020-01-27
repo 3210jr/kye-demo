@@ -5,18 +5,24 @@ import CompanyStaff from "../CompanyStaff";
 import { connect, useSelector } from "react-redux";
 
 const CompanyView = ({ organizations, profile, match }) => {
-    let organization = useSelector(
-        state => state.organizations.organizations.find(o => o.id === match.params.companyId)
+    let organization = useSelector(state =>
+        state.organizations.organizations.find(
+            o => o.id === match.params.companyId
+        )
     );
     if (!organization) {
-		return <div>Loading ....</div>
-	}
+        return <div>Loading ....</div>;
+    }
     return (
         <div>
-            <CompanyForm closeForm={() => {}} organization={organization} title="Company Details" />
+            <CompanyForm
+                closeForm={() => {}}
+                organization={organization}
+                title="Company Details"
+            />
 
             <div style={{ marginTop: "3.5em" }}>
-                <CompanyStaff />
+                <CompanyStaff organizationId={match.params.companyId} />
             </div>
         </div>
     );

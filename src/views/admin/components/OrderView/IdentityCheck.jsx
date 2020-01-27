@@ -10,7 +10,11 @@ import {
     TextField,
     MenuItem
 } from "@material-ui/core";
-import { persistOrderResults, uploadFile } from "../../../../utils";
+import {
+    persistOrderResults,
+    uploadFile,
+    isValidDate
+} from "../../../../utils";
 import { identificationTypes } from "../../../../constants";
 import { countryList } from "../../../../constants/countries";
 
@@ -69,6 +73,9 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
         const { loading } = state;
         const currentState = omit(state, ["loading"]);
         if (loading) return;
+        if (!isValidDate([currentState.expiryDate, currentState.dateOfCheck])) {
+            return alert("Please validate the dates entered");
+        }
         const emptyFields = Object.keys(currentState).filter(
             key => state[key].length === 0
         );
@@ -129,8 +136,8 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
                         label="Country of issue"
                         style={{ margin: 3 }}
                         className="wide"
-						value={state.countryOfIssue}
-						select
+                        value={state.countryOfIssue}
+                        select
                         onChange={({ target }) =>
                             handleChange("countryOfIssue", target.value)
                         }

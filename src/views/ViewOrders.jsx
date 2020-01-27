@@ -1,5 +1,5 @@
 // @ts-check
-import React,{Suspense} from "react";
+import React, { Suspense } from "react";
 import { renderToString } from "react-dom/server";
 import classNames from "classnames";
 import PropTypes from "prop-types";
@@ -43,7 +43,6 @@ import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
 import NewReport from "./client_reports/Report";
 // const NewReport=React.lazy(() => import('./client_reports/Report'));
-
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -136,6 +135,11 @@ class ViewOrders extends React.Component {
 
     selectRow = id => {
         const { selectedRowId } = this.state;
+        const { myOrders, history, match } = this.props;
+        const row = find(myOrders, ["id", id]);
+        if (row && row.status === "changes requested") {
+            return history.push(`${match.url}/edit-order/${id}`);
+        }
         let rowId = id;
         if (selectedRowId === id) {
             rowId = "";
@@ -173,7 +177,7 @@ class ViewOrders extends React.Component {
             selectedRowId
         } = this.state;
 
-        // console.log(myOrders);
+        console.log(this.props);
 
         const selectedOrder = find(myOrders, ["id", selectedRowId]);
         const emptyRows =
@@ -308,9 +312,6 @@ function isInvestigationComplete(order = {}, investigation) {
     return Object.keys(order[investigation]).length > 0;
 }
 
-
-
-
 function KYEOrderSummary({ order, closeSummary }) {
     // const LazyReport = React.lazy(() => import("./client_reports/Report"));
 
@@ -332,7 +333,7 @@ function KYEOrderSummary({ order, closeSummary }) {
 
     const handleOpen = (type, order) => {
         store.dispatch.orders.setCurrentOrder(order);
-        setScreeningType(type);  
+        setScreeningType(type);
         setOpen(true);
     };
 
@@ -356,12 +357,8 @@ function KYEOrderSummary({ order, closeSummary }) {
                     backgroundColor: "rgba(0,0,0,0.7)"
                 }}
             >
-           
-
-   
                 <div
                     style={{
-                        
                         minWidth: 800,
                         height: "80%",
                         maxWidth: 900,
@@ -369,7 +366,6 @@ function KYEOrderSummary({ order, closeSummary }) {
                         marginRight: "auto"
                     }}
                 >
-            
                     <PDFDownloadLink
                         document={<NewReport screeningType={screeningType} />}
                         fileName={getReportName()}
@@ -387,11 +383,15 @@ function KYEOrderSummary({ order, closeSummary }) {
                                     style={{
                                         // paddingLeft: 8,
                                         padding: 20,
-                                        backgroundColor:"#323639"
+                                        backgroundColor: "#323639"
                                     }}
                                 >
                                     <Grid item xs={9}>
-                                    <Typography variant="h5" component="h5" style={{color:"white"}}>
+                                        <Typography
+                                            variant="h5"
+                                            component="h5"
+                                            style={{ color: "white" }}
+                                        >
                                             {getReportName()}
                                         </Typography>
                                     </Grid>
@@ -400,7 +400,7 @@ function KYEOrderSummary({ order, closeSummary }) {
                                             variant="contained"
                                             color="primary"
                                             fullWidth
-                                            style={{height:"100%"}}
+                                            style={{ height: "100%" }}
                                         >
                                             Download Report
                                         </Button>
@@ -409,12 +409,16 @@ function KYEOrderSummary({ order, closeSummary }) {
                             )
                         }
                     </PDFDownloadLink>
-                    <PDFViewer style={{ width: "100%", height: "100%",border:"none" }}>
+                    <PDFViewer
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            border: "none"
+                        }}
+                    >
                         <NewReport screeningType={screeningType} />
                     </PDFViewer>
-                
                 </div>
-                
             </Modal>
 
             <div style={{ position: "relative" }}>
@@ -548,10 +552,11 @@ function KYCOrderItem({ order, index }) {
 }
 
 ViewOrders.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 };
 
-const mapState = state => ({
+const mapState = (state, props) => ({
     profile: state.profile,
     // FIXME: This only loads the current users orders ... in our case, the user is also admin and its the only reason it "works" for the admin too
     myOrders: state.orders.myOrders.map(order => {
@@ -559,7 +564,8 @@ const mapState = state => ({
             ...order,
             fullName: `${order.firstName} ${order.middleName} ${order.lastName}`
         };
-    })
+    }),
+    ...props
 });
 
 export default connect(mapState)(withStyles(styles)(ViewOrders));

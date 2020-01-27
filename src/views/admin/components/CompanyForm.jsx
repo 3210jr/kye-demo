@@ -12,7 +12,8 @@ import {
     Button,
     FormHelperText,
     TextField,
-    TablePagination
+    TablePagination,
+    MenuItem
 } from "@material-ui/core";
 import _ from "lodash";
 import { registerOrganization, updateOrganization } from "../../../utils";
@@ -25,6 +26,7 @@ const companyDetails = {
     address: "",
     country: "",
     services: [],
+    packageType: "standard",
     features: ["pdf-export", "general-ratings"]
 };
 
@@ -219,6 +221,27 @@ const CompanyForm = ({
                                 variant="outlined"
                             />
                         </Grid>
+                        <Grid
+                            item
+                            style={{ padding: "0 0.5em 0.5em 0" }}
+                            xs={12}
+                            md={4}
+                        >
+                            <TextField
+                                id="package-type"
+                                label="Package Type"
+                                style={{ margin: 1 }}
+                                className="wide"
+                                value={state.packageType}
+                                onChange={evt => handleChange("packageType", evt)}
+                                margin="normal"
+                                select
+                                variant="outlined"
+                            >
+                                <MenuItem value="extended">Extended (14 Days)</MenuItem>
+                                <MenuItem value="standard">Standard (21 Days)</MenuItem>
+                            </TextField>
+                        </Grid>
                     </Grid>
 
                     <div style={{ marginTop: 20 }}>
@@ -403,7 +426,7 @@ const CompanyForm = ({
 
                     <div style={{ marginTop: 20 }}>
                         <Typography variant="h6" component="h5">
-                            Basic Information
+                            Features
                         </Typography>
                         <Grid container>
                             <Grid

@@ -13,15 +13,20 @@ import {
     MenuItem,
     Grid
 } from "@material-ui/core";
-import { persistOrderEmbeddedResults, uploadFile, updateOrderFields } from "../../../../utils";
+import {
+    persistOrderEmbeddedResults,
+    uploadFile,
+    updateOrderFields,
+    isValidDate
+} from "../../../../utils";
 
 const ACADEMIC_REPORTS_TEMPLATE = {
     establishmentName: "",
     referenceMethod: "",
     dateSupplied: "",
     didCandidateStudyInTheEstablishment: true,
-    attendanceDateCandidate: "",
-    attendanceDateReference: "",
+    attendanceDateCandidate: new Date().getFullYear(),
+    attendanceDateReference: new Date().getFullYear(),
     nameOfCourseStudiedCandidate: "",
     nameOfCourseStudiedReference: "",
     qualificationAndGradedAwardedCandidate: "",
@@ -89,6 +94,15 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
         return setState({ ...state });
     }
 
+    function removeReport(key) {
+        const stateClone = { ...state };
+        if (window.confirm("Are you sure you want to delete this part of the report? This action is IRREVERSIBLE.")) {
+            delete stateClone[key]
+            setState({ ...stateClone });
+        }
+        return;
+    }
+
     function saveAcademicReports(resultKey) {
         const { loading, uploadingAttachment, comments } = state;
         const currentState = omit(state[resultKey], [
@@ -96,6 +110,9 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
             "uploadingAttachment"
         ]);
         if (loading) return;
+        if (!isValidDate(currentState.dateSupplied)) {
+            return alert("Please enter a valid date");
+        }
         const emptyFields = Object.keys(currentState).filter(
             key => currentState[key].length === 0
         );
@@ -112,13 +129,13 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
         }
 
         state[resultKey].loading = true;
-		setState({ ...state });
+        setState({ ...state });
 
         persistOrderEmbeddedResults(order.id, type, resultKey, {
             ...currentState
         })
             .then(res => {
-				updateOrderFields(order.id, { [`${type}.comments`]: comments });
+                updateOrderFields(order.id, { [`${type}.comments`]: comments });
                 toggleSnackBar({
                     message: "Academic Reports updated successfully!"
                 });
@@ -309,7 +326,7 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <Typography variant="h6">Referee</Typography>
+                                <Typography variant="h6">Reference</Typography>
                             </Grid>
                         </Grid>
 
@@ -322,7 +339,7 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <p>Attendance Date</p>
+                                <p>Attendance Date (Year)</p>
                             </Grid>
 
                             <Grid
@@ -341,10 +358,23 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                         )
                                     }
                                     fullWidth
+                                    select
                                     margin="normal"
                                     variant="outlined"
                                     style={{ margin: 3 }}
-                                />
+                                >
+                                    {_.times(
+                                        100,
+                                        n => new Date().getFullYear() - n
+                                    ).map(year => (
+                                        <MenuItem
+                                            value={year}
+                                            key={`candidate__${year}`}
+                                        >
+                                            {year}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                             </Grid>
 
                             <Grid
@@ -363,10 +393,23 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                         )
                                     }
                                     fullWidth
+                                    select
                                     margin="normal"
                                     variant="outlined"
                                     style={{ margin: 3 }}
-                                />
+                                >
+                                    {_.times(
+                                        100,
+                                        n => new Date().getFullYear() - n
+                                    ).map(year => (
+                                        <MenuItem
+                                            value={year}
+                                            key={`reference__${year}`}
+                                        >
+                                            {year}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                             </Grid>
                         </Grid>
 
@@ -584,6 +627,23 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                         : "Upload Supporting Documents"}
                                 </Button>
                             </Grid>
+                            {keys(_.omit(state, ["comments"])).length > 1 && (
+                                <Grid
+                                    item
+                                    xs={2}
+                                    sm={2}
+                                    style={{ paddingLeft: 3, paddingRight: 3 }}
+                                >
+                                    <Button
+                                        fullWidth
+                                        variant="text"
+                                        color="secondary"
+                                        onClick={() => removeReport(key)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </Grid>
+                            )}
                         </Grid>
                         {/* education details headers ends */}
 

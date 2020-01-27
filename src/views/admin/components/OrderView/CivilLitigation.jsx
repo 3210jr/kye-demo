@@ -19,12 +19,13 @@ import {
 import {
     persistOrderResults,
     uploadFile,
-    friendlyFormatDate
+    friendlyFormatDate,
+    isValidDate
 } from "../../../../utils";
 
 function CivilLitigation({ order, type, toggleSnackBar }) {
     const [state, setstate] = useState({
-        date: new Date(),
+        date: "",
         caseNumber: "",
         caseNature: "",
         partiesInvolved: "",
@@ -74,6 +75,9 @@ function CivilLitigation({ order, type, toggleSnackBar }) {
     function saveCivilLitigation() {
         const { comments, supportingDocsURL, loading } = state;
         if (loading) return;
+        if (!isValidDate(state.date)) {
+            return alert("Please enter a valid date");
+        }
         if (comments.length < 5) {
             alert("Comments are too short. Please enter valid comments.");
             return;

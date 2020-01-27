@@ -14,7 +14,8 @@ import {
 import {
     persistOrderResults,
     uploadFile,
-    friendlyFormatDate
+    friendlyFormatDate,
+    isValidDate
 } from "../../../../utils";
 
 function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
@@ -89,6 +90,9 @@ function PoliceReports({ order, type, snackbar, toggleSnackBar }) {
             loading
         } = state;
         if (loading) return;
+        if (!isValidDate(reportDate)) {
+            return (alert("Please enter a valid date."));
+        }
         if (comments.length < 5) {
             alert("Comments are too short. Please enter valid comments.");
             return;

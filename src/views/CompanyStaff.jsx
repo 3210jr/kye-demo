@@ -12,8 +12,11 @@ import {
     FormLabel,
     Paper
 } from "@material-ui/core";
+import _ from "lodash";
+import PropTypes from "prop-types";
 import { Add as AddIcon, Close as CloseIcon } from "@material-ui/icons";
 import SimpleTable from "../components/SimpleTable";
+import { registerOrganizationMember } from "../utils";
 
 const permissionsList = ["kyc", "kye", "legal"];
 
@@ -36,12 +39,33 @@ export default class CompanyStaff extends Component {
     toggleRegistrationForm() {
         this.setState(prevState => ({ addStaffForm: !prevState.addStaffForm }));
     }
-    registerPerson() {
+    registerPerson = () => {
         if (this.state.loading) return;
-        // const {...state} = _.omit(this.state, ["loading", "addStaffForm"]);
-        // registerOrganizationMember()
-    }
-    togglePermissions(permission) {
+        const state = _.omit({ ...this.state }, ["loading", "addStaffForm"]);
+        const { organizationId } = this.props;
+        console.log("Profile: ", {
+            fullName: state.fullName,
+            email: state.email,
+            password: state.password,
+            permissions: state.permissions,
+            telephone: state.telephone,
+            organizationId: organizationId
+        });
+        this.setState({ loading: true });
+        registerOrganizationMember({
+            fullName: state.fullName,
+            email: state.email,
+            password: state.password,
+            permissions: state.permissions,
+            telephone: state.telephone,
+            organizationId: organizationId
+        }).then(result => {
+            this.setState({ loading: false });
+            if (!result.error) this.toggleRegistrationForm();
+            alert(result.message);
+        });
+    };
+    togglePermissions = permission => {
         const { permissions } = { ...this.state };
         if (permissions.includes(permission)) {
             permissions.splice(permissions.indexOf(permission), 1);
@@ -49,7 +73,7 @@ export default class CompanyStaff extends Component {
             permissions.push(permission);
         }
         this.setState({ permissions });
-    }
+    };
     render() {
         const {
             fullName,
@@ -91,7 +115,11 @@ export default class CompanyStaff extends Component {
                                             variant="outlined"
                                             value={fullName}
                                             autoFocus
-                                            onChange={evt => this.setState({ fullName: evt.target.value })}
+                                            onChange={evt =>
+                                                this.setState({
+                                                    fullName: evt.target.value
+                                                })
+                                            }
                                             margin="normal"
                                         />
                                     </Grid>
@@ -102,7 +130,11 @@ export default class CompanyStaff extends Component {
                                             className="wide"
                                             variant="outlined"
                                             value={email}
-                                            onChange={evt => this.setState({ email: evt.target.value })}
+                                            onChange={evt =>
+                                                this.setState({
+                                                    email: evt.target.value
+                                                })
+                                            }
                                             margin="normal"
                                         />
                                     </Grid>
@@ -113,7 +145,26 @@ export default class CompanyStaff extends Component {
                                             className="wide"
                                             variant="outlined"
                                             value={telephone}
-                                            onChange={evt => this.setState({ telephone: evt.target.value })}
+                                            onChange={evt =>
+                                                this.setState({
+                                                    telephone: evt.target.value
+                                                })
+                                            }
+                                            margin="normal"
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={4}>
+                                        <TextField
+                                            id="password"
+                                            label="Password"
+                                            className="wide"
+                                            variant="outlined"
+                                            value={password}
+                                            onChange={evt =>
+                                                this.setState({
+                                                    password: evt.target.value
+                                                })
+                                            }
                                             margin="normal"
                                         />
                                     </Grid>
@@ -201,8 +252,14 @@ export default class CompanyStaff extends Component {
                                     </Grid>
                                 </div>
                                 <div style={{ textAlign: "right" }}>
-                                    <Button variant="contained" onClick={this.registerPerson} color="primary">
-                                        {loading ? "Loading ...":"Register new user"}
+                                    <Button
+                                        variant="contained"
+                                        onClick={this.registerPerson}
+                                        color="primary"
+                                    >
+                                        {loading
+                                            ? "Loading ..."
+                                            : "Register new user"}
                                     </Button>
                                 </div>
                             </Paper>
@@ -228,3 +285,7 @@ const userData = [
     ["Edgar Mboki", "+255 686 349 661", "ally@inspiredideas.io"],
     ["Fred Taton", "+255 754 640 731", "ally@inspiredideas.io"]
 ];
+
+CompanyStaff.propTypes = {
+    organizationId: PropTypes.string.isRequired
+};

@@ -2,6 +2,10 @@
 import firebase from "./firebase";
 import uuidV1 from "uuid/v1";
 import store from "./store";
+import axios from "axios";
+
+const registerMemberURL =
+    "https://us-central1-mwema-solutions.cloudfunctions.net/registerOrganizationStaff";
 
 export function acceptOrder(orderId: string) {
     const orderRef = firebase
@@ -21,7 +25,7 @@ export function rejectOrder(orderId: string) {
     return orderRef.update({ status: "rejected" });
 }
 
-export function requestOrderChanges(orderId: string, changes: Object) {
+export function requestOrderChanges(orderId: string, changes: string) {
     const orderRef = firebase
         .firestore()
         .collection("orders")
@@ -170,6 +174,10 @@ export function createKYCOrder({
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
+    const organization = store.getState().organizations.myOrganization;
+    const deliveryDate = getDeliveryDate(
+        organization ? organization.packageType : "standard"
+    );
     return firebase
         .firestore()
         .collection("orders")
@@ -185,6 +193,7 @@ export function createKYCOrder({
             box,
             notes,
             createdAt: serverTime,
+            deliveryDate,
             referenceNumber: generateOrderRefNo(organizationName),
             status: "pending",
             organizationId,
@@ -238,6 +247,11 @@ export function createOrder({
         throw new Error("You must be registered to create an order!");
     }
 
+    const organization = store.getState().organizations.myOrganization;
+    const deliveryDate = getDeliveryDate(
+        organization ? organization.packageType : "standard"
+    );
+
     const sreenings = {};
     screeningTypes.forEach(type => (sreenings[type] = {}));
 
@@ -267,6 +281,7 @@ export function createOrder({
             assetsURL,
             status: "pending",
             notes: "",
+            deliveryDate,
             referenceNumber: generateOrderRefNo(organizationName),
             createdAt: serverTime,
             personMAID: null,
@@ -291,12 +306,53 @@ export function updateOrganization(organization, organizationId) {
         });
 }
 
-export function registerOrganizationMember({ fullName, email, password, permissions, telephone, organizationId, organizationName }) {
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+export function registerOrganizationMember({
+    fullName,
+    email,
+    password,
+    permissions,
+    telephone,
+    organizationId
+}) {
+    // const serverTime = firebase.firestore.FieldValue.serverTimestamp();
     const user = firebase.auth().currentUser;
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
+
+    const response = {
+        error: false,
+        message: ""
+    };
+
+    return axios
+        .post(registerMemberURL, {
+            personObj: {
+                fullName,
+                email,
+                password,
+                permissions,
+                telephone,
+                organizationId,
+                registeredBy: user.uid,
+                registeredByEmail: user.email
+            },
+            organizationId
+        })
+        .then(result => {
+            if (result.status !== 200) {
+                // There was an error.
+                response.error = true;
+            }
+            response.message = result.data;
+            return response;
+        })
+        .catch(error => {
+            console.error("Error making request to register [400]", error);
+            response.error = true;
+            response.message = "Error making request to register";
+            return response;
+        });
 
     // return firebase.firestore().collection("profiles").add
 }
@@ -370,6 +426,54 @@ export function getMonthName(timeStamp) {
     return months[new Date(timeStamp).getMonth()];
 }
 
+/**
+ * Check if the date is valid, less than 5 years in the future, and within the past 100 years.
+ *
+ * @export
+ * @param {*}
+ * @returns
+ */
+export function isValidDate(dates) {
+    const futureMaxYears = 10;
+    const pastMaxYears = 100;
+    if (Array.isArray(dates)) {
+        const invalid = dates.filter(date => {
+            const d = new Date(date);
+            const now = new Date();
+            if (isNaN(d.getTime())) {
+                return true;
+            }
+            if (d.getFullYear() > now.getFullYear() + futureMaxYears) {
+                // Check if the date is more than futureMaxYears years in the future
+                return true;
+            }
+            if (d.getFullYear() < now.getFullYear() - pastMaxYears) {
+                // check if the date is older than pastMaxYears years
+                return true;
+            }
+            return false;
+        });
+        if (invalid.length > 0) {
+            return false;
+        }
+        return true;
+    }
+    const d = new Date(dates);
+    const now = new Date();
+    if (isNaN(d.getTime())) {
+        return false;
+    }
+    if (d.getFullYear() > now.getFullYear() + futureMaxYears) {
+        // Check if the date is more than 5 years in the future
+        return false;
+    }
+    if (d.getFullYear() < now.getFullYear() - pastMaxYears) {
+        // check if the date is older than pastMaxYears years
+        return false;
+    }
+    return true;
+}
+
 export function friendlyFormatMoney(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -399,7 +503,20 @@ export function isCompleteForm(formState = {}, exceptions = []) {
         return formState[key].length < 2; // account for anything that is a string
     });
 
-    console.log(emptyFields);
+    console.log(formState);
 
     return emptyFields.length === 0;
+}
+
+function getDeliveryDate(packageType = "standard") {
+    const date = new Date();
+    if (packageType === "standard") {
+        date.setDate(new Date().getDate() + 21);
+    } else if (packageType === "extended") {
+        date.setDate(new Date().getDate() + 14);
+    } else {
+        date.setDate(new Date().getDate() + 21);
+    }
+
+    return date;
 }

@@ -28,6 +28,9 @@ firebase.auth().onAuthStateChanged(user => {
                     const profile = { ...snap.data(), id: snap.id };
                     store.dispatch.profile.setProfile(profile);
                     store.dispatch.orders.loadMyOrders(profile.organizationId);
+                    store.dispatch.organizations.loadMyOrganization(
+                        profile.organizationId
+                    );
                     if (profile.admin === true) {
                         store.dispatch.orders.loadRecentOrders();
                         store.dispatch.organizations.loadOrganizationsList();
