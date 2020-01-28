@@ -1,5 +1,6 @@
 import React from "react";
 import { Page, Text, View } from "@react-pdf/renderer";
+import _ from "lodash";
 import { useSelector } from "react-redux";
 
 import styles from "./styles";
@@ -13,58 +14,65 @@ const SocialMediaAnalysis = ({ media }) => (
     <View style={styles.section} break>
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1 }}>
-                <Text style={styles.subtitle}>Media Verification Written</Text>
+                <Text style={styles.subtitle}>More Details</Text>
             </View>
         </View>
         <View style={styles.table}>
             <View style={styles.tableRow}>
+                <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}></Text>
+                </View>
+
                 <View style={styles.tableCol}>
                     <Text style={[styles.tableCell, styles.bold]}>
                         Details of Media
                     </Text>
                 </View>
 
+                {/* <View style={styles.tableCol}>
+                    <Text style={[styles.tableCell, styles.bold]}>Results</Text>
+                </View> */}
+            </View>
+
+            <View style={styles.tableRow}>
                 <View style={styles.tableCol}>
-                    <Text style={[styles.tableCell, styles.bold]}>
-                        Observation
+                    <Text style={[styles.tableCell, styles.bold]}>Sources</Text>
+                </View>
+
+                <View style={[styles.tableCol]}>
+                    <Text style={[styles.tableCell]}>
+                        {media.networks
+                            .map(net => _.upperFirst(net))
+                            .join(", ")}
                     </Text>
                 </View>
 
-                <View style={styles.tableCol}>
-                    <Text style={[styles.tableCell, styles.bold]}>Results</Text>
-                </View>
+                {/* <View style={[styles.tableCol]}>
+                    <Text style={[styles.tableCell]}>{}</Text>
+                </View> */}
             </View>
 
             <View style={styles.tableRow}>
                 <View style={styles.tableCol}>
-                    <Text style={[styles.tableCell, styles.bold]}>Source</Text>
+                    <Text style={[styles.tableCell, styles.bold]}>
+                        Matching Accounts
+                    </Text>
                 </View>
 
                 <View style={[styles.tableCol]}>
-                    <Text style={[styles.tableCell]}>{}</Text>
+                    <Text style={[styles.tableCell]}>
+                        {media.handles
+                            .map(net => _.upperFirst(net))
+                            .join(", ")}
+                    </Text>
                 </View>
 
-                <View style={[styles.tableCol]}>
+                {/* <View style={[styles.tableCol]}>
                     <Text style={[styles.tableCell]}>{}</Text>
-                </View>
+                </View> */}
             </View>
 
-            <View style={styles.tableRow}>
-                <View style={styles.tableCol}>
-                    <Text style={[styles.tableCell, styles.bold]}>Matching Account</Text>
-                </View>
-
-                <View style={[styles.tableCol]}>
-                    <Text style={[styles.tableCell]}>{}</Text>
-                </View>
-
-                <View style={[styles.tableCol]}>
-                    <Text style={[styles.tableCell]}>{}</Text>
-                </View>
-            </View>
-
-
-            <View style={styles.tableRow}>
+            {/* <View style={styles.tableRow}>
                 <View style={styles.tableCol}>
                     <Text style={[styles.tableCell, styles.bold]}>
                         Comments
@@ -78,29 +86,23 @@ const SocialMediaAnalysis = ({ media }) => (
                 <View style={[styles.tableCol]}>
                     <Text style={[styles.tableCell]}>{}</Text>
                 </View>
-                
-
-            </View>
-
+            </View> */}
 
             <View style={styles.tableRow}>
                 <View style={styles.tableCol}>
                     <Text style={[styles.tableCell, styles.bold]}>
-                        Year/Month of Search
+                        Date of Search
                     </Text>
                 </View>
 
                 <View style={[styles.tableCol]}>
-                    <Text style={[styles.tableCell]}>{}</Text>
+                    <Text style={[styles.tableCell]}>{media.dateOfSearch}</Text>
                 </View>
 
-                <View style={[styles.tableCol]}>
+                {/* <View style={[styles.tableCol]}>
                     <Text style={[styles.tableCell]}>{}</Text>
-                </View>
-                
-
+                </View> */}
             </View>
-
         </View>
     </View>
 );
@@ -110,7 +112,7 @@ const SocialMediaReport = () => {
         state => state.orders.currentOrder["social-media"]
     );
 
-    if (media=== null || media === undefined) {
+    if (media === null || media === undefined) {
         return null;
     }
 
@@ -118,8 +120,8 @@ const SocialMediaReport = () => {
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus statuses={[]} />
-            <Observations />
+            <CheckStatus score={media.score} statuses={[]} />
+            <Observations observations={media.comments} />
             <SocialMediaAnalysis media={media} />
             {/* <Note /> */}
             <Text

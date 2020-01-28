@@ -20,7 +20,8 @@ import {
 import {
     persistOrderResults,
     uploadFile,
-    friendlyFormatDate
+    friendlyFormatDate,
+    isCompleteForm
 } from "../../../../utils";
 
 const socialNetworks = [
@@ -44,21 +45,27 @@ const MenuProps = {
 };
 
 function SocialMediaSearch({ order, type, toggleSnackBar }) {
+    const date = new Date();
     const [state, setstate] = useState({
         networks: [],
+        dateOfSearch: '',
+        handles: "",
         comments: "",
+        score: "",
         supportingDocsURL: "",
         uploadingAttachment: false,
         loading: false
     });
 
+    console.log("Date: ", state.dateOfSearch);
+
     let fileUploaderRef = createRef();
     useEffect(() => {
         const initialState = { ...state, ...order[type] };
         setstate(initialState);
-	}, []);
-	
-	function uploadAttachment(evt) {
+    }, []);
+
+    function uploadAttachment(evt) {
         if (state.uploadingAttachment) return;
         const file = evt.target.files[0];
 
@@ -86,8 +93,14 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
         setstate({ ...state, comments: evt.target.value });
     }
 
+    // function updateHandles(target) {
+    //     const { value } = target;
+    //     const handles = value.split(",").map(handle => handle.trim());
+    //     setstate({ ...state, handles });
+    // }
+
     function saveSocialMediaSearch() {
-        const { loading, comments, networks } = state;
+        const { loading, comments, networks, handles } = state;
         if (loading) return;
 
         if (networks.length === 0) {
@@ -96,9 +109,18 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
             );
         }
 
+        if (!isCompleteForm(state)) {
+            return alert(
+                "Please fill out all the forms before saving the report"
+            );
+        }
+
         setstate({ ...state, loading: true });
 
-        persistOrderResults(order.id, type, omit(state, ["loading", "uploadingAttachment"]))
+        persistOrderResults(order.id, type, {
+            ...omit(state, ["loading", "uploadingAttachment"]),
+            handles: handles.toString().split(",").map(h => h.trim())
+        })
             .then(res => {
                 toggleSnackBar({
                     message: "Social Media Search Report updated successfully!"
@@ -166,6 +188,56 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
             </Grid>
 
             <Grid container style={{ marginTop: 5 }}>
+                <Grid item md={4} style={{ margin: 3 }}>
+                    <TextField
+                        id="outlined-name"
+                        label="Score"
+                        select
+                        // style={{ margin: 3 }}
+                        className="wide"
+                        value={state.score}
+                        onChange={({ target }) =>
+                            setstate({ ...state, score: target.value })
+                        }
+                        margin="normal"
+                        variant="outlined"
+                    >
+                        <MenuItem value="bad">Bad</MenuItem>
+                        <MenuItem value="medium">Medium</MenuItem>
+                        <MenuItem value="good">Good</MenuItem>
+                    </TextField>
+                </Grid>
+                <Grid item md={4} style={{ margin: 3 }}>
+                    <TextField
+                        id="outlined-name"
+                        label="Handle Names (comma separated)"
+                        placeholder="@name255, name_255"
+                        className="wide"
+                        value={state.handles}
+                        onChange={({ target }) =>
+                            setstate({ ...state, handles: target.value })
+                        }
+                        margin="normal"
+                        variant="outlined"
+                    />
+                </Grid>
+                <Grid item md={4} style={{ margin: 3 }}>
+                    <TextField
+                        id="outlined-name"
+                        label="Date of Search"
+                        className="wide"
+                        type="date"
+                        value={state.dateOfSearch}
+                        onChange={({ target }) =>
+                            setstate({ ...state, dateOfSearch: target.value })
+                        }
+                        margin="normal"
+                        variant="outlined"
+                    />
+                </Grid>
+            </Grid>
+
+            <Grid container style={{ marginTop: 5 }}>
                 <Grid
                     item
                     xs={12}
@@ -203,11 +275,7 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
                         {state.loading ? "Loading" : "Save"}
                     </Button>
                 </Grid>
-                <Grid
-                    item
-                    xs={4}
-                    style={{ paddingLeft: 3, paddingRight: 3 }}
-                >
+                <Grid item xs={4} style={{ paddingLeft: 3, paddingRight: 3 }}>
                     <Button
                         variant={
                             state.supportingDocsURL.length > 0
