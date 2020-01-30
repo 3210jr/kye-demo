@@ -61,9 +61,10 @@ const SocialMediaAnalysis = ({ media }) => (
 
                 <View style={[styles.tableCol]}>
                     <Text style={[styles.tableCell]}>
-                        {media.handles
-                            .map(net => _.upperFirst(net))
-                            .join(", ")}
+                        {media.handles &&
+                            media.handles
+                                .map(net => _.upperFirst(net))
+                                .join(", ")}
                     </Text>
                 </View>
 
