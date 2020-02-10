@@ -80,6 +80,7 @@ export default class Login extends Component {
 						<TextField
 							label="Password"
 							className="wide"
+							type="password"
 							value={password}
 							onChange={e => this.updateForm("password", e.target.value)}
 							margin="normal"
