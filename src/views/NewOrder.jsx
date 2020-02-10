@@ -101,7 +101,8 @@ class NewOrder extends Component {
             screeningTypes: [],
             assetsURL: "",
             uploadingAssets: false,
-            loading: false
+            loading: false,
+            isSubmittedButton: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleGenderDropDown = this.toggleGenderDropDown.bind(this);
@@ -120,9 +121,9 @@ class NewOrder extends Component {
                 );
             })
             .catch(error => {
-                alert(
-                    "There was an error uploading your assets, please try again"
-                );
+                // alert(
+                //     "There was an error uploading your assets, please try again"
+                // );
                 console.log(error);
                 this.setState({ uploadingAssets: false });
             });
@@ -152,6 +153,7 @@ class NewOrder extends Component {
         }));
     };
     createOrder = () => {
+        this.setState({ isSubmittedButton: true})
         const {
             firstName,
             lastName,
@@ -182,20 +184,22 @@ class NewOrder extends Component {
         }
 
         if (!isValidDate([idExpiry, dateOfBirth])) {
-            return alert("Please verify the expiry date and the date of birth");
+            // return alert("Please verify the expiry date and the date of birth");
+            return ;
         }
 
         if (assetsURL.length < 5) {
-            alert(
-                "Please upload the zipped folder with all required documents"
-            );
+            // alert(
+            //     "Please upload the zipped folder with all required documents"
+            // );
             return;
         }
 
         if (screeningTypes.length === 0) {
-            return alert(
-                "Please choose at least one screening type to perform."
-            );
+            // return alert(
+            //     "Please choose at least one screening type to perform."
+            // );
+            return;
         }
 
         const emptyFields = Object.keys(
@@ -216,6 +220,7 @@ class NewOrder extends Component {
         }
 
         this.setState({ loading: true });
+
         createOrder({
             firstName,
             lastName,
@@ -250,6 +255,46 @@ class NewOrder extends Component {
                 this.setState({ loading: false });
             });
     };
+
+    // Handle form validation
+
+    checkField = (field, label, customMessage) => {
+        if (this.state["isSubmittedButton"] && field === "") {
+            return(
+                <Typography style={{
+                    color: "#ff0000",
+                    fontSize: "12px",
+                    fontStyle: "italic"
+                }}>
+                    {customMessage !== "" && (
+                        <span>
+                            {customMessage}
+                        </span>
+                    )}
+                    {customMessage === "" && (
+                        <span>
+                            {label} is required
+                        </span>
+                    )}
+                </Typography>
+            )
+        }
+        return ''
+    }
+
+    checkAssetsUploadURL() {
+        if (this.state["assetsURL"].length < 5 && this.state["isSubmittedButton"]) {
+            return (
+                <Typography style={{
+                    color: "#ff0000",
+                    fontSize: "12px",
+                    fontStyle: "italic"
+                }}>
+                    Please upload the zipped folder with all required documents
+                </Typography>
+            )
+        }
+    }
     render() {
         const { classes, history, profile } = this.props;
         const {
@@ -275,7 +320,8 @@ class NewOrder extends Component {
             gender,
             screeningTypes,
             uploadingAssets,
-            loading
+            loading,
+            isSubmittedButton
         } = this.state;
         const { serviceOptions } = this.props;
         return (
@@ -362,11 +408,11 @@ class NewOrder extends Component {
                                                 onChange={evt =>
                                                     this.handleChange(
                                                         "firstName",
-                                                        evt
-                                                    )
+                                                        evt)
                                                 }
                                                 margin="normal"
                                             />
+                                            {this.checkField(firstName, "First name")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
@@ -382,6 +428,7 @@ class NewOrder extends Component {
                                                 }
                                                 margin="normal"
                                             />
+                                            {this.checkField(middleName, "Middle name")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
@@ -397,6 +444,7 @@ class NewOrder extends Component {
                                                 }
                                                 margin="normal"
                                             />
+                                            {this.checkField(middleName, "Last name")}
                                         </Grid>
                                         <Grid item xs={4} md={2} lg={1}>
                                             <TextField
@@ -412,6 +460,7 @@ class NewOrder extends Component {
                                                 }
                                                 margin="normal"
                                             />
+                                            {this.checkField(telephoneCode, "Tel. Code")}
                                         </Grid>
                                         <Grid item xs={8} md={2} lg={3}>
                                             <TextField
@@ -427,6 +476,7 @@ class NewOrder extends Component {
                                                 }
                                                 margin="normal"
                                             />
+                                            {this.checkField(telephone, "Telephone Number")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
@@ -443,6 +493,7 @@ class NewOrder extends Component {
                                                 }
                                                 margin="normal"
                                             />
+                                            {this.checkField(dateOfBirth, "Date of Birth", "Please verify the expiry date and the date of birth")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <FormControl
@@ -841,6 +892,15 @@ class NewOrder extends Component {
                                         </Grid>
                                     )}
                                 </Grid>
+                                {screeningTypes.length === 0 && this.state["isSubmittedButton"] && (
+                                    <Typography style={{
+                                        color: "#ff0000",
+                                        fontSize: "12px",
+                                        fontStyle: "italic"
+                                    }}>
+                                        Please choose at least one screening type to perform.
+                                    </Typography>
+                                )}
                             </CardContent>
                         </Card>
                         <Card className={classes.cardSection}>
@@ -933,6 +993,16 @@ class NewOrder extends Component {
                             type="file"
                             onChange={this.uploadZippedFolder}
                         />
+                        {this.checkAssetsUploadURL()}
+                        {uploadingAssets && (
+                            <Typography style={{
+                                color: "#ff0000",
+                                fontSize: "12px",
+                                fontStyle: "italic"
+                            }}>
+                                There was an error uploading your assets, please try again
+                            </Typography>
+                        )}
                     </div>
                 )}
             </div>
