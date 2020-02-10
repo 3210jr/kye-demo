@@ -337,6 +337,10 @@ function KYEOrderSummary({ order, closeSummary }) {
         setOpen(true);
     };
 
+    const downloadZippedReport = event => {
+        event.preventDefault();
+        console.log(order[screeningType]);
+    };
     const handleClose = () => {
         setOpen(false);
     };
@@ -399,6 +403,7 @@ function KYEOrderSummary({ order, closeSummary }) {
                                         <Button
                                             variant="contained"
                                             color="primary"
+                                            onClick={downloadZippedReport}
                                             fullWidth
                                             style={{ height: "100%" }}
                                         >
