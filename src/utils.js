@@ -7,6 +7,8 @@ import axios from "axios";
 const registerMemberURL =
     "https://us-central1-mwema-solutions.cloudfunctions.net/registerOrganizationStaff";
 
+const fileNameSeparator = "___";
+
 export function acceptOrder(orderId: string) {
     const orderRef = firebase
         .firestore()
@@ -132,7 +134,7 @@ export function uploadFile(file, folder) {
     if (!folder) {
         throw new Error("You must specify what folder to upload the file in!");
     }
-    const fileName = uuidV1() + "___" + file.name;
+    const fileName = uuidV1() + fileNameSeparator + file.name;
     const storageRef = firebase.storage().ref(`${folder}/`);
     return storageRef.child(fileName).put(file);
 }
@@ -506,6 +508,19 @@ export function isCompleteForm(formState = {}, exceptions = []) {
     console.log(formState);
 
     return emptyFields.length === 0;
+}
+
+export function reverseFileName(fileName = "") {
+    return fileName.split(fileNameSeparator)[1];
+}
+
+export function isValidUUID(id) {
+    const reg = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const match = id.toString().match(reg);
+    if (match === null) {
+        return false;
+    }
+    return true;
 }
 
 function getDeliveryDate(packageType = "standard") {
