@@ -157,6 +157,7 @@ class ViewOrders extends React.Component {
     };
 
     handlePrint = item => {
+        // handlePrint()
         console.log(item);
     };
 
@@ -269,6 +270,7 @@ class ViewOrders extends React.Component {
                                                     "completed" ? (
                                                         <CloudDownload
                                                             color="default"
+                                                            onClick={() => this.handlePrint(n)}
                                                             className="pointer"
                                                         />
                                                     ) : (
