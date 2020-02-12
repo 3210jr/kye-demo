@@ -32,6 +32,7 @@ import {
 import ReactToPrint from "react-to-print";
 import CaseItem from "./components/CaseItem";
 import { ExtendedTableHead } from "../../components/Table";
+import {viewOrderStyle as styles} from "../Styles";
 
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -216,19 +217,6 @@ class CasesList extends React.Component {
 CasesList.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-
-const styles = theme => ({
-	root: {
-		width: "100%",
-		marginTop: theme.spacing.unit * 3
-	},
-	table: {
-		minWidth: 1020
-	},
-	tableWrapper: {
-		overflowX: "auto"
-	}
-});
 
 const mapState = state => ({
 	profile: state.profile,

@@ -13,7 +13,6 @@ const ReportIntro = () => {
         firstName,
         middleName,
         lastName,
-        address,
         dateOfBirth,
         organizationName,
         referenceNumber,
@@ -31,7 +30,6 @@ const ReportIntro = () => {
 
             <View style={styles.section}>
                 <Text style={styles.subtitle}>Candidate Details</Text>
-
                 <View style={styles.table}>
                     <View style={styles.tableRow}>
                         <View style={[styles.tableCol, {}]}>
@@ -39,7 +37,6 @@ const ReportIntro = () => {
                                 Candidate Full Name
                             </Text>
                         </View>
-
                         <View style={styles.tableColOneThird}>
                             <Text style={[styles.tableCell]}>
                                 {firstName + " " + middleName + " " + lastName}

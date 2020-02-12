@@ -1,7 +1,7 @@
 // @ts-check
 import React, { useState, useEffect, createRef } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import {renderYear} from "../../../helpers/HelpersComponents";
 import uuidV1 from "uuid/v1";
 import _ from "lodash";
 import { keys, map, omit } from "lodash";
@@ -63,6 +63,10 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar, setErrors }) {
             uploadingAttachment: false
         };
         setState({ ...state });
+    }
+
+    function renderAcademicYear() {
+
     }
 
     function uploadAttachment(evt, key) {
@@ -325,7 +329,6 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar, setErrors }) {
                                 xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             ></Grid>
-
                             <Grid
                                 item
                                 xs={4}
@@ -374,19 +377,8 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar, setErrors }) {
                                     select
                                     margin="normal"
                                     variant="outlined"
-                                    style={{ margin: 3 }}
-                                >
-                                    {_.times(
-                                        100,
-                                        n => new Date().getFullYear() - n
-                                    ).map(year => (
-                                        <MenuItem
-                                            value={year}
-                                            key={`candidate__${year}`}
-                                        >
-                                            {year}
-                                        </MenuItem>
-                                    ))}
+                                    style={{ margin: 3 }}>
+                                    {renderYear()}
                                 </TextField>
                             </Grid>
 
@@ -411,17 +403,7 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar, setErrors }) {
                                     variant="outlined"
                                     style={{ margin: 3 }}
                                 >
-                                    {_.times(
-                                        100,
-                                        n => new Date().getFullYear() - n
-                                    ).map(year => (
-                                        <MenuItem
-                                            value={year}
-                                            key={`reference__${year}`}
-                                        >
-                                            {year}
-                                        </MenuItem>
-                                    ))}
+                                    {renderYear()}
                                 </TextField>
                             </Grid>
                         </Grid>
