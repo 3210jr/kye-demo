@@ -221,3 +221,20 @@ export const snackbar = {
         }
     })
 };
+
+export const validate = {
+    state: [],
+    reducers: {
+        pushError(state, errorObject) {
+            return [...state, errorObject]
+        },
+        popError(state, {errorId}) {
+            return state.filter(errorObject => errorObject.errorId !== errorId)
+        },
+        resetErrors() {
+            return []
+        }
+    },
+    effects: dispatch => ({
+    })
+}

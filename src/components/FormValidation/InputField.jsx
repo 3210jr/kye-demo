@@ -8,7 +8,7 @@ export default class InputField extends Component{
         this.state = {
             required: false,
             type: "text",
-            errrors: []
+            id: ""
         }
     }
     componentDidMount = () => {}
