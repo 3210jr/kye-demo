@@ -222,7 +222,7 @@ export const snackbar = {
     })
 };
 
-export const validate = {
+export const inputValidation = {
     state: [],
     reducers: {
         pushError(state, errorObject) {
@@ -236,5 +236,9 @@ export const validate = {
         }
     },
     effects: dispatch => ({
+        async pushErrorAsync(payload, rootState) {
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            dispatch.pushError(payload)
+        }
     })
 }

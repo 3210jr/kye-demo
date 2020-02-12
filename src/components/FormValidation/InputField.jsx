@@ -1,29 +1,28 @@
-import React, {Component} from "react";
-import {TextField, InputLabel} from "@material-ui/core"
+import React, { Fragment} from "react";
+import { TextField} from "@material-ui/core";
+import {connect} from "react-redux";
+
+const InputField = ({label, value, id, type, className, onChange, inputValidation}) => (
+    <Fragment>
+        <TextField
+            label={label}
+            value={value}
+            type={type}
+            onChange={onChange}
+            id={id}
+            className={className}/>
+    </Fragment>
+);
 
 
-export default class InputField extends Component{
-    constructor(props) {
-        super(props)
-        this.state = {
-            required: false,
-            type: "text",
-            id: ""
-        }
-    }
-    componentDidMount = () => {}
-    handleChange = (event) => {}
 
-    render() {
-        return (
-            <div>
-                <TextField
-                    label={this.props.label}
-                    value={this.props.value}
-                    type={this.props.type}
-                />
-                {/* Show errors */}
-            </div>
-        )
-    }
-}
+// NewOrder.propTypes = {
+//     classes: PropTypes.object.isRequired
+// };
+
+const mapState = (state, props) => ({
+    inputValidation: state.inputValidation, ...props
+});
+
+export default connect(mapState)(InputField);
+
