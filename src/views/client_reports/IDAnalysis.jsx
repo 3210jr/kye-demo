@@ -49,21 +49,20 @@ const IDAnalysis = ({ identification }) => (
                     </View>
                     <View style={styles.tableCol}>
                         <Text style={styles.tableCell}>
-                            {id.countryOfIssue
-                                .split(" ")
-                                .map(word => _.upperFirst(word))
-                                .join(" ")}
+                            {id.countryOfIssue &&
+                                id.countryOfIssue
+                                    .split(" ")
+                                    .map(word => _.upperFirst(word))
+                                    .join(" ")}
                         </Text>
                     </View>
 
                     <View style={styles.tableCol}>
-                        <Text style={styles.tableCell}>
-                            {id.dateOfCheck}
-                        </Text>
+                        <Text style={styles.tableCell}>{id.dateOfCheck}</Text>
                     </View>
                     <View style={styles.tableCol}>
                         <Text style={styles.tableCell}>
-                            {id.result}
+                            {_.upperFirst(id.result)}
                         </Text>
                     </View>
                 </View>
@@ -77,22 +76,34 @@ const IDAnalysisReport = () => {
     // const identification = useSelector(
     //     state => state.orders.currentOrder["identification"]
     // );
-    const {identification, address} = order;
+    const { identification, address } = order;
     // console.log(order)
 
     if (identification === null || identification === undefined) {
         return null;
     }
 
-    // console.log("ID: ", identification)
+    console.log("ID: ", identification);
+
+    const scores = Object.values(identification).map(id => ({
+        title: id.documentType.split("-").map(title => _.upperFirst(title)).join(" "),
+        status: id.identityScore
+    }));
+
+    console.log(scores)
 
     return (
         // <Document style={{ height: "400px" }}>
         <Page style={styles.body}>
             <ReportIntro />
-            <CheckStatus score={identification.identityScore} />
-            <IDAnalysis identification={[identification]} />
-            <Observations observations={identification.comments} />
+            <CheckStatus score={scores} />
+            <IDAnalysis
+                identification={_.map(identification, (doc, id) => ({
+                    ...doc,
+                    id
+                }))}
+            />
+            {/* <Observations observations={identification.comments} /> */}
             {/* <Note /> */}
             <Text
                 style={styles.pageNumber}
