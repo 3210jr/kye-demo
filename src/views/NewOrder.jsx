@@ -17,61 +17,11 @@ import {
     Select,
     MenuItem
 } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
 import _ from "lodash";
 import { uploadFile, createOrder, isValidDate } from "../utils";
 import { countryList } from "../constants/countries";
 import KYCOrderForm from "./orders/KYCOrderForm";
-
-const months = [
-    "january",
-    "febuary",
-    "march",
-    "april",
-    "may",
-    "june",
-    "july",
-    "august",
-    "september",
-    "october",
-    "november",
-    "december"
-];
-
-const styles = theme => ({
-    container: {
-        display: "flex",
-        flexWrap: "wrap",
-        flex: 1
-    },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        marginTop: 0,
-        width: "100%"
-    },
-    cardSection: {
-        paddingRight: theme.spacing.unit,
-        width: "100%",
-        marginBottom: 15
-    },
-    bullet: {
-        display: "inline-block",
-        margin: "0 2px",
-        transform: "scale(0.8)"
-    },
-    title: {
-        fontSize: 14
-    },
-    pos: {
-        marginBottom: 12
-    },
-    formControl: {
-        margin: 0,
-        minWidth: 120,
-        width: "100%"
-    }
-});
+import {styles} from "./Styles"
 
 class NewOrder extends Component {
     constructor(props) {

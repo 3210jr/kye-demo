@@ -35,3 +35,18 @@ export const identificationTypes = {
     "drivers-license": "Drivers License",
     "social-security": "Social Security Number"
 };
+
+export const months = [
+    "january",
+    "febuary",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december"
+];

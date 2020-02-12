@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import firebase from "firebase";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {
     ListItem,
     List,
@@ -20,15 +19,11 @@ import {
     ListItemIcon
 } from "@material-ui/core";
 import {
-    Mail as MailIcon,
-    MoveToInbox,
-    ChevronRight,
     AccountCircle,
     ExitToApp,
     Dashboard as DashboardIcon,
     Gavel,
     Create,
-    ImportExport,
     ViewCarousel,
     SupervisedUserCircle,
     HowToReg,
@@ -37,10 +32,6 @@ import {
 import { Route, Switch } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import OverviewCard from "../components/OverviewCard";
-import NotificationsCard from "../components/NotificationsCard";
-import OrdersTable from "../components/OrdersTable";
-import QuickOrderCard from "../components/QuickOrderCard";
-
 import NewOrder from "./NewOrder";
 import ViewOrders from "./ViewOrders";
 import PreLitigation from "./pre-litigation";
@@ -53,78 +44,13 @@ import { PDFViewer } from "@react-pdf/renderer";
 
 import Report from "./client_reports/Report";
 import { useSelector } from "react-redux";
+import {layoutStyle as styles} from "./Styles"
 
 const NewReport = () => (
     <PDFViewer style={{ width: "100%", height: 600 }}>
         <Report />
     </PDFViewer>
 );
-const drawerWidth = 240;
-
-const styles = theme => ({
-    root: {
-        display: "flex"
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(["width", "margin"], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        })
-    },
-    // appBarShift: {
-    // 	marginLeft: drawerWidth,
-    // 	width: `calc(100% - ${drawerWidth}px)`,
-    // 	transition: theme.transitions.create(["width", "margin"], {
-    // 		easing: theme.transitions.easing.sharp,
-    // 		duration: theme.transitions.duration.enteringScreen
-    // 	})
-    // },
-    grow: {
-        flexGrow: 1
-    },
-    menuButton: {
-        marginLeft: 12,
-        marginRight: 36
-    },
-    hide: {
-        display: "none"
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: "nowrap"
-    },
-    drawerOpen: {
-        width: drawerWidth,
-        transition: theme.transitions.create("width", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
-        })
-    },
-    drawerClose: {
-        transition: theme.transitions.create("width", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
-        }),
-        overflowX: "hidden",
-        width: theme.spacing.unit * 7 + 1,
-        [theme.breakpoints.up("sm")]: {
-            width: theme.spacing.unit * 9 + 1
-        }
-    },
-    toolbar: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        padding: "0 8px",
-        ...theme.mixins.toolbar
-    },
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing.unit * 3
-    }
-});
 
 const drawerItems = [
     {
@@ -192,8 +118,10 @@ class Dashboard extends Component {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AppBar position="fixed" className={classNames(classes.appBar)}>
-                    <Toolbar className="" disableGutters={true}>
+                <AppBar position="fixed"
+                        className={classNames(classes.appBar)}>
+                    <Toolbar className=""
+                             disableGutters={true}>
                         <IconButton
                             aria-label="Open drawer"
                             onClick={this.toggleDrawerState}

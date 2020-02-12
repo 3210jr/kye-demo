@@ -3,74 +3,51 @@ import firebase from "./firebase";
 import uuidV1 from "uuid/v1";
 import store from "./store";
 import axios from "axios";
+import {months} from "./constants";
 
 const registerMemberURL =
     "https://us-central1-mwema-solutions.cloudfunctions.net/registerOrganizationStaff";
 
-export function acceptOrder(orderId: string) {
-    const orderRef = firebase
-        .firestore()
-        .collection("orders")
-        .doc(orderId);
+const orderRef = firebase.firestore().collection("orders")
+const preLitigationRef = firebase.firestore().collection("orders")
+const serverTime = firebase.firestore.FieldValue.serverTimestamp
+const profile = store.getState().profile;
+const user = firebase.auth().currentUser;
 
-    return orderRef.update({ status: "in progress" });
+const organization = store.getState().organizations.myOrganization;
+const deliveryDate = getDeliveryDate(
+    organization ? organization.packageType : "standard"
+);
+
+export function acceptOrder(orderId: string) {
+    return orderRef.doc(orderId).update({ status: "in progress" });
 }
 
 export function rejectOrder(orderId: string) {
-    const orderRef = firebase
-        .firestore()
-        .collection("orders")
-        .doc(orderId);
-
-    return orderRef.update({ status: "rejected" });
+        return orderRef.doc(orderId).update({ status: "rejected" });
 }
 
 export function requestOrderChanges(orderId: string, changes: string) {
-    const orderRef = firebase
-        .firestore()
-        .collection("orders")
-        .doc(orderId);
-
-    return orderRef.update({ status: "changes requested", changes });
+        return orderRef.doc(orderId).update({ status: "changes requested", changes });
 }
 
-/**
- * Changes the status of an order to completed
- *
- * @export
- * @param {*} orderId
- * @returns promise fo the update firestore method
- */
 export function completeOrder(orderId: string) {
-    const orderRef = firebase
-        .firestore()
-        .collection("orders")
-        .doc(orderId);
-
-    return orderRef.update({ status: "completed" });
+        return orderRef.doc(orderId).update({ status: "completed" });
 }
 
 export function createNewCase(caseDetails: Object) {
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    return firebase
-        .firestore()
-        .collection("preLitigationCases")
-        .add({
+    return preLitigationRef.add({
             ...caseDetails,
             status: "in progress",
-            createdAt: serverTime,
+            createdAt: serverTime(),
             referenceNumber: generateOrderRefNo("Mwema Advocates")
         });
 }
 
 export function addCaseUpdate({ caseId, status, comments, attachmentURL }) {
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    const profile = store.getState().profile;
+
     const userId = firebase.auth().currentUser.uid;
-    return firebase
-        .firestore()
-        .collection("preLitigationCases")
-        .doc(caseId)
+    return preLitigationRef.doc(caseId)
         .collection("updates")
         .add({
             status,
@@ -78,26 +55,18 @@ export function addCaseUpdate({ caseId, status, comments, attachmentURL }) {
             updatedById: userId,
             updatedByName: profile.username,
             attachmentURL,
-            createdAt: serverTime
+            createdAt: serverTime()
         });
 }
 
 export function updateOrderFields(orderId, update) {
-    return firebase
-        .firestore()
-        .collection("orders")
-        .doc(orderId)
+    return orderRef.doc(orderId)
         .update({ ...update });
 }
 
 export function persistOrderResults(orderId, resultType, results) {
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
     const update = { [resultType]: { ...results }, updatedAt: serverTime };
-    return firebase
-        .firestore()
-        .collection("orders")
-        .doc(orderId)
-        .update(update);
+    return orderRef.doc(orderId).update(update);
 }
 
 export function persistOrderEmbeddedResults(
@@ -106,28 +75,15 @@ export function persistOrderEmbeddedResults(
     resultKey,
     results
 ) {
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
     const update = {
         [`${resultType}.${resultKey.toString()}`]: {
             ...results,
-            updatedAt: serverTime
+            updatedAt: serverTime()
         }
     };
-    return firebase
-        .firestore()
-        .collection("orders")
-        .doc(orderId)
-        .update(update);
+    return orderRef.doc(orderId).update(update);
 }
 
-/**
- * Uploads a given file to the destination folder in the default bucket
- *
- * @export
- * @param {string} file the reference to the file
- * @param {string} folder the remote folder you will be storing the file in
- * @returns {promise} to the firebase storage put method
- */
 export function uploadFile(file, folder) {
     if (!folder) {
         throw new Error("You must specify what folder to upload the file in!");
@@ -137,23 +93,6 @@ export function uploadFile(file, folder) {
     return storageRef.child(fileName).put(file);
 }
 
-/**
- * Creates a new KYC specific order
- *
- * @export
- * @param {*} {
- * 	customerName,
- * 	registeretedOrganization,
- * 	registrationNumber,
- * 	tinNumber,
- * 	attachmentURL,
- * 	address,
- * 	organizationId,
- * 	organizationName,
- * 	notes
- * }
- * @returns
- */
 export function createKYCOrder({
     customerName,
     registeretedOrganization,
@@ -169,8 +108,6 @@ export function createKYCOrder({
     notes
 }) {
     // Creates new orders and sets up new sub documents to keep track of the results
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    const user = firebase.auth().currentUser;
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -178,10 +115,7 @@ export function createKYCOrder({
     const deliveryDate = getDeliveryDate(
         organization ? organization.packageType : "standard"
     );
-    return firebase
-        .firestore()
-        .collection("orders")
-        .add({
+    return orderRef.add({
             customerName,
             registeretedOrganization,
             registrationNumber,
@@ -192,7 +126,7 @@ export function createKYCOrder({
             district,
             box,
             notes,
-            createdAt: serverTime,
+            createdAt: serverTime(),
             deliveryDate,
             referenceNumber: generateOrderRefNo(organizationName),
             status: "pending",
@@ -240,24 +174,19 @@ export function createOrder({
     district,
     idExpiry
 }) {
-    // Creates new orders and sets up new sub documents to keep track of the results
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    const user = firebase.auth().currentUser;
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
 
-    const organization = store.getState().organizations.myOrganization;
-    const deliveryDate = getDeliveryDate(
-        organization ? organization.packageType : "standard"
-    );
+    // const organization = store.getState().organizations.myOrganization;
+    // const deliveryDate = getDeliveryDate(
+    //     organization ? organization.packageType : "standard"
+    // );
 
     const sreenings = {};
     screeningTypes.forEach(type => (sreenings[type] = {}));
 
-    return firebase
-        .firestore()
-        .collection("orders")
+    return orderRef
         .add({
             firstName,
             lastName,
@@ -283,15 +212,15 @@ export function createOrder({
             notes: "",
             deliveryDate,
             referenceNumber: generateOrderRefNo(organizationName),
-            createdAt: serverTime,
+            createdAt: serverTime(),
             personMAID: null,
-            updatedAt: serverTime
+            updatedAt: serverTime()
         });
 }
 
 export function updateOrganization(organization, organizationId) {
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    const user = firebase.auth().currentUser;
+    // const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+    // const user = firebase.auth().currentUser;
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -302,7 +231,7 @@ export function updateOrganization(organization, organizationId) {
         .doc(organizationId)
         .update({
             ...organization,
-            updatedAt: serverTime
+            updatedAt: serverTime()
         });
 }
 
@@ -315,7 +244,7 @@ export function registerOrganizationMember({
     organizationId
 }) {
     // const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    const user = firebase.auth().currentUser;
+    // const user = firebase.auth().currentUser;
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -358,8 +287,8 @@ export function registerOrganizationMember({
 }
 
 export function registerOrganization(organization) {
-    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    const user = firebase.auth().currentUser;
+    // const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+    // const user = firebase.auth().currentUser;
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -369,7 +298,7 @@ export function registerOrganization(organization) {
         .collection("organizations")
         .add({
             ...organization,
-            createdAt: serverTime,
+            createdAt: serverTime(),
             timeStamp: new Date().getTime(),
             registeredBy: user.uid,
             registeredByEmail: user.email
@@ -408,20 +337,6 @@ export function fullFormatDate(timeStamp) {
 }
 
 export function getMonthName(timeStamp) {
-    const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    ];
 
     return months[new Date(timeStamp).getMonth()];
 }

@@ -12,39 +12,10 @@ import {
 } from "@material-ui/core";
 import _, { map } from "lodash";
 
-import * as logoImg from "../assets/mwema_logo.png";
 import "./ClientReport.css";
+import {borders, headers} from "./Styles";
+import {Logo} from "./helpers/HelpersComponents";
 
-const borders = {
-	left: {
-		borderLeft: "1px solid #ececec"
-	},
-	right: {
-		borderRight: "1px solid #ececec"
-	},
-	left_right: {
-		borderLeft: "1px solid #ececec",
-		borderRight: "1px solid #ececec"
-	},
-	top: {
-		borderTop: "1px solid #ececec"
-	}
-};
-
-const headers = {
-	marginTopBottom: {
-		marginTop: "40px",
-		marginBottom: "40px"
-	}
-};
-
-const Logo = () => (
-	<div className="center">
-		<div style={{ textAlign: "center" }}>
-			<img alt="" style={{}} src={logoImg} />
-		</div>
-	</div>
-);
 const ReportsHeader = ({ person, referenceNumber }) => {
 	return (
 		<div>
@@ -260,8 +231,8 @@ const FirstPage = ({ person }) => {
 					<TableCell style={borders.left}>Discrepant</TableCell>
 					<TableCell style={borders.left}>Minor Discrepant</TableCell>
 					<TableCell style={borders.left}>Attention Required</TableCell>
-					<TableCell style={borders.left}>Insufficient</TableCell> 
-					<TableCell style={borders.left}>No response received</TableCell> 
+					<TableCell style={borders.left}>Insufficient</TableCell>
+					<TableCell style={borders.left}>No response received</TableCell>
 					<TableCell style={borders.left_right}>Clear</TableCell>
 					</TableRow>
 
