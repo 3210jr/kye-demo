@@ -3,6 +3,7 @@ import React, { Component, useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import Select from 'react-select'
 import {
     Grid,
     Typography,
@@ -11,67 +12,18 @@ import {
     InputLabel,
     Button,
     Card,
+    Select as MaterialSelect,
     CardContent,
     Checkbox,
     FormControlLabel,
-    Select,
     MenuItem
 } from "@material-ui/core";
-import DateFnsUtils from "@date-io/date-fns";
 import _ from "lodash";
 import { uploadFile, createOrder, isValidDate } from "../utils";
 import { countryList } from "../constants/countries";
 import KYCOrderForm from "./orders/KYCOrderForm";
-
-const months = [
-    "january",
-    "febuary",
-    "march",
-    "april",
-    "may",
-    "june",
-    "july",
-    "august",
-    "september",
-    "october",
-    "november",
-    "december"
-];
-
-const styles = theme => ({
-    container: {
-        display: "flex",
-        flexWrap: "wrap",
-        flex: 1
-    },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        marginTop: 0,
-        width: "100%"
-    },
-    cardSection: {
-        paddingRight: theme.spacing.unit,
-        width: "100%",
-        marginBottom: 15
-    },
-    bullet: {
-        display: "inline-block",
-        margin: "0 2px",
-        transform: "scale(0.8)"
-    },
-    title: {
-        fontSize: 14
-    },
-    pos: {
-        marginBottom: 12
-    },
-    formControl: {
-        margin: 0,
-        minWidth: 120,
-        width: "100%"
-    }
-});
+import { styles } from "./Styles";
+import InputField from "../components/FormValidation/InputField";
 
 class NewOrder extends Component {
     constructor(props) {
@@ -108,6 +60,7 @@ class NewOrder extends Component {
         this.toggleGenderDropDown = this.toggleGenderDropDown.bind(this);
         this.fileUploaderRef = React.createRef();
     }
+
     uploadZippedFolder = evt => {
         const file = evt.target.files[0];
         this.setState({ uploadingAssets: true });
@@ -137,23 +90,28 @@ class NewOrder extends Component {
         }
         this.setState({ screeningTypes });
     };
+
     handleChange(field, evt) {
         // if (field === "dateOfBirth") {
         // 	return this.setState(prevState => (prevState[field] = evt));
         // }
         const update = evt.target.value;
+
         this.setState(prevState => (prevState[field] = update));
     }
+
     toggleGenderDropDown() {
         this.setState(prevState => ({ open: !prevState.open }));
     }
+
     toggleMonthDropDown = () => {
         this.setState(prevState => ({
             openMonthPicker: !prevState.openMonthPicker
         }));
     };
     createOrder = () => {
-        this.setState({ isSubmittedButton: true})
+        this.setState({ isSubmittedButton: true });
+        const { pushFormError, setErrors } = this.props;
         const {
             firstName,
             lastName,
@@ -185,30 +143,41 @@ class NewOrder extends Component {
 
         if (!isValidDate([idExpiry, dateOfBirth])) {
             // return alert("Please verify the expiry date and the date of birth");
-            return ;
+            pushFormError({
+                "id": "Date",
+                "message": "Please verify the expiry date and the date of birth"
+            });
+            // return;
         }
 
         if (assetsURL.length < 5) {
             // alert(
             //     "Please upload the zipped folder with all required documents"
             // );
-            return;
+            // return;
         }
 
         if (screeningTypes.length === 0) {
             // return alert(
             //     "Please choose at least one screening type to perform."
             // );
-            return;
+            // return;
         }
 
         const emptyFields = Object.keys(
             _.omit(this.state, ["district", "region", "box"])
         ).filter(key => this.state[key].length === 0);
+        setErrors(emptyFields.map(field => ({
+            id: field,
+            message: "This field cannot be empty"
+        })))
         if (emptyFields.length > 0) {
+            // pushFormError({ id: emptyFields[0], message: "This field cannot be empty" })
             alert("Please fill in all the appropriate fields");
             return;
         }
+
+
 
         if (
             idNumber.length < 5 &&
@@ -260,7 +229,7 @@ class NewOrder extends Component {
 
     checkField = (field, label, customMessage) => {
         if (this.state["isSubmittedButton"] && field === "") {
-            return(
+            return (
                 <Typography style={{
                     color: "#ff0000",
                     fontSize: "12px",
@@ -277,10 +246,10 @@ class NewOrder extends Component {
                         </span>
                     )}
                 </Typography>
-            )
+            );
         }
-        return ''
-    }
+        return "";
+    };
 
     checkAssetsUploadURL() {
         if (this.state["assetsURL"].length < 5 && this.state["isSubmittedButton"]) {
@@ -292,9 +261,10 @@ class NewOrder extends Component {
                 }}>
                     Please upload the zipped folder with all required documents
                 </Typography>
-            )
+            );
         }
     }
+
     render() {
         const { classes, history, profile } = this.props;
         const {
@@ -326,6 +296,8 @@ class NewOrder extends Component {
         const { serviceOptions } = this.props;
         return (
             <div>
+
+
                 <Grid container style={{ marginBottom: 15 }}>
                     <Typography
                         variant="h4"
@@ -354,8 +326,7 @@ class NewOrder extends Component {
                         >
                             Order Type:{" "}
                         </InputLabel>
-
-                        <Select
+                        <MaterialSelect
                             // labelId="order-type-picker-label"
                             id="order-type-picker"
                             value={orderType}
@@ -373,7 +344,7 @@ class NewOrder extends Component {
                             <MenuItem value={"kyc"}>
                                 Know Your Customer
                             </MenuItem>
-                        </Select>
+                        </MaterialSelect>
                     </CardContent>
                 </Card>
 
@@ -400,142 +371,132 @@ class NewOrder extends Component {
                                 >
                                     <Grid container spacing={24}>
                                         <Grid item xs={12} md={4}>
-                                            <TextField
-                                                id="first-name"
-                                                label="First Name"
-                                                className={classes.textField}
+                                            <InputField
+                                                id="firstName"
+                                                label={"First Name"}
                                                 value={firstName}
+                                                className={classes.textField}
                                                 onChange={evt =>
-                                                    this.handleChange(
-                                                        "firstName",
-                                                        evt)
-                                                }
-                                                margin="normal"
+                                                    this.handleChange("firstName", evt)}
                                             />
-                                            {this.checkField(firstName, "First name")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
-                                            <TextField
-                                                id="middle-name"
-                                                label="Middle Name"
-                                                className={classes.textField}
+                                            <InputField
+                                                variant="outlined"
+                                                id="middleName"
+                                                label={"Middle Name"}
                                                 value={middleName}
+                                                className={classes.textField}
                                                 onChange={evt =>
-                                                    this.handleChange(
-                                                        "middleName",
-                                                        evt
-                                                    )
-                                                }
-                                                margin="normal"
+                                                    this.handleChange("middleName", evt)}
                                             />
-                                            {this.checkField(middleName, "Middle name")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
-                                            <TextField
-                                                id="last-name"
-                                                label="Last Name"
-                                                className={classes.textField}
+                                            <InputField
+                                                id="lastName"
+                                                label={"Last Name"}
                                                 value={lastName}
+                                                className={classes.textField}
                                                 onChange={evt =>
-                                                    this.handleChange(
-                                                        "lastName",
-                                                        evt
-                                                    )
-                                                }
-                                                margin="normal"
+                                                    this.handleChange("lastName", evt)}
                                             />
-                                            {this.checkField(middleName, "Last name")}
                                         </Grid>
                                         <Grid item xs={4} md={2} lg={1}>
-                                            <TextField
+                                            <InputField
                                                 id="telephoneCode"
-                                                label="Tel. Code"
-                                                className={classes.textField}
+                                                label={"Tel. Code"}
                                                 value={telephoneCode}
+                                                className={classes.textField}
                                                 onChange={evt =>
-                                                    this.handleChange(
-                                                        "telephoneCode",
-                                                        evt
-                                                    )
-                                                }
-                                                margin="normal"
+                                                    this.handleChange("telephoneCode", evt)}
                                             />
-                                            {this.checkField(telephoneCode, "Tel. Code")}
                                         </Grid>
                                         <Grid item xs={8} md={2} lg={3}>
-                                            <TextField
+                                            <InputField
                                                 id="telephone"
-                                                label="Telephone Number"
-                                                className={classes.textField}
+                                                label={"Telephone Number"}
                                                 value={telephone}
-                                                onChange={evt =>
-                                                    this.handleChange(
-                                                        "telephone",
-                                                        evt
-                                                    )
-                                                }
-                                                margin="normal"
-                                            />
-                                            {this.checkField(telephone, "Telephone Number")}
-                                        </Grid>
-                                        <Grid item xs={12} md={4}>
-                                            <TextField
-                                                id="dateOfBirth"
-                                                label="Date of Birth"
-                                                type="date"
                                                 className={classes.textField}
+                                                onChange={evt =>
+                                                    this.handleChange("telephone", evt)}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} md={4}>
+                                            <InputField
+                                                id="dateOfBirth"
+                                                label={"Date of Birth"}
+                                                type={"date"}
                                                 value={dateOfBirth}
+                                                className={classes.textField}
+                                                onChange={evt =>
+                                                    this.handleChange("dateOfBirth", evt)}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} md={4}>
+
+                                            <TextField
+                                                variant="outlined"
+                                                value={gender}
                                                 onChange={evt =>
                                                     this.handleChange(
-                                                        "dateOfBirth",
+                                                        "gender",
                                                         evt
                                                     )
                                                 }
-                                                margin="normal"
-                                            />
-                                            {this.checkField(dateOfBirth, "Date of Birth", "Please verify the expiry date and the date of birth")}
-                                        </Grid>
-                                        <Grid item xs={12} md={4}>
-                                            <FormControl
-                                                className={classes.formControl}
+                                                label="Gender"
+                                                fullWidth
+                                                select
                                             >
-                                                <InputLabel htmlFor="demo-controlled-open-select">
-                                                    Gender
-                                                </InputLabel>
-                                                <Select
-                                                    open={open}
-                                                    onClose={
-                                                        this
-                                                            .toggleGenderDropDown
-                                                    }
-                                                    onOpen={
-                                                        this
-                                                            .toggleGenderDropDown
-                                                    }
-                                                    value={gender}
-                                                    onChange={evt =>
-                                                        this.handleChange(
-                                                            "gender",
-                                                            evt
-                                                        )
-                                                    }
-                                                    inputProps={{
-                                                        name: "gender",
-                                                        id:
-                                                            "demo-controlled-open-select"
-                                                    }}
-                                                >
-                                                    <MenuItem value={"male"}>
-                                                        Male
-                                                    </MenuItem>
-                                                    <MenuItem value={"female"}>
-                                                        Female
-                                                    </MenuItem>
-                                                </Select>
-                                            </FormControl>
+                                                <MenuItem value={"male"}>
+                                                    Male
+                                                </MenuItem>
+                                                <MenuItem value={"female"}>
+                                                    Female
+                                                </MenuItem>
+                                            </TextField>
+
+                                            {/*<FormControl*/}
+                                            {/*    className={classes.formControl}*/}
+                                            {/*>*/}
+                                            {/*    <InputLabel htmlFor="demo-controlled-open-select">*/}
+                                            {/*        Gender*/}
+                                            {/*    </InputLabel>*/}
+                                            {/*    <Select*/}
+                                            {/*        variant="outlined"*/}
+                                            {/*        open={open}*/}
+                                            {/*        onClose={*/}
+                                            {/*            this*/}
+                                            {/*                .toggleGenderDropDown*/}
+                                            {/*        }*/}
+                                            {/*        onOpen={*/}
+                                            {/*            this*/}
+                                            {/*                .toggleGenderDropDown*/}
+                                            {/*        }*/}
+                                            {/*        value={gender}*/}
+                                            {/*        onChange={evt =>*/}
+                                            {/*            this.handleChange(*/}
+                                            {/*                "gender",*/}
+                                            {/*                evt*/}
+                                            {/*            )*/}
+                                            {/*        }*/}
+                                            {/*        inputProps={{*/}
+                                            {/*            name: "gender",*/}
+                                            {/*            id:*/}
+                                            {/*                "demo-controlled-open-select"*/}
+                                            {/*        }}*/}
+                                            {/*    >*/}
+                                            {/*        <MenuItem value={"male"}>*/}
+                                            {/*            Male*/}
+                                            {/*        </MenuItem>*/}
+                                            {/*        <MenuItem value={"female"}>*/}
+                                            {/*            Female*/}
+                                            {/*        </MenuItem>*/}
+                                            {/*    </Select>*/}
+                                            {/*</FormControl>*/}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
+                                                variant="outlined"
                                                 onChange={evt =>
                                                     this.handleChange(
                                                         "idType",
@@ -545,8 +506,7 @@ class NewOrder extends Component {
                                                 label="ID Type"
                                                 value={idType}
                                                 fullWidth
-                                                select
-                                            >
+                                                select>
                                                 <MenuItem
                                                     value={
                                                         "national-identification"
@@ -583,6 +543,7 @@ class NewOrder extends Component {
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
+                                                variant="outlined"
                                                 id="nida-number"
                                                 label="Identification Number"
                                                 className={classes.textField}
@@ -598,6 +559,7 @@ class NewOrder extends Component {
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
+                                                variant="outlined"
                                                 id="id-expiry"
                                                 label="Identification Expiry Date"
                                                 className={classes.textField}
@@ -623,30 +585,38 @@ class NewOrder extends Component {
 											/>
 										</Grid> */}
                                         <Grid item xs={12} md={4}>
-                                            <TextField
-                                                onChange={evt =>
-                                                    this.handleChange(
-                                                        "country",
-                                                        evt
-                                                    )
-                                                }
-                                                label="Country"
-                                                value={country}
-                                                fullWidth
-                                                select
-                                            >
-                                                {countryList.map(country => (
-                                                    <MenuItem
-                                                        key={country}
-                                                        value={country.toLowerCase()}
-                                                    >
-                                                        {country}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
+                                            <Select options={
+                                                countryList.map(country =>({
+                                                    value:country.toLowerCase(),
+                                                    label:country
+                                                }))
+                                            } />
+                                            {/*<TextField*/}
+                                            {/*    variant="outlined"*/}
+                                            {/*    onChange={evt =>*/}
+                                            {/*        this.handleChange(*/}
+                                            {/*            "country",*/}
+                                            {/*            evt*/}
+                                            {/*        )*/}
+                                            {/*    }*/}
+                                            {/*    label="Country"*/}
+                                            {/*    value={country}*/}
+                                            {/*    fullWidth*/}
+                                            {/*    select*/}
+                                            {/*>*/}
+                                            {/*    {countryList.map(country => (*/}
+                                            {/*        <MenuItem*/}
+                                            {/*            key={country}*/}
+                                            {/*            value={country.toLowerCase()}*/}
+                                            {/*        >*/}
+                                            {/*            {country}*/}
+                                            {/*        </MenuItem>*/}
+                                            {/*    ))}*/}
+                                            {/*</TextField>*/}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
+                                                variant="outlined"
                                                 id="region"
                                                 label="Region (optional)"
                                                 className={classes.textField}
@@ -662,6 +632,7 @@ class NewOrder extends Component {
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
+                                                variant="outlined"
                                                 id="district"
                                                 label="District (optional)"
                                                 className={classes.textField}
@@ -678,6 +649,7 @@ class NewOrder extends Component {
                                         <Grid item xs={12} md={4}>
                                             <TextField
                                                 id="pobox"
+                                                variant="outlined"
                                                 label="P.O.Box (optional)"
                                                 className={classes.textField}
                                                 value={box}
@@ -994,15 +966,6 @@ class NewOrder extends Component {
                             onChange={this.uploadZippedFolder}
                         />
                         {this.checkAssetsUploadURL()}
-                        {uploadingAssets && (
-                            <Typography style={{
-                                color: "#ff0000",
-                                fontSize: "12px",
-                                fontStyle: "italic"
-                            }}>
-                                There was an error uploading your assets, please try again
-                            </Typography>
-                        )}
                     </div>
                 )}
             </div>
@@ -1021,4 +984,9 @@ const mapState = state => ({
         || []
 });
 
-export default connect(mapState)(withStyles(styles)(NewOrder));
+const mapActions = ({ inputValidation: { pushError, setErrors } }) => ({
+    pushFormError: pushError,
+    setErrors
+});
+
+export default connect(mapState, mapActions)(withStyles(styles)(NewOrder));
