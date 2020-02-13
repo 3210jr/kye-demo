@@ -17,6 +17,7 @@ import {
 } from "../../../../utils";
 import { identificationTypes } from "../../../../constants";
 import { countryList } from "../../../../constants/countries";
+import InputField from "../../../../components/FormValidation/InputField";
 
 function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
     const [state, setState] = useState({
@@ -249,12 +250,10 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
             </div>
 
             <div className="flex-row" style={{ marginTop: 10 }}>
-                <TextField
-                    id="outlined-name"
-                    label="Comments"
-                    multiline
-                    // style={{ margin: 3 }}
+                <InputField
+                    id="comments"
                     className="wide"
+                    label={"Comments"}
                     value={state.comments}
                     onChange={({ target }) =>
                         handleChange("comments", target.value)
@@ -262,6 +261,19 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
                     margin="normal"
                     variant="outlined"
                 />
+                {/*<TextField*/}
+                {/*    id="outlined-name"*/}
+                {/*    label="Comments"*/}
+                {/*    multiline*/}
+                {/*    // style={{ margin: 3 }}*/}
+                {/*    className="wide"*/}
+                {/*    value={state.comments}*/}
+                {/*    onChange={({ target }) =>*/}
+                {/*        handleChange("comments", target.value)*/}
+                {/*    }*/}
+                {/*    margin="normal"*/}
+                {/*    variant="outlined"*/}
+                {/*/>*/}
             </div>
 
             <div className="flex-row" style={{ marginTop: 10 }}>
