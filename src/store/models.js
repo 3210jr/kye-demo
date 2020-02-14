@@ -243,9 +243,9 @@ export const inputValidation = {
         },
     },
     // effects: dispatch => ({
-    //     async pushErrorAsync(payload, rootState) {
+    //     async setErrors(payload, rootState) {
     //         await new Promise(resolve => setTimeout(resolve, 1000))
-    //         dispatch.pushError(payload)
+    //         dispatch.setErrors(payload)
     //     }
     // })
 }

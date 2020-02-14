@@ -1,8 +1,8 @@
 // @ts-check
-import React, { Component, useState, useEffect, createRef } from "react";
+import React, {useState, useEffect, createRef } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { omit, clone, map } from "lodash";
+import _, { omit, clone, map } from "lodash";
+import Select from "react-select"
 import {
     Paper,
     Typography,
@@ -19,7 +19,7 @@ import { identificationTypes } from "../../../../constants";
 import { countryList } from "../../../../constants/countries";
 import InputField from "../../../../components/FormValidation/InputField";
 
-function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
+function IdentityCheck({ order, type, snackbar, toggleSnackBar, setErrors }) {
     const [state, setState] = useState({
         documentType: "national-identification",
         countryOfIssue: "tanzania, united republic of",
@@ -67,6 +67,7 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
 
     function handleChange(field, value) {
         state[field] = value;
+        console.log(value)
         return setState(clone(state));
     }
 
@@ -75,14 +76,20 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
         const currentState = omit(state, ["loading"]);
         if (loading) return;
         if (!isValidDate([currentState.expiryDate, currentState.dateOfCheck])) {
-            return alert("Please validate the dates entered");
+            // return alert("Please validate the dates entered");
         }
-        const emptyFields = Object.keys(currentState).filter(
-            key => state[key].length === 0
-        );
+        const emptyFields = Object.keys(currentState)
+            .filter(key => state[key].length === 0);
+
+        setErrors(emptyFields.map(field => ({
+            id: field,
+            message: "This field cannot be empty"
+        })))
+
         if (emptyFields.length > 0) {
             alert("Please fill in all the appropriate fields");
             return;
+
         }
 
         setState({ ...state, loading: true });
@@ -132,57 +139,45 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
                     </TextField>
                 </div>
                 <div style={{ flex: 1, display: "flex" }}>
-                    <TextField
-                        id="outlined-name"
-                        label="Country of issue"
+                    <Select
                         style={{ margin: 3 }}
                         className="wide"
-                        value={state.countryOfIssue}
-                        select
-                        onChange={({ target }) =>
-                            handleChange("countryOfIssue", target.value)
+                        onChange={(item, meta) =>
+                            handleChange("countryOfIssue", item.value)
                         }
-                        margin="normal"
-                        variant="outlined"
-                    >
-                        {countryList.map(country => (
-                            <MenuItem
-                                key={country}
-                                value={country.toLowerCase()}
-                            >
-                                {country}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                        label="Country of issue"
+                        options={
+                        countryList.map(country =>({
+                            value:country.toLowerCase(),
+                            label:country
+                        }))
+                    } />
                 </div>
                 <div style={{ flex: 1, display: "flex" }}>
-                    <TextField
-                        id="outlined-name"
-                        label="Date of Check"
-                        style={{ margin: 3 }}
-                        className="wide"
+                    <InputField
+                        id="dateOfCheck"
                         type="date"
-                        value={state.dateOfCheck}
+                        className="wide"
+                        style={{
+                            margin: 3,
+                            height: 56
+                        }}
+                        label="Date of Check"
                         onChange={({ target }) =>
                             handleChange("dateOfCheck", target.value)
                         }
-                        margin="normal"
-                        variant="outlined"
                     />
                 </div>
                 <div style={{ flex: 1, display: "flex" }}>
-                    <TextField
-                        id="outlined-name"
-                        label="Expiry Date"
+                    <InputField
+                        id="expiryDate"
+                        type="date"
                         style={{ margin: 3 }}
                         className="wide"
-                        value={state.expiryDate}
-                        type="date"
+                        label="Expiry Date"
                         onChange={({ target }) =>
                             handleChange("expiryDate", target.value)
                         }
-                        margin="normal"
-                        variant="outlined"
                     />
                 </div>
                 <div style={{ flex: 1, display: "flex" }}>
@@ -261,19 +256,6 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
                     margin="normal"
                     variant="outlined"
                 />
-                {/*<TextField*/}
-                {/*    id="outlined-name"*/}
-                {/*    label="Comments"*/}
-                {/*    multiline*/}
-                {/*    // style={{ margin: 3 }}*/}
-                {/*    className="wide"*/}
-                {/*    value={state.comments}*/}
-                {/*    onChange={({ target }) =>*/}
-                {/*        handleChange("comments", target.value)*/}
-                {/*    }*/}
-                {/*    margin="normal"*/}
-                {/*    variant="outlined"*/}
-                {/*/>*/}
             </div>
 
             <div className="flex-row" style={{ marginTop: 10 }}>
@@ -318,8 +300,11 @@ const mapState = state => ({
     snackbar: state.snackbar
 });
 
-const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
-    toggleSnackBar: payload => asyncToggleSnackBar(payload)
+const mapDispatch = ({ snackbar: { asyncToggleSnackBar }, inputValidation: { setErrors } }) => ({
+    toggleSnackBar: payload => asyncToggleSnackBar(payload),
+    setErrors
 });
+
+
 
 export default connect(mapState, mapDispatch)(IdentityCheck);

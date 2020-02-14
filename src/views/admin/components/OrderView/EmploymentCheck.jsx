@@ -1,13 +1,11 @@
 // @ts-check
 import React, {
-    Component,
     useState,
     useEffect,
     createRef,
     Fragment
 } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import uuidV1 from "uuid/v1";
 import _ from "lodash";
 import { keys, map, omit } from "lodash";
@@ -23,7 +21,6 @@ import {
     withStyles
 } from "@material-ui/core";
 import {
-    persistOrderResults,
     persistOrderEmbeddedResults,
     uploadFile,
     isCompleteForm,

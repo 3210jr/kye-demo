@@ -6,7 +6,6 @@ const InputField = ({label, value, id, type, className, onChange, errorObj, hasE
     <>
         <TextField
             variant="outlined"
-            margin="normal"
             label={label}
             value={value}
             type={type}
