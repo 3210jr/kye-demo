@@ -1,5 +1,6 @@
 // @ts-check
 import firebase from "firebase";
+import { object } from "prop-types";
 
 export const count = {
     state: {}, // initial state
@@ -232,13 +233,15 @@ export const inputValidation = {
         popError(state, errorId) {
             return state.filter(errorObject => errorObject.id !== errorId)
         },
-        resetErrors() {
-            return []
+        resetErrors(state, field) {
+            console.log(state.find(obj => obj.id === field))
+            return state.filter(obj => obj.id !== field)
         },
         hasErrorById(state = [], payload) {
             return state.find(obj => obj.id === payload)
         },
         setErrors(state, errorsList) {
+            console.log(errorsList)
             return [...errorsList]
         },
     },

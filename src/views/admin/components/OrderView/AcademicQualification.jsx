@@ -19,6 +19,7 @@ import {
     updateOrderFields,
     isValidDate
 } from "../../../../utils";
+import InputField from "../../../../components/FormValidation/InputField";
 
 const ACADEMIC_REPORTS_TEMPLATE = {
     establishmentName: "",
@@ -36,7 +37,7 @@ const ACADEMIC_REPORTS_TEMPLATE = {
     comments: ""
 };
 
-function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
+function AcademicReports({ order, type, snackbar, toggleSnackBar, setErrors }) {
     const [state, setState] = useState({
         [uuidV1()]: {
             ...ACADEMIC_REPORTS_TEMPLATE,
@@ -90,14 +91,19 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
     }
 
     function handleChange(key, field, value) {
-        state[key][field] = value;
+        const stateField = field.substring(0, field.indexOf("-"));
+        state[key][stateField] = value;
         return setState({ ...state });
     }
 
     function removeReport(key) {
         const stateClone = { ...state };
-        if (window.confirm("Are you sure you want to delete this part of the report? This action is IRREVERSIBLE.")) {
-            delete stateClone[key]
+        if (
+            window.confirm(
+                "Are you sure you want to delete this part of the report? This action is IRREVERSIBLE."
+            )
+        ) {
+            delete stateClone[key];
             setState({ ...stateClone });
         }
         return;
@@ -116,6 +122,14 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
         const emptyFields = Object.keys(currentState).filter(
             key => currentState[key].length === 0
         );
+
+        setErrors(
+            emptyFields.map(field => ({
+                id: `${field}-${resultKey}`,
+                message: "This Field can not be empty"
+            }))
+        );
+
         if (emptyFields.length > 0) {
             alert("Please fill in all the appropriate fields");
             return;
@@ -173,18 +187,17 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
 
             <Grid container>
                 <Grid xs item>
-                    <TextField
+                    <InputField
                         fullWidth
+                        magin="dense"
                         multiline
                         rows={4}
-                        label="Overall Observations (Brief Summary)"
                         value={state.comments}
+                        label="Overall Observations (Brief Summary)"
                         onChange={({ target }) =>
                             setState({ ...state, comments: target.value })
                         }
                         id=""
-                        margin="dense"
-                        variant="outlined"
                     />
                 </Grid>
             </Grid>
@@ -210,21 +223,21 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={3}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id=""
-                                    label="Establish Name"
+                                <InputField
+                                    fullWidth
+                                    magin="normal"
+                                    multiline
                                     value={result.establishmentName}
+                                    label="Estabilish name"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "establishmentName",
+                                            `establishmentName-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`establishmentName-${key}`}
                                 />
                             </Grid>
 
@@ -233,21 +246,21 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={3}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id=""
-                                    label="Reference Method"
+                                <InputField
+                                    fullWidth
+                                    magin="normal"
+                                    multiline
                                     value={result.referenceMethod}
+                                    label="Reference method"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "referenceMethod",
+                                            `referenceMethod-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`referenceMethod-${key}`}
                                 />
                             </Grid>
 
@@ -256,22 +269,22 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={3}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id=""
-                                    label="Date Supplied"
+                                <InputField
+                                    fullWidth
+                                    magin="normal"
+                                    multiline
                                     type="date"
                                     value={result.dateSupplied}
+                                    label="Date supplied"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "dateSupplied",
+                                            `dateSupplied-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`dateSupplied-${key}`}
                                 />
                             </Grid>
 
@@ -427,20 +440,21 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id=""
+                                <InputField
+                                    rows={4}
+                                    fullWidth
+                                    magin="dense"
+                                    multiline
                                     value={result.nameOfCourseStudiedCandidate}
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "nameOfCourseStudiedCandidate",
+                                            `nameOfCourseStudiedCandidate-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`nameOfCourseStudiedCandidate-${key}`}
                                 />
                             </Grid>
 
@@ -449,20 +463,21 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id=""
+                            <InputField
+                                    rows={4}
+                                    fullWidth
+                                    magin="dense"
+                                    multiline
                                     value={result.nameOfCourseStudiedReference}
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "nameOfCourseStudiedReference",
+                                            `nameOfCourseStudiedReference-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`nameOfCourseStudiedReference-${key}`}
                                 />
                             </Grid>
                         </Grid>
@@ -481,23 +496,22 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id=""
-                                    value={
-                                        result.qualificationAndGradedAwardedCandidate
-                                    }
+                            <InputField
+                                    fullWidth
+                                    magin="normal"
+                                    multiline
+                                    value={result.qualificationAndGradedAwardedCandidate}
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "qualificationAndGradedAwardedCandidate",
+                                            `qualificationAndGradedAwardedCandidate-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`qualificationAndGradedAwardedCandidate-${key}`}
                                 />
+                            
                             </Grid>
 
                             <Grid
@@ -505,22 +519,20 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                 xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id=""
-                                    value={
-                                        result.qualificationAndGradedAwardedReference
-                                    }
+                            <InputField
+                                    fullWidth
+                                    magin="normal"
+                                    multiline
+                                    value={result.qualificationAndGradedAwardedReference}
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "qualificationAndGradedAwardedReference",
+                                            `qualificationAndGradedAwardedReference-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`qualificationAndGradedAwardedReference-${key}`}
                                 />
                             </Grid>
                         </Grid>
@@ -545,7 +557,7 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "academicQualificationScore",
+                                            `academicQualificationScore-${key}`,
                                             target.value
                                         )
                                     }
@@ -573,7 +585,7 @@ function AcademicReports({ order, type, snackbar, toggleSnackBar }) {
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "comments",
+                                            `comments-${key}`,
                                             target.value
                                         )
                                     }
@@ -666,8 +678,12 @@ const mapState = state => ({
     snackbar: state.snackbar
 });
 
-const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
-    toggleSnackBar: payload => asyncToggleSnackBar(payload)
+const mapDispatch = ({
+    snackbar: { asyncToggleSnackBar },
+    inputValidation: { setErrors }
+}) => ({
+    toggleSnackBar: payload => asyncToggleSnackBar(payload),
+    setErrors
 });
 
 export default connect(mapState, mapDispatch)(AcademicReports);

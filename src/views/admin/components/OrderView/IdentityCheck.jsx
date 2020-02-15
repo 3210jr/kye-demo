@@ -19,7 +19,7 @@ import { identificationTypes } from "../../../../constants";
 import { countryList } from "../../../../constants/countries";
 import InputField from "../../../../components/FormValidation/InputField";
 
-function IdentityCheck({ order, type, snackbar, toggleSnackBar, setErrors }) {
+function IdentityCheck({ order, type, snackbar, toggleSnackBar, setErrors, resetErrors }) {
     const [state, setState] = useState({
         documentType: "national-identification",
         countryOfIssue: "tanzania, united republic of",
@@ -28,7 +28,7 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar, setErrors }) {
         result: "not-genuine",
         dateOfBirthConsisntency: "no",
         identityScore: "risk", // risk, medium, good
-        comments: "",
+        comment: "",
         supportingDocsURL: "",
         uploadingAttachment: false,
         loading: false
@@ -67,7 +67,6 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar, setErrors }) {
 
     function handleChange(field, value) {
         state[field] = value;
-        console.log(value)
         return setState(clone(state));
     }
 
@@ -83,7 +82,7 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar, setErrors }) {
 
         setErrors(emptyFields.map(field => ({
             id: field,
-            message: "This field cannot be empty"
+            message: "This Field cannot be empty"
         })))
 
         if (emptyFields.length > 0) {
@@ -246,12 +245,12 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar, setErrors }) {
 
             <div className="flex-row" style={{ marginTop: 10 }}>
                 <InputField
-                    id="comments"
+                    id="comment"
                     className="wide"
-                    label={"Comments"}
-                    value={state.comments}
+                    label={"Comment"}
+                    value={state.comment}
                     onChange={({ target }) =>
-                        handleChange("comments", target.value)
+                        handleChange("comment", target.value)
                     }
                     margin="normal"
                     variant="outlined"
@@ -300,9 +299,10 @@ const mapState = state => ({
     snackbar: state.snackbar
 });
 
-const mapDispatch = ({ snackbar: { asyncToggleSnackBar }, inputValidation: { setErrors } }) => ({
+const mapDispatch = ({ snackbar: { asyncToggleSnackBar }, inputValidation: { setErrors, resetErrors } }) => ({
     toggleSnackBar: payload => asyncToggleSnackBar(payload),
-    setErrors
+    setErrors,
+    resetErrors
 });
 
 

@@ -1,10 +1,5 @@
 // @ts-check
-import React, {
-    useState,
-    useEffect,
-    createRef,
-    Fragment
-} from "react";
+import React, { useState, useEffect, createRef, Fragment } from "react";
 import { connect } from "react-redux";
 import uuidV1 from "uuid/v1";
 import _ from "lodash";
@@ -27,6 +22,7 @@ import {
     updateOrderFields,
     isValidDate
 } from "../../../../utils";
+import InputField from "../../../../components/FormValidation/InputField";
 
 const EMPLOYMENT_HISTORY_TEMPLATE = {
     organization: "",
@@ -53,29 +49,41 @@ const EMPLOYMENT_HISTORY_TEMPLATE = {
     loading: false
 };
 
-const CssTextField = withStyles({
-    root: {
-        "& label.Mui-focused": {
-            color: "green"
-        },
-        "& .MuiInput-underline:after": {
-            borderBottomColor: "green"
-        },
-        "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-                borderColor: "red"
-            },
-            "&:hover fieldset": {
-                borderColor: "yellow"
-            },
-            "&.Mui-focused fieldset": {
-                borderColor: "green"
-            }
-        }
-    }
-})(TextField);
+// const useStyles = makeStyles(theme => (
+//     {
+//         root: {
+//             flexGrow: 1,
+//             control: {
+//                 padding: theme.spacing(2)
+//             },
+//             "& label.Mui-focused": {
+//                 color: "green"
+//             },
+//             "& .MuiInput-underline:after": {
+//                 borderBottomColor: "green"
+//             },
+//             "& .MuiOutlinedInput-root": {
+//                 "& fieldset": {
+//                     borderColor: "red"
+//                 },
+//                 "&:hover fieldset": {
+//                     borderColor: "yellow"
+//                 },
+//                 "&.Mui-focused fieldset": {
+//                     borderColor: "green"
+//                 }
+//             }
+//         }
+//     }
+// ))
 
-function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
+function EmploymentHistory({
+    order,
+    type,
+    snackbar,
+    toggleSnackBar,
+    setErrors
+}) {
     const [state, setState] = useState({
         [uuidV1()]: {
             ...EMPLOYMENT_HISTORY_TEMPLATE,
@@ -142,7 +150,8 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
     }
 
     function handleChange(key, field, value) {
-        state[key][field] = value;
+        const stateField = field.substring(0, field.indexOf("-"));
+        state[key][stateField] = value;
         return setState({ ...state });
     }
 
@@ -152,6 +161,17 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
             "loading",
             "uploadingAttachment"
         ]);
+
+        const emptyFields = Object.keys(currentState).filter(
+            key => currentState[key].length === 0
+        );
+        setErrors(
+            emptyFields.map(field => ({
+                id: `${field}-${resultKey}`,
+                message: "This Field can not be empty"
+            }))
+        );
+
         if (loading || uploadingAttachment) return;
 
         if (
@@ -216,7 +236,6 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 
             <Grid justify="space-between" container spacing={24}>
                 <Grid item></Grid>
-
                 <Grid item>
                     <Button
                         fullWidth
@@ -231,23 +250,20 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
 
             <Grid container>
                 <Grid xs item>
-                    <TextField
+                    <InputField
                         fullWidth
+                        magin="dense"
                         multiline
                         rows={4}
-                        label="Overall Observations (Brief Summary)"
                         value={state.comments}
+                        label="Overall Observations (Brief Summary)"
                         onChange={({ target }) =>
                             setState({ ...state, comments: target.value })
                         }
                         id=""
-                        margin="dense"
-                        variant="outlined"
                     />
                 </Grid>
             </Grid>
-
-            {/* first row */}
 
             {map(_.omit(state, ["comments"]), (result, key) => {
                 let fileUploaderRef = createRef();
@@ -266,73 +282,76 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                             }px solid #ccc`
                         }}
                     >
+                        {/* first row */}
                         <Grid container spacing={3} style={{ marginTop: 5 }}>
                             <Grid
                                 item
-                                xs
+                                xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <CssTextField
-                                    id="outlined-name"
+                                <InputField
+                                    rows={4}
+                                    fullWidth
+                                    magin="dense"
+                                    multiline
                                     value={result.organization}
-                                    onChange={({ target }) =>
-                                        handleChange(
-                                            key,
-                                            "organization",
-                                            target.value
-                                        )
-                                    }
-                                    required
                                     label="Organization"
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
+                                    onChange={({ target }) =>
+                                        handleChange(
+                                            key,
+                                            `organization-${key}`,
+                                            target.value
+                                        )
+                                    }
                                     style={{ margin: 3 }}
+                                    id={`organization-${key}`}
                                 />
                             </Grid>
                             <Grid
                                 item
-                                xs
+                                xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id="outlined-name"
-                                    label="Reference method"
+                                <InputField
+                                    fullWidth
+                                    magin="dense"
+                                    multiline
+                                    rows={4}
                                     value={result.referenceMethod}
+                                    label="Reference method"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "referenceMethod",
+                                            `referenceMethod-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`referenceMethod-${key}`}
                                 />
                             </Grid>
                             <Grid
                                 item
-                                xs
+                                xs={4}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id="outlined-name"
-                                    label="Date Produced"
+                                <InputField
+                                    fullWidth
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
                                     value={result.dateProduced}
+                                    label="Date produced"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "dateProduced",
+                                            `dateProduced-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    type="date"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    type="date"
+                                    id={`dateProduced-${key}`}
                                 />
                             </Grid>
                         </Grid>
@@ -343,24 +362,25 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                         <Grid container spacing={3} style={{ marginTop: 5 }}>
                             <Grid
                                 item
-                                xs
+                                xs={6}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id="outlined-name"
+                                <InputField
+                                    fullWidth
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
+                                    value={result.positionHeldCandidated}
                                     label="Candidate"
-                                    value={result.positionHeldCandidate}
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "positionHeldCandidate",
+                                            `positionHeldCandidate-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`positionHeldCandidate-${key}`}
                                 />
                             </Grid>
                             <Grid
@@ -368,21 +388,22 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                 xs
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
-                                    id="outlined-name"
-                                    label="Referee"
+                                <InputField
+                                    fullWidth
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
                                     value={result.positionHeldReferee}
+                                    label="Referee"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "positionHeldReferee",
+                                            `positionHeldReferee-${key}`,
                                             target.value
                                         )
                                     }
-                                    fullWidth
-                                    margin="normal"
-                                    variant="outlined"
                                     style={{ margin: 3 }}
+                                    id={`positionHeldReferee-${key}`}
                                 />
                             </Grid>
                         </Grid>
@@ -396,7 +417,7 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
                                 <Grid item xs={4}>
-                                    <p style={{ paddingLeft: 6 }}>
+                                    <p style={{ paddingLeft: 6, fontSize: 14 }}>
                                         Employment Start Date
                                     </p>
                                 </Grid>
@@ -409,23 +430,25 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                             paddingRight: 3
                                         }}
                                     >
-                                        <TextField
-                                            id="outlined-name"
-                                            label="Candidate"
+                                        <InputField
+                                            rows={4}
+                                            fullWidth
+                                            margin="normal"
+                                            multiline
+                                            type="date"
                                             value={
                                                 result.employmentStartDateCandidate
                                             }
+                                            label="Candidate"
                                             onChange={({ target }) =>
                                                 handleChange(
                                                     key,
-                                                    "employmentStartDateCandidate",
+                                                    `employmentStartDateCandidate-${key}`,
                                                     target.value
                                                 )
                                             }
-                                            fullWidth
-                                            margin="normal"
-                                            variant="outlined"
                                             style={{ margin: 3 }}
+                                            id={`employmentStartDateCandidate-${key}`}
                                         />
                                     </Grid>
 
@@ -437,23 +460,25 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                             paddingRight: 3
                                         }}
                                     >
-                                        <TextField
-                                            id="outlined-name"
-                                            label="Referee"
+                                        <InputField
+                                            rows={4}
+                                            fullWidth
+                                            margin="normal"
+                                            multiline
+                                            type="date"
                                             value={
                                                 result.employmentStartDateReferee
                                             }
+                                            label="Referee"
                                             onChange={({ target }) =>
                                                 handleChange(
                                                     key,
-                                                    "employmentStartDateReferee",
+                                                    `employmentStartDateReferee-${key}`,
                                                     target.value
                                                 )
                                             }
-                                            fullWidth
-                                            margin="normal"
-                                            variant="outlined"
                                             style={{ margin: 3 }}
+                                            id={`employmentStartDateReferee-${key}`}
                                         />
                                     </Grid>
                                 </Grid>
@@ -465,7 +490,7 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
                                 <Grid item xs={4}>
-                                    <p style={{ paddingLeft: 6 }}>
+                                    <p style={{ paddingLeft: 6, fontSize: 14 }}>
                                         Employment End Date
                                     </p>
                                 </Grid>
@@ -478,23 +503,25 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                             paddingRight: 3
                                         }}
                                     >
-                                        <TextField
-                                            id="outlined-name"
-                                            label="Candidate"
+                                        <InputField
+                                            rows={4}
+                                            fullWidth
+                                            margin="normal"
+                                            multiline
+                                            type="date"
                                             value={
                                                 result.employmentEndDateCandidate
                                             }
+                                            label="Candidate"
                                             onChange={({ target }) =>
                                                 handleChange(
                                                     key,
-                                                    "employmentEndDateCandidate",
+                                                    `employmentEndDateCandidate-${key}`,
                                                     target.value
                                                 )
                                             }
-                                            fullWidth
-                                            margin="normal"
-                                            variant="outlined"
                                             style={{ margin: 3 }}
+                                            id={`employmentEndDateCandidate-${key}`}
                                         />
                                     </Grid>
 
@@ -506,23 +533,25 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                             paddingRight: 3
                                         }}
                                     >
-                                        <TextField
-                                            id="outlined-name"
-                                            label="Referee"
+                                        <InputField
+                                            rows={4}
+                                            fullWidth
+                                            margin="normal"
+                                            multiline
+                                            type="date"
                                             value={
                                                 result.employmentEndDateReferee
                                             }
+                                            label="Referee"
                                             onChange={({ target }) =>
                                                 handleChange(
                                                     key,
-                                                    "employmentEndDateReferee",
+                                                    `employmentEndDateReferee-${key}`,
                                                     target.value
                                                 )
                                             }
-                                            fullWidth
-                                            margin="normal"
-                                            variant="outlined"
                                             style={{ margin: 3 }}
+                                            id={`employmentEndDateReferee-${key}`}
                                         />
                                     </Grid>
                                 </Grid>
@@ -617,21 +646,23 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                             marginTop: 10
                                         }}
                                     >
-                                        <TextField
-                                            id="outlined-name"
-                                            label="Liability Comments (if any)"
+                                        <InputField
+                                            rows={4}
+                                            fullWidth
+                                            margin="dense"
+                                            multiline
+                                            rowsMax="4"
                                             value={result.liabilitiesInfo}
+                                            label="Liability Comments (if any)"
                                             onChange={({ target }) =>
                                                 handleChange(
                                                     key,
-                                                    "liabilitiesInfo",
+                                                    `liabilitiesInfo-${key}`,
                                                     target.value
                                                 )
                                             }
-                                            fullWidth
-                                            margin="normal"
-                                            variant="outlined"
                                             style={{ margin: 3 }}
+                                            id={`liabilitiesInfo-${key}`}
                                         />
                                     </Grid>
                                 )}
@@ -645,21 +676,23 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                         marginTop: 10
                                     }}
                                 >
-                                    <TextField
-                                        id="outlined-name"
-                                        label="Reason for leaving"
+                                    <InputField
+                                        rows={4}
+                                        fullWidth
+                                        margin="dense"
+                                        multiline
+                                        rowsMax="4"
                                         value={result.reasonForLeaving}
+                                        label="Reason for leaving"
                                         onChange={({ target }) =>
                                             handleChange(
                                                 key,
-                                                "reasonForLeaving",
+                                                `reasonForLeaving-${key}`,
                                                 target.value
                                             )
                                         }
-                                        fullWidth
-                                        margin="normal"
-                                        variant="outlined"
                                         style={{ margin: 3 }}
+                                        id={`reasonForLeaving-${key}`}
                                     />
                                 </Grid>
 
@@ -726,22 +759,26 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                         marginTop: 10
                                     }}
                                 >
-                                    <TextField
-                                        id="outlined-name"
+                                    <InputField
+                                        rows={4}
+                                        fullWidth
+                                        margin="normal"
+                                        multiline
+                                        value={
+                                            result.rehirePossibility
+                                        }
                                         label="Posibility of being rehired by the organization"
-                                        value={result.rehirePossibility}
                                         onChange={({ target }) =>
                                             handleChange(
                                                 key,
-                                                "rehirePossibility",
+                                                `rehirePossibility-${key}`,
                                                 target.value
                                             )
                                         }
-                                        fullWidth
-                                        margin="normal"
-                                        variant="outlined"
                                         style={{ margin: 3 }}
+                                        id={`rehirePossibility-${key}`}
                                     />
+                                
                                 </Grid>
                             </Grid>
                             {/* Extras end */}
@@ -801,22 +838,23 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                 sm={12}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
+                                <InputField
+                                    rows={4}
                                     fullWidth
+                                    margin="dense"
+                                    multiline
+                                    rowsMax="4"
                                     value={result.comments}
+                                    label="Commets"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "comments",
+                                            `comments-${key}`,
                                             target.value
                                         )
                                     }
-                                    label="Comments"
-                                    id="outlined-dense-multiline"
-                                    margin="dense"
-                                    variant="outlined"
-                                    multiline
-                                    rowsMax="4"
+                                    style={{ margin: 3 }}
+                                    id={`comments-${key}`}
                                 />
                             </Grid>
                         </Grid>
@@ -831,22 +869,23 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                 sm={12}
                                 style={{ paddingLeft: 3, paddingRight: 3 }}
                             >
-                                <TextField
+                                <InputField
+                                    rows={4}
                                     fullWidth
+                                    margin="dense"
+                                    multiline
+                                    rowsMax="4"
                                     value={result.additionalInformation}
+                                    label="Additional information"
                                     onChange={({ target }) =>
                                         handleChange(
                                             key,
-                                            "additionalInformation",
+                                            `additionalInformation-${key}`,
                                             target.value
                                         )
                                     }
-                                    label="Additional information"
-                                    id="outlined-dense-multiline"
-                                    margin="dense"
-                                    variant="outlined"
-                                    multiline
-                                    rowsMax="4"
+                                    style={{ margin: 3 }}
+                                    id={`additionalInformation-${key}`}
                                 />
                             </Grid>
                         </Grid>
@@ -940,8 +979,12 @@ const mapState = state => ({
     snackbar: state.snackbar
 });
 
-const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
-    toggleSnackBar: payload => asyncToggleSnackBar(payload)
+const mapDispatch = ({
+    snackbar: { asyncToggleSnackBar },
+    inputValidation: { setErrors }
+}) => ({
+    toggleSnackBar: payload => asyncToggleSnackBar(payload),
+    setErrors
 });
 
 export default connect(mapState, mapDispatch)(EmploymentHistory);

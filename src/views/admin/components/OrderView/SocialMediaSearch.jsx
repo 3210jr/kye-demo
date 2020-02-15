@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { storage } from "firebase";
 import { upperFirst, clone, map, omit } from "lodash";
 import uuidV1 from "uuid/v1";
+import Select from "react-select";
 import {
     Paper,
     Typography,
@@ -13,16 +14,17 @@ import {
     TextField,
     FormControl,
     InputLabel,
-    Select,
     MenuItem,
     Input
 } from "@material-ui/core";
+import InputField from "../../../../components/FormValidation/InputField";
 import {
     persistOrderResults,
     uploadFile,
     friendlyFormatDate,
     isCompleteForm
 } from "../../../../utils";
+import { keys } from "@material-ui/core/styles/createBreakpoints";
 
 const socialNetworks = [
     "facebook",
@@ -44,11 +46,11 @@ const MenuProps = {
     }
 };
 
-function SocialMediaSearch({ order, type, toggleSnackBar }) {
+function SocialMediaSearch({ order, type, toggleSnackBar, setErrors }) {
     const date = new Date();
     const [state, setstate] = useState({
         networks: [],
-        dateOfSearch: '',
+        dateOfSearch: "",
         handles: "",
         comments: "",
         score: "",
@@ -103,6 +105,25 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
         const { loading, comments, networks, handles } = state;
         if (loading) return;
 
+        const currentState = omit(state, [
+            "loading",
+            "comments",
+            "score",
+            "networks",
+            "supportingDocsURL",
+            "uploadingAttachment"
+        ]);
+
+        const emptyField = Object.keys(currentState).filter(
+            key => currentState[key].length === 0
+        );
+        setErrors(
+            emptyField.map(field => ({
+                id: field,
+                message: "This field can not be empty"
+            }))
+        )
+
         if (networks.length === 0) {
             return alert(
                 "Please choose at least one social network that was searched"
@@ -119,7 +140,10 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
 
         persistOrderResults(order.id, type, {
             ...omit(state, ["loading", "uploadingAttachment"]),
-            handles: handles.toString().split(",").map(h => h.trim())
+            handles: handles
+                .toString()
+                .split(",")
+                .map(h => h.trim())
         })
             .then(res => {
                 toggleSnackBar({
@@ -155,7 +179,7 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
                     lg={4}
                     style={{ paddingLeft: 3, paddingRight: 3 }}
                 >
-                    <FormControl variant="outlined" fullWidth>
+                    <div variant="outlined" fullWidth>
                         <InputLabel
                             variant="outlined"
                             id="demo-mutiple-name-label"
@@ -163,6 +187,19 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
                             Networks searched
                         </InputLabel>
                         <Select
+                            multiple
+                            closeMenuOnSelect={false}
+                            isMulti
+                            fullWidth
+                            onChange={(item, meta) => {
+                                setstate({ ...state, networks: item.value });
+                            }}
+                            options={socialNetworks.map(name => ({
+                                value: name,
+                                label: name
+                            }))}
+                        />
+                        {/* <Select
                             // labelid="demo-mutiple-name-label"
                             id="demo-mutiple-name"
                             variant="outlined"
@@ -182,13 +219,13 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
                                     {upperFirst(name)}
                                 </MenuItem>
                             ))}
-                        </Select>
-                    </FormControl>
+                        </Select> */}
+                    </div>
                 </Grid>
             </Grid>
 
             <Grid container style={{ marginTop: 5 }}>
-                <Grid item md={4} style={{ margin: 3 }}>
+                <Grid item md={4} style={{ margin: 2 }}>
                     <TextField
                         id="outlined-name"
                         label="Score"
@@ -199,7 +236,6 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
                         onChange={({ target }) =>
                             setstate({ ...state, score: target.value })
                         }
-                        margin="normal"
                         variant="outlined"
                     >
                         <MenuItem value="bad">Bad</MenuItem>
@@ -207,32 +243,33 @@ function SocialMediaSearch({ order, type, toggleSnackBar }) {
                         <MenuItem value="good">Good</MenuItem>
                     </TextField>
                 </Grid>
-                <Grid item md={4} style={{ margin: 3 }}>
-                    <TextField
-                        id="outlined-name"
+                <Grid item md={4} style={{ margin: 2 }}>
+                    <InputField
+                        className="wide"
+                        magin="normal"
+                        multiline
+                        value={state.handles}
                         label="Handle Names (comma separated)"
                         placeholder="@name255, name_255"
-                        className="wide"
-                        value={state.handles}
                         onChange={({ target }) =>
                             setstate({ ...state, handles: target.value })
                         }
-                        margin="normal"
-                        variant="outlined"
+                        id="handles"
                     />
                 </Grid>
-                <Grid item md={4} style={{ margin: 3 }}>
-                    <TextField
-                        id="outlined-name"
-                        label="Date of Search"
+                <Grid item md={3} style={{ margin: 2 }}>
+                    <InputField
                         className="wide"
+                        magin="normal"
+                        multiline
                         type="date"
                         value={state.dateOfSearch}
+                        label="Date of search"
+                        placeholder="Date of search"
                         onChange={({ target }) =>
                             setstate({ ...state, dateOfSearch: target.value })
                         }
-                        margin="normal"
-                        variant="outlined"
+                        id="dateOfSearch"
                     />
                 </Grid>
             </Grid>
@@ -310,8 +347,12 @@ const mapState = state => ({
     snackbar: state.snackbar
 });
 
-const mapDispatch = ({ snackbar: { asyncToggleSnackBar } }) => ({
-    toggleSnackBar: payload => asyncToggleSnackBar(payload)
+const mapDispatch = ({
+    snackbar: { asyncToggleSnackBar },
+    inputValidation: { setErrors }
+}) => ({
+    toggleSnackBar: payload => asyncToggleSnackBar(payload),
+    setErrors
 });
 
 export default connect(mapState, mapDispatch)(SocialMediaSearch);
