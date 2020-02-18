@@ -28,47 +28,67 @@ const CheckStatus = ({ score }) => (
                 }}
             >
                 <Text style={styles.subtitle}>Status : </Text>
-                <ColorBlock score={score} />
+                {!Array.isArray(score) && <ColorBlock score={score} />}
             </View>
         </View>
 
         {/* QUESTION: Why is the statuses an array? */}
-        {/* {statuses.map((status,index) => (
-            <View
-                style={[
-                    {
-                        flexDirection: "row",
-                        marginVertical: 8,
-                        paddingVertical: 8,
-                        paddingLeft: 8
-                    },
-                    styles.bodyPrimaryBackground
-                ]}
-                key={index}
-            >
-                <View style={{ flex: 3 }}>
-                    <Text style={styles.text}>{status&&status}</Text>
-                </View>
-                <View style={{ flex: 1, marginVertical: -8, marginLeft: 2 }}>
+        {Array.isArray(score) &&
+            score.map((status, index) => {
+                console.log("STATUS LOOP:", status.status)
+                return (
                     <View
-                        style={{ flex: 1, backgroundColor: "#00ff00" }}
-                    ></View>
-                </View>
-            </View>
-        ))} */}
+                        style={[
+                            {
+                                flexDirection: "row",
+                                marginVertical: 8,
+                                paddingVertical: 8,
+                                paddingLeft: 8
+                            },
+                            styles.bodyPrimaryBackground
+                        ]}
+                        key={index}
+                    >
+                        <View style={{ flex: 3 }}>
+                            <Text style={styles.text}>
+                                {status && status.title}
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flex: 1,
+                                marginVertical: -8,
+                                marginLeft: 2
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: getColor(status.status)
+                                }}
+                            ></View>
+                        </View>
+                    </View>
+                );
+            })}
     </View>
 );
 
 export default CheckStatus;
 
 function ColorBlock({ score }) {
+    let color = getColor(score);
+
+    return <View style={{ height: 25, backgroundColor: color, flex: 1 }} />;
+}
+
+function getColor(score) {
+    console.log("COLOR: ", score);
     let color = score === "bad" ? "red" : "white";
     if (score && score.length > 0 && color === "white") {
         color =
             score === "risk" ? "red" : score === "medium" ? "orange" : "green";
     }
 
-    // console.log("Color: ", color, score)
-
-    return <View style={{ height: 25, backgroundColor: color, flex: 1 }} />;
+    return color;
 }

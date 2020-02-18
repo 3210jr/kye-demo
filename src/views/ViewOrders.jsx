@@ -19,8 +19,10 @@ import {
 } from "@material-ui/core";
 import { upperFirst, find } from "lodash";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
+import axios from "axios";
 import { connect, useDispatch } from "react-redux";
-import { fullFormatDate } from "../utils";
+import { saveAs } from "file-saver";
+import { fullFormatDate, reverseFileName, isValidUUID } from "../utils";
 import {
     CloudDownload,
 } from "@material-ui/icons";
@@ -34,6 +36,8 @@ import { ExtendedTableHead } from "../components/Table";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
 import NewReport from "./client_reports/Report";
+import JSZip from "jszip";
+import firebase from "firebase";
 // const NewReport=React.lazy(() => import('./client_reports/Report'));
 import {viewOrderStyle as styles} from "./Styles";
 
@@ -134,6 +138,7 @@ class ViewOrders extends React.Component {
     };
 
     handlePrint = item => {
+        // handlePrint()
         console.log(item);
     };
 
@@ -246,6 +251,7 @@ class ViewOrders extends React.Component {
                                                     "completed" ? (
                                                         <CloudDownload
                                                             color="default"
+                                                            onClick={() => this.handlePrint(n)}
                                                             className="pointer"
                                                         />
                                                     ) : (
@@ -318,9 +324,59 @@ function KYEOrderSummary({ order, closeSummary }) {
         setOpen(true);
     };
 
-    const downloadZippedReport = event => {
+    const downloadZippedReport = async (event, blob) => {
+        // TODO: account for multiple and single type entries
         event.preventDefault();
-        console.log(order[screeningType]);
+        const zip = new JSZip(); // initialize the zip folder
+        const reportName = getReportName(); // get the report name
+        zip.file(reportName, blob); // create zip folder with the correct name
+
+        const docs = zip.folder("Supporting Documents")
+
+        const { supportingDocsURL } = order[screeningType];
+
+        if (Object.keys(order[screeningType]).length > 3 && supportingDocsURL) {
+            // this report does not contain multiple layers of reports (no "add another report")
+            const fileName = reverseFileName(
+                firebase.storage().refFromURL(supportingDocsURL).name
+            );
+            const supportingDocument = await axios.get(supportingDocsURL, {
+                responseType: "blob"
+            });
+            docs.file(fileName, supportingDocument.data);
+        } else {
+            // this report contains multiple layers of reports
+            const fileURLs = Object.keys(order[screeningType])
+                .map(key => {
+                    if (isValidUUID(key)) {
+                        return order[screeningType][key].supportingDocsURL;
+                    }
+                    return null;
+                })
+                .filter(key => key !== null);
+
+            // console.log("Files: ", fileURLs);
+
+            const requests = fileURLs.map(url => {
+                const fileName = reverseFileName(
+                    firebase.storage().refFromURL(url).name
+                );
+                // console.log("FileNAe:", fileName, url);
+                return axios
+                    .get(url, {
+                        responseType: "blob"
+                    })
+                    .then(res => docs.file(fileName, res.data));
+            });
+
+            // console.log("Requests: ", requests);
+
+            await Promise.all(requests);
+        }
+        console.log(zip.files);
+        zip.generateAsync({ type: "blob" }).then(function(content) {
+            saveAs(content, `${order.firstName}-${screeningType}.zip`);
+        });
     };
     const handleClose = () => {
         setOpen(false);
@@ -384,7 +440,9 @@ function KYEOrderSummary({ order, closeSummary }) {
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            onClick={downloadZippedReport}
+                                            onClick={evt =>
+                                                downloadZippedReport(evt, blob)
+                                            }
                                             fullWidth
                                             style={{ height: "100%" }}
                                         >

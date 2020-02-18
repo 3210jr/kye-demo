@@ -6,7 +6,6 @@ import {
 	CardActions,
 	Card,
 	CardContent,
-	Button,
 	Typography,
 	List,
 	ListItem,
