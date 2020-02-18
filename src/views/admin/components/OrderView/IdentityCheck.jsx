@@ -1,9 +1,10 @@
 // @ts-check
 import React, { Component, useState, useEffect, createRef } from "react";
 import { connect } from "react-redux";
+import Select from "react-select";
 import PropTypes from "prop-types";
 import uuidV1 from "uuid/v1";
-import { omit, clone, map, keys } from "lodash";
+import _, { omit, clone, map, keys } from "lodash";
 import {
     Paper,
     Typography,
@@ -118,7 +119,9 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
         state[resultKey].loading = true;
         setState(clone(state));
 
-        persistOrderEmbeddedResults(order.id, type, resultKey, { ...currentState })
+        persistOrderEmbeddedResults(order.id, type, resultKey, {
+            ...currentState
+        })
             .then(res => {
                 toggleSnackBar({
                     message: "Identity Check updated successfully!"
@@ -200,33 +203,36 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
                                     )}
                                 </TextField>
                             </div>
-                            <div style={{ flex: 1, display: "flex" }}>
-                                <TextField
-                                    id="outlined-name"
-                                    label="Country of issue"
-                                    style={{ margin: 3 }}
-                                    className="wide"
-                                    value={result.countryOfIssue}
-                                    select
-                                    onChange={({ target }) =>
-                                        handleChange(
-                                            key,
-                                            "countryOfIssue",
-                                            target.value
-                                        )
-                                    }
-                                    margin="normal"
-                                    variant="outlined"
-                                >
-                                    {countryList.map(country => (
-                                        <MenuItem
-                                            key={country}
-                                            value={country.toLowerCase()}
-                                        >
-                                            {country}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
+                            <div
+                                style={{
+                                    flex: 1,
+                                    display: "flex",
+                                    paddingTop: 3
+                                }}
+                            >
+                                <div className="wide">
+                                    <Select
+                                        options={countryList.map(country => ({
+                                            value: country.toLowerCase(),
+                                            label: country
+                                        }))}
+                                        onChange={item =>
+                                            handleChange(
+                                                key,
+                                                "countryOfIssue",
+                                                item.value
+                                            )
+                                        }
+                                        className="country-selector"
+                                        value={{
+                                            value: result.countryOfIssue,
+                                            label: result.countryOfIssue
+                                                .split(" ")
+                                                .map(c => _.upperFirst(c))
+                                                .join(" ")
+                                        }}
+                                    />
+                                </div>
                             </div>
                             <div style={{ flex: 1, display: "flex" }}>
                                 <TextField
@@ -368,6 +374,7 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
                             </Button>
                             <Button
                                 variant={
+                                    result.supportingDocsURL &&
                                     result.supportingDocsURL.length > 0
                                         ? "text"
                                         : "contained"
@@ -377,7 +384,8 @@ function IdentityCheck({ order, type, snackbar, toggleSnackBar }) {
                             >
                                 {result.uploadingAttachment
                                     ? "Uploading..."
-                                    : result.supportingDocsURL.length > 0
+                                    : result.supportingDocsURL &&
+                                      result.supportingDocsURL.length > 0
                                     ? "Update Supporting Documents"
                                     : "Upload Supporting Documents"}
                             </Button>

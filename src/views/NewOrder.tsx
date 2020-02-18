@@ -17,31 +17,12 @@ import {
     Select,
     MenuItem
 } from "@material-ui/core";
+import RSelect from "react-select";
 import DateFnsUtils from "@date-io/date-fns";
 import _ from "lodash";
-import {
-    uploadFile,
-    createOrder,
-    isValidDate,
-    updateOrderFields
-} from "../utils";
+import { uploadFile, createOrder, isValidDate } from "../utils";
 import { countryList } from "../constants/countries";
 import KYCOrderForm from "./orders/KYCOrderForm";
-
-const months = [
-    "january",
-    "febuary",
-    "march",
-    "april",
-    "may",
-    "june",
-    "july",
-    "august",
-    "september",
-    "october",
-    "november",
-    "december"
-];
 
 const styles = theme => ({
     container: {
@@ -78,22 +59,27 @@ const styles = theme => ({
     }
 });
 
-class EditOrder extends Component {
+class NewOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
             open: false,
+            openMonthPicker: false,
             orderType: "kye", // "not-set", // kyc, kye, not-set
             firstName: "",
             lastName: "",
             middleName: "",
             telephone: "",
             telephoneCode: "+255",
+            // nidaNumber: "",
             dateOfBirth: "",
+            // monthOfBirth: "january",
+            // yearOfBirth: 1990,
+            // address: "",
             idType: "national-identification",
             idNumber: "",
             idExpiry: "",
-            country: "tanzania",
+            country: "tanzania, united republic of",
             region: "",
             box: "",
             district: "",
@@ -101,34 +87,11 @@ class EditOrder extends Component {
             screeningTypes: [],
             assetsURL: "",
             uploadingAssets: false,
-            loading: true
+            loading: false
         };
         this.handleChange = this.handleChange.bind(this);
-        this.toggleGenderDropDown = this.toggleGenderDropDown.bind(this);
         this.fileUploaderRef = React.createRef();
     }
-    componentDidMount() {
-        this.setOrderToState();
-    }
-    componentDidUpdate(prevProps, prevState) {
-        const { match, order } = this.props;
-        if (order.firstName !== prevState.firstName) {
-            this.setOrderToState();
-        }
-    }
-    setOrderToState = () => {
-        const { match, order } = this.props;
-        if (!order) return;
-        const editedOrder = {};
-        _.forEach(this.state, (value, key) => {
-            if (order[key]) {
-                editedOrder[key] = order[key];
-            } else {
-                editedOrder[key] = this.state[key];
-            }
-        });
-        this.setState({ ...editedOrder, loading: false });
-    };
     uploadZippedFolder = evt => {
         const file = evt.target.files[0];
         this.setState({ uploadingAssets: true });
@@ -165,9 +128,11 @@ class EditOrder extends Component {
         const update = evt.target.value;
         this.setState(prevState => (prevState[field] = update));
     }
-    toggleGenderDropDown() {
-        this.setState(prevState => ({ open: !prevState.open }));
-    }
+    toggleMonthDropDown = () => {
+        this.setState(prevState => ({
+            openMonthPicker: !prevState.openMonthPicker
+        }));
+    };
     createOrder = () => {
         const {
             firstName,
@@ -175,6 +140,9 @@ class EditOrder extends Component {
             middleName,
             dateOfBirth,
             telephoneCode,
+            // monthOfBirth,
+            // yearOfBirth,
+            // address,
             gender,
             screeningTypes,
             assetsURL,
@@ -189,8 +157,7 @@ class EditOrder extends Component {
             idExpiry,
             uploadingAssets
         } = this.state;
-        const { profile, history, match } = this.props;
-        const { orderId } = match.params;
+        const { profile, history } = this.props;
         if (loading || uploadingAssets) {
             alert("Please wait while loading");
             return;
@@ -231,7 +198,7 @@ class EditOrder extends Component {
         }
 
         this.setState({ loading: true });
-        updateOrderFields(orderId, {
+        createOrder({
             firstName,
             lastName,
             middleName,
@@ -248,7 +215,6 @@ class EditOrder extends Component {
             region,
             box,
             district,
-            status: "pending",
             idExpiry,
             organizationId: profile.organizationId,
             organizationName: profile.organizationName
@@ -261,16 +227,17 @@ class EditOrder extends Component {
                 history.push("/dashboard/my-orders");
             })
             .catch(error => {
-                alert("There was an error updating your order!");
+                alert("There was an error creating a new order!");
                 console.log("Error: ", error);
                 this.setState({ loading: false });
             });
     };
     render() {
-        const { classes, history, profile, match, order } = this.props;
+        const { classes, history, profile } = this.props;
         const {
             orderType,
             open,
+            openMonthPicker,
             firstName,
             lastName,
             middleName,
@@ -284,17 +251,15 @@ class EditOrder extends Component {
             district,
             box,
             dateOfBirth,
+            // monthOfBirth,
+            // yearOfBirth,
+            // address,
             gender,
             screeningTypes,
             uploadingAssets,
             loading
         } = this.state;
         const { serviceOptions } = this.props;
-        const { orderId } = match.params;
-        // console.log(orderId, order);
-        if (loading) {
-            return <div />;
-        }
         return (
             <div>
                 <Grid container style={{ marginBottom: 15 }}>
@@ -303,19 +268,10 @@ class EditOrder extends Component {
                         color="textSecondary"
                         component="h2"
                     >
-                        Edit Order:
+                        New Order:
                     </Typography>
                 </Grid>
-                <Grid container style={{ marginBottom: 15 }}>
-                    <Typography
-                        variant="h6"
-                        // color="textSecondary"
-                        component="h6"
-                    >
-                        Changes: {order.changes}
-                    </Typography>
-                </Grid>
-                {/* <Card className={classes.cardSection}>
+                <Card className={classes.cardSection}>
                     <CardContent>
                         <Typography variant="h5" component="h4">
                             Order Type
@@ -355,7 +311,7 @@ class EditOrder extends Component {
                             </MenuItem>
                         </Select>
                     </CardContent>
-                </Card> */}
+                </Card>
 
                 {orderType === "kyc" && (
                     <KYCOrderForm
@@ -382,6 +338,7 @@ class EditOrder extends Component {
                                         <Grid item xs={12} md={4}>
                                             <TextField
                                                 id="first-name"
+                                                variant="outlined"
                                                 label="First Name"
                                                 className={classes.textField}
                                                 value={firstName}
@@ -397,6 +354,7 @@ class EditOrder extends Component {
                                         <Grid item xs={12} md={4}>
                                             <TextField
                                                 id="middle-name"
+                                                variant="outlined"
                                                 label="Middle Name"
                                                 className={classes.textField}
                                                 value={middleName}
@@ -413,6 +371,7 @@ class EditOrder extends Component {
                                             <TextField
                                                 id="last-name"
                                                 label="Last Name"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={lastName}
                                                 onChange={evt =>
@@ -428,6 +387,7 @@ class EditOrder extends Component {
                                             <TextField
                                                 id="telephoneCode"
                                                 label="Tel. Code"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={telephoneCode}
                                                 onChange={evt =>
@@ -443,6 +403,7 @@ class EditOrder extends Component {
                                             <TextField
                                                 id="telephone"
                                                 label="Telephone Number"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={telephone}
                                                 onChange={evt =>
@@ -459,6 +420,7 @@ class EditOrder extends Component {
                                                 id="dateOfBirth"
                                                 label="Date of Birth"
                                                 type="date"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={dateOfBirth}
                                                 onChange={evt =>
@@ -470,15 +432,17 @@ class EditOrder extends Component {
                                                 margin="normal"
                                             />
                                         </Grid>
-                                        <Grid item xs={12} md={4}>
+                                        {/* <Grid item xs={12} md={4}>
                                             <FormControl
                                                 className={classes.formControl}
+                                                variant="outlined"
                                             >
                                                 <InputLabel htmlFor="demo-controlled-open-select">
                                                     Gender
                                                 </InputLabel>
                                                 <Select
                                                     open={open}
+                                                    variant="outlined"
                                                     onClose={
                                                         this
                                                             .toggleGenderDropDown
@@ -508,6 +472,28 @@ class EditOrder extends Component {
                                                     </MenuItem>
                                                 </Select>
                                             </FormControl>
+                                        </Grid> */}
+                                        <Grid item xs={12} md={4}>
+                                            <TextField
+                                                onChange={evt =>
+                                                    this.handleChange(
+                                                        "gender",
+                                                        evt
+                                                    )
+                                                }
+                                                label="Gender"
+                                                value={gender}
+                                                variant="outlined"
+                                                fullWidth
+                                                select
+                                            >
+                                                <MenuItem value={"male"}>
+                                                    Male
+                                                </MenuItem>
+                                                <MenuItem value={"female"}>
+                                                    Female
+                                                </MenuItem>
+                                            </TextField>
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
@@ -518,6 +504,7 @@ class EditOrder extends Component {
                                                     )
                                                 }
                                                 label="ID Type"
+                                                variant="outlined"
                                                 value={idType}
                                                 fullWidth
                                                 select
@@ -560,6 +547,7 @@ class EditOrder extends Component {
                                             <TextField
                                                 id="nida-number"
                                                 label="Identification Number"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={idNumber}
                                                 onChange={evt =>
@@ -575,6 +563,7 @@ class EditOrder extends Component {
                                             <TextField
                                                 id="id-expiry"
                                                 label="Identification Expiry Date"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 type="date"
                                                 value={idExpiry}
@@ -598,32 +587,35 @@ class EditOrder extends Component {
 											/>
 										</Grid> */}
                                         <Grid item xs={12} md={4}>
-                                            <TextField
-                                                onChange={evt =>
-                                                    this.handleChange(
-                                                        "country",
-                                                        evt
-                                                    )
+                                            <RSelect
+                                                options={countryList.map(
+                                                    country => ({
+                                                        value: country.toLowerCase(),
+                                                        label: country
+                                                    })
+                                                )}
+                                                onChange={item =>
+                                                    this.setState({
+                                                        country: item.value
+                                                    })
                                                 }
-                                                label="Country"
-                                                value={country}
-                                                fullWidth
-                                                select
-                                            >
-                                                {countryList.map(country => (
-                                                    <MenuItem
-                                                        key={country}
-                                                        value={country.toLowerCase()}
-                                                    >
-                                                        {country}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
+                                                className="country-selector"
+                                                value={{
+                                                    value: country,
+                                                    label: country
+                                                        .split(" ")
+                                                        .map(c =>
+                                                            _.upperFirst(c)
+                                                        )
+                                                        .join(" ")
+                                                }}
+                                            />
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <TextField
                                                 id="region"
                                                 label="Region (optional)"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={region}
                                                 onChange={evt =>
@@ -639,6 +631,7 @@ class EditOrder extends Component {
                                             <TextField
                                                 id="district"
                                                 label="District (optional)"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={district}
                                                 onChange={evt =>
@@ -654,6 +647,7 @@ class EditOrder extends Component {
                                             <TextField
                                                 id="pobox"
                                                 label="P.O.Box (optional)"
+                                                variant="outlined"
                                                 className={classes.textField}
                                                 value={box}
                                                 onChange={evt =>
@@ -948,7 +942,7 @@ class EditOrder extends Component {
                             >
                                 {uploadingAssets || loading
                                     ? "Uploading files ... "
-                                    : "Update Order"}
+                                    : "Confirm Order"}
                             </Button>
                         </div>
 
@@ -966,21 +960,16 @@ class EditOrder extends Component {
     }
 }
 
-EditOrder.propTypes = {
-    classes: PropTypes.object.isRequired,
-    order: PropTypes.object.isRequired,
-    serviceOptions: PropTypes.array.isRequired
+NewOrder.propTypes = {
+    classes: PropTypes.object.isRequired
 };
 
-const mapState = (state, props) => ({
+const mapState = state => ({
     profile: state.profile,
-    order: state.orders.myOrders.find(
-        order => order.id === props.match.params.orderId
-    ),
     serviceOptions:
         (state.organizations.myOrganization &&
             state.organizations.myOrganization.services) ||
         []
 });
 
-export default connect(mapState)(withStyles(styles)(EditOrder));
+export default connect(mapState)(withStyles(styles)(NewOrder));

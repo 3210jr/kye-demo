@@ -11,6 +11,7 @@ import {
     MenuItem
 } from "@material-ui/core";
 import _ from "lodash";
+import Select from "react-select";
 import { uploadFile, createKYCOrder } from "../../utils";
 import { countryList } from "../../constants/countries";
 
@@ -112,6 +113,7 @@ export default function KYCOrderForm({ classes, profile, history }) {
                                 <TextField
                                     id="customer-name"
                                     label="Customer Name"
+                                    variant="outlined"
                                     className={classes.textField}
                                     value={state.customerName}
                                     onChange={evt =>
@@ -124,6 +126,7 @@ export default function KYCOrderForm({ classes, profile, history }) {
                                 <TextField
                                     id="registrations-number"
                                     label="Registration Number"
+                                    variant="outlined"
                                     className={classes.textField}
                                     value={state.registrationNumber}
                                     onChange={evt =>
@@ -136,6 +139,7 @@ export default function KYCOrderForm({ classes, profile, history }) {
                                 <TextField
                                     id="tin-number"
                                     label="Tin Number"
+                                    variant="outlined"
                                     className={classes.textField}
                                     value={state.tinNumber}
                                     onChange={evt =>
@@ -147,7 +151,8 @@ export default function KYCOrderForm({ classes, profile, history }) {
                             {/* <Grid item xs={12} md={4}>
 								<TextField
 									id="address"
-									label="Address"
+                                    label="Address"
+                                    variant="outlined"
 									className={classes.textField}
 									value={state.address}
 									onChange={evt => updateText("address", evt)}
@@ -155,7 +160,27 @@ export default function KYCOrderForm({ classes, profile, history }) {
 								/>
 							</Grid> */}
                             <Grid item xs={12} md={4}>
-                                <TextField
+                                <Select
+                                    options={countryList.map(country => ({
+                                        value: country.toLowerCase(),
+                                        label: country
+                                    }))}
+                                    onChange={item =>
+                                        setstate({
+                                            ...state,
+                                            country: item.value
+                                        })
+                                    }
+                                    className="country-selector"
+                                    value={{
+                                        value: state.country,
+                                        label: state.country
+                                            .split(" ")
+                                            .map(c => _.upperFirst(c))
+                                            .join(" ")
+                                    }}
+                                />
+                                {/* <TextField
                                     onChange={evt => updateText("country", evt)}
                                     label="Country"
                                     value={state.country}
@@ -170,12 +195,13 @@ export default function KYCOrderForm({ classes, profile, history }) {
                                             {country}
                                         </MenuItem>
                                     ))}
-                                </TextField>
+                                </TextField> */}
                             </Grid>
                             <Grid item xs={12} md={4}>
                                 <TextField
                                     id="region"
                                     label="Region (optional)"
+                                    variant="outlined"
                                     className={classes.textField}
                                     value={state.region}
                                     onChange={evt => updateText("region", evt)}
@@ -186,6 +212,7 @@ export default function KYCOrderForm({ classes, profile, history }) {
                                 <TextField
                                     id="district"
                                     label="District (optional)"
+                                    variant="outlined"
                                     className={classes.textField}
                                     value={state.district}
                                     onChange={evt =>
@@ -198,6 +225,7 @@ export default function KYCOrderForm({ classes, profile, history }) {
                                 <TextField
                                     id="pobox"
                                     label="P.O.Box (optional)"
+                                    variant="outlined"
                                     className={classes.textField}
                                     value={state.box}
                                     onChange={evt => updateText("box", evt)}
@@ -208,6 +236,7 @@ export default function KYCOrderForm({ classes, profile, history }) {
                                 <TextField
                                     id="notes"
                                     label="Notes"
+                                    variant="outlined"
                                     className={classes.textField}
                                     value={state.notes}
                                     onChange={evt => updateText("notes", evt)}
