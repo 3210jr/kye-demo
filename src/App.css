@@ -1,7 +1,16 @@
 .secondary {
-	background-color: #999966;
+    background-color: #999966;
 }
 
 .secondary-text {
-	color: #999966;
+    color: #999966;
+}
+
+.country-selector > div {
+    padding: 8px;
+}
+
+.country-selector > div[class*="-menu"] {
+    z-index: 999;
+    position: relative;
 }

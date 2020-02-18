@@ -65,7 +65,15 @@ export function createNewCase(caseDetails: Object) {
         });
 }
 
-export function addCaseUpdate({ caseId, status, comments, attachmentURL }) {
+interface CaseUpdate {
+    caseId: string;
+    status: string;
+    comments: string;
+    attachmentURL: string;
+}
+
+export function addCaseUpdate(caseUpdates: CaseUpdate) {
+    const { caseId, status, comments, attachmentURL } = caseUpdates;
     const serverTime = firebase.firestore.FieldValue.serverTimestamp();
     const profile = store.getState().profile;
     const userId = firebase.auth().currentUser.uid;
@@ -84,7 +92,7 @@ export function addCaseUpdate({ caseId, status, comments, attachmentURL }) {
         });
 }
 
-export function updateOrderFields(orderId, update) {
+export function updateOrderFields(orderId: string, update: string) {
     return firebase
         .firestore()
         .collection("orders")
@@ -92,7 +100,11 @@ export function updateOrderFields(orderId, update) {
         .update({ ...update });
 }
 
-export function persistOrderResults(orderId, resultType, results) {
+export function persistOrderResults(
+    orderId: string,
+    resultType: string,
+    results: string
+) {
     const serverTime = firebase.firestore.FieldValue.serverTimestamp();
     const update = { [resultType]: { ...results }, updatedAt: serverTime };
     return firebase
@@ -480,7 +492,7 @@ export function friendlyFormatMoney(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-export function friendlyFormatDate(timeStamp) {
+export function friendlyFormatDate(timeStamp: string | Date) {
     const dateObj = new Date(timeStamp);
 
     const date = dateObj.getDate();
@@ -498,7 +510,10 @@ export function friendlyFormatDate(timeStamp) {
  * @param {*} [exceptions=[]]
  * @returns
  */
-export function isCompleteForm(formState = {}, exceptions = []) {
+export function isCompleteForm(
+    formState: Object = {},
+    exceptions: Array<string> = []
+) {
     const emptyFields = Object.keys(formState).filter(key => {
         if (exceptions.includes(key)) return false; // ignore anything in exceptions
         if (typeof formState[key] === "boolean") return false; // ignore any boolean fields
@@ -510,11 +525,11 @@ export function isCompleteForm(formState = {}, exceptions = []) {
     return emptyFields.length === 0;
 }
 
-export function reverseFileName(fileName = "") {
+export function reverseFileName(fileName: string = "") {
     return fileName.split(fileNameSeparator)[1];
 }
 
-export function isValidUUID(id) {
+export function isValidUUID(id: string) {
     const reg = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const match = id.toString().match(reg);
     if (match === null) {
@@ -523,7 +538,19 @@ export function isValidUUID(id) {
     return true;
 }
 
-function getDeliveryDate(packageType = "standard") {
+export function browserFormatDate(date: string | Date) {
+    const d = new Date(date);
+    let month = "" + (d.getMonth() + 1);
+    let day = "" + d.getDate();
+    let year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+}
+
+function getDeliveryDate(packageType: string = "standard") {
     const date = new Date();
     if (packageType === "standard") {
         date.setDate(new Date().getDate() + 21);

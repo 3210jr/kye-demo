@@ -9,7 +9,7 @@ import "./App.css";
 import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 import store from "./store";
-import { AppRoute, AdminRoute } from "./ExtendedRoutes";
+import { AppRoute, AdminRoute } from "./ExtendedRoutes.tsx";
 
 import Admin from "./views/admin";
 import { Snackbar } from "@material-ui/core";
