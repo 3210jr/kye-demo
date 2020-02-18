@@ -11,13 +11,11 @@ const registerMemberURL =
 const orderRef = firebase.firestore().collection("orders")
 const preLitigationRef = firebase.firestore().collection("orders")
 const serverTime = firebase.firestore.FieldValue.serverTimestamp
-const profile = store.getState().profile;
-const user = firebase.auth().currentUser;
 
-const organization = store.getState().organizations.myOrganization;
-const deliveryDate = getDeliveryDate(
-    organization ? organization.packageType : "standard"
-);
+// const organization = store.getState().organizations.myOrganization;
+// const deliveryDate = getDeliveryDate(
+//     organization ? organization.packageType : "standard"
+// );
 
 export function acceptOrder(orderId: string) {
     return orderRef.doc(orderId).update({ status: "in progress" });
@@ -47,6 +45,7 @@ export function createNewCase(caseDetails: Object) {
 export function addCaseUpdate({ caseId, status, comments, attachmentURL }) {
 
     const userId = firebase.auth().currentUser.uid;
+    const profile = store.getState().profile;
     return preLitigationRef.doc(caseId)
         .collection("updates")
         .add({
@@ -108,6 +107,7 @@ export function createKYCOrder({
     notes
 }) {
     // Creates new orders and sets up new sub documents to keep track of the results
+    const user = firebase.auth().currentUser
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -174,14 +174,17 @@ export function createOrder({
     district,
     idExpiry
 }) {
+    const user = firebase.auth().currentUser
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
 
-    // const organization = store.getState().organizations.myOrganization;
-    // const deliveryDate = getDeliveryDate(
-    //     organization ? organization.packageType : "standard"
-    // );
+    const organization = store.getState().organizations.myOrganization;
+    const deliveryDate = getDeliveryDate(
+        organization ? organization.packageType : "standard"
+    );
+
+    const serverTime = firebase.firestore.FieldValue.serverTimestamp()
 
     const sreenings = {};
     screeningTypes.forEach(type => (sreenings[type] = {}));
@@ -212,15 +215,15 @@ export function createOrder({
             notes: "",
             deliveryDate,
             referenceNumber: generateOrderRefNo(organizationName),
-            createdAt: serverTime(),
+            createdAt: serverTime,
             personMAID: null,
-            updatedAt: serverTime()
+            updatedAt: serverTime
         });
 }
 
 export function updateOrganization(organization, organizationId) {
-    // const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    // const user = firebase.auth().currentUser;
+    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+    const user = firebase.auth().currentUser;
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -231,7 +234,7 @@ export function updateOrganization(organization, organizationId) {
         .doc(organizationId)
         .update({
             ...organization,
-            updatedAt: serverTime()
+            updatedAt: serverTime
         });
 }
 
@@ -245,6 +248,7 @@ export function registerOrganizationMember({
 }) {
     // const serverTime = firebase.firestore.FieldValue.serverTimestamp();
     // const user = firebase.auth().currentUser;
+    const user = firebase.auth().currentUser
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -287,8 +291,8 @@ export function registerOrganizationMember({
 }
 
 export function registerOrganization(organization) {
-    // const serverTime = firebase.firestore.FieldValue.serverTimestamp();
-    // const user = firebase.auth().currentUser;
+    const serverTime = firebase.firestore.FieldValue.serverTimestamp();
+    const user = firebase.auth().currentUser
     if (!user) {
         throw new Error("You must be registered to create an order!");
     }
@@ -298,7 +302,7 @@ export function registerOrganization(organization) {
         .collection("organizations")
         .add({
             ...organization,
-            createdAt: serverTime(),
+            createdAt: serverTime,
             timeStamp: new Date().getTime(),
             registeredBy: user.uid,
             registeredByEmail: user.email
