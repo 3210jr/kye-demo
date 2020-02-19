@@ -379,6 +379,7 @@ class NewOrder extends Component {
                                                 onChange={evt =>
                                                     this.handleChange("firstName", evt)}
                                             />
+                                            {this.checkField(firstName, "First name")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <InputField
@@ -390,6 +391,7 @@ class NewOrder extends Component {
                                                 onChange={evt =>
                                                     this.handleChange("middleName", evt)}
                                             />
+                                            {this.checkField(middleName, "Middle name")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <InputField
@@ -400,6 +402,7 @@ class NewOrder extends Component {
                                                 onChange={evt =>
                                                     this.handleChange("lastName", evt)}
                                             />
+                                            {this.checkField(middleName, "Last name")}
                                         </Grid>
                                         <Grid item xs={4} md={2} lg={1}>
                                             <InputField
@@ -410,6 +413,7 @@ class NewOrder extends Component {
                                                 onChange={evt =>
                                                     this.handleChange("telephoneCode", evt)}
                                             />
+                                            {this.checkField(telephoneCode, "Tel. Code")}
                                         </Grid>
                                         <Grid item xs={8} md={2} lg={3}>
                                             <InputField
@@ -420,6 +424,7 @@ class NewOrder extends Component {
                                                 onChange={evt =>
                                                     this.handleChange("telephone", evt)}
                                             />
+                                            {this.checkField(telephone, "Telephone Number")}
                                         </Grid>
                                         <Grid item xs={12} md={4}>
                                             <InputField
