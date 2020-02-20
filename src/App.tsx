@@ -9,10 +9,11 @@ import "./App.css";
 import Login from "./views/Login";
 import Dashboard from "./views/Dashboard";
 import store from "./store";
-import { AppRoute, AdminRoute } from "./ExtendedRoutes.tsx";
+import { AppRoute, AdminRoute, AdminSearchRoute } from "./ExtendedRoutes";
 
 import Admin from "./views/admin";
 import { Snackbar } from "@material-ui/core";
+import EntitySearch from "./views/admin/EntitySearch";
 
 const theme = createMuiTheme({
 	palette: {
@@ -57,6 +58,7 @@ class App extends Component {
 									<Route path="/" exact component={Login} />
 									<AppRoute path="/dashboard/" component={Dashboard} />
 									<AdminRoute path="/admin/" component={Admin} />
+									<AdminSearchRoute path="/search/" component={EntitySearch}/>
 								</Switch>
 							</ScrollToTop>
 						</BrowserRouter>

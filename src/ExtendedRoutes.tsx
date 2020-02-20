@@ -1,7 +1,7 @@
 // @ts-check
-import React from "react";
+import React, { Component } from "react";
 import { Redirect, Route } from "react-router-dom";
-import { Provider, connect } from "react-redux";
+import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const isAdmin = profile => {
@@ -32,6 +32,29 @@ function Loader() {
         </div>
     );
 }
+
+export const AdminSearchRoute = connect(mapState)(
+    ({component: Component, ...rest}) => {
+        if(rest.profile.loading) return <Loader/>
+        return  (
+            <Route
+                {...rest}
+                render={props =>
+                    isAdmin(rest.profile) ? (
+                        <Component {...props} />
+                    ) : (
+                        <Redirect to={{
+                            pathname: '/',
+                            state: {
+                                from: props.location
+                            }
+                        }} />
+                    )
+                }
+            />
+        )
+    }
+)
 
 export const AdminRoute = connect(mapState)(
     ({ component: Component, ...rest }) => {

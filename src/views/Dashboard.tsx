@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import firebase from "firebase";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {
     ListItem,
     List,
@@ -37,16 +36,13 @@ import {
 import { Route, Switch } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import OverviewCard from "../components/OverviewCard";
-import NotificationsCard from "../components/NotificationsCard";
-import OrdersTable from "../components/OrdersTable";
-import QuickOrderCard from "../components/QuickOrderCard";
-
 import NewOrder from "./NewOrder";
 import ViewOrders from "./ViewOrders";
 import PreLitigation from "./pre-litigation";
 import CompanyStaff from "./CompanyStaff";
 import Help from "./Help";
 import EditOrder from "./EditOrder";
+
 
 // new report styling and everything
 import { PDFViewer } from "@react-pdf/renderer";

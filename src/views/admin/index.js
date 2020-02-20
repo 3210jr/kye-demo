@@ -1,6 +1,6 @@
 // @ts-check
 import React, { Component, useState } from "react";
-import { Provider, connect, useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { Switch } from "react-router-dom";
 import OverviewCard from "../../components/OverviewCard";
 import {
@@ -13,34 +13,24 @@ import {
     Fab,
     Typography,
     Paper,
-    FormControlLabel,
-    FormControl,
-    FormLabel,
-    Switch as SwitchButton,
-    FormGroup,
-    Button,
-    FormHelperText,
-    TextField,
     TablePagination
 } from "@material-ui/core";
 
-import { AdminRoute } from "../../ExtendedRoutes";
+import { AdminRoute, AdminSearchRoute } from "../../ExtendedRoutes";
 import Layout from "../Layout";
 import CompanyView from "./CompanyView";
 import OrderView from "./OrderView";
 
 import {
     Mail as MailIcon,
-    MoveToInbox,
     Dashboard as DashboardIcon,
     Create,
     FormatAlignJustify,
     AccountBalance,
     ViewCarousel,
     SupervisedUserCircle,
-    HowToReg,
     Close,
-    HelpOutline,
+    Search,
     Gavel
 } from "@material-ui/icons";
 import AdminOrdersTable from "./components/AdminOrdersTable";
@@ -48,7 +38,6 @@ import CompanyForm from "./components/CompanyForm";
 import CompanyStaff from "../CompanyStaff";
 import Reports from "./Reports";
 import PreLitigation from "./Prelitigation";
-
 const drawerItems = [
     {
         text: "Dashboard",
@@ -89,6 +78,11 @@ const drawerItems = [
         text: "Reports",
         icons: <FormatAlignJustify />,
         path: "/admin/reports"
+    },
+    {
+        text: 'Search Entities',
+        icons: <Search />,
+        path: '/search'
     }
 ];
 
@@ -141,6 +135,10 @@ class Admin extends Component {
                             path={`${match.path}orders/:orderId`}
                             exact
                             component={OrderView}
+                        />
+                        <AdminSearchRoute
+                            path='search'
+                            exact
                         />
                     </Switch>
                 </Layout>

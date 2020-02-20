@@ -10,9 +10,7 @@ import {
     Switch as SwitchButton,
     FormGroup,
     Button,
-    FormHelperText,
     TextField,
-    TablePagination,
     MenuItem
 } from "@material-ui/core";
 import _ from "lodash";

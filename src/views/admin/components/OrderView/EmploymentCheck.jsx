@@ -415,6 +415,7 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                         <TextField
                                             id="outlined-name"
                                             label="Candidate"
+                                            type="date"
                                             value={
                                                 result.employmentStartDateCandidate
                                             }
@@ -443,6 +444,7 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                         <TextField
                                             id="outlined-name"
                                             label="Referee"
+                                            type="date"
                                             value={
                                                 result.employmentStartDateReferee
                                             }
@@ -484,6 +486,7 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                         <TextField
                                             id="outlined-name"
                                             label="Candidate"
+                                            type="date"
                                             value={
                                                 result.employmentEndDateCandidate
                                             }
@@ -512,6 +515,7 @@ function EmploymentHistory({ order, type, snackbar, toggleSnackBar }) {
                                         <TextField
                                             id="outlined-name"
                                             label="Referee"
+                                            type="date"
                                             value={
                                                 result.employmentEndDateReferee
                                             }
