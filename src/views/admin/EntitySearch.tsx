@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {
-    AppBar, Typography, InputBase, IconButton, Toolbar, CssBaseline
+    AppBar, Typography, InputBase, IconButton, Toolbar, CssBaseline, Paper
 } from "@material-ui/core";
 import {withStyles} from '@material-ui/core/styles'
 import { fade} from '@material-ui/core/styles';
@@ -112,9 +112,14 @@ class EntitySearch extends Component{
                     {this.state.searches.length > 0 && (
                         this.state.searches.map((res) => {})
                     )}
-                    {this.state.searches.length < 0 && (
-                        <p>Search for new Entities</p>
+                    {this.state.searches.length <= 0 && (
+                        <Paper style={{
+                            padding:30
+                        }} elevation={1}>
+                            <h3>You haven't search anything</h3>
+                        </Paper>
                     )}
+
                 </main>
             </div>
         )
