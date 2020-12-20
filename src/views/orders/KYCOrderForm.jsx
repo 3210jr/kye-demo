@@ -13,6 +13,8 @@ import {
 import _ from "lodash";
 import { uploadFile, createKYCOrder } from "../../utils";
 import { countryList } from "../../constants/countries";
+import Select from "react-select";
+import InputField from "../../components/FormValidation/InputField";
 
 const newOrderFileUploader = React.createRef();
 
@@ -109,109 +111,81 @@ export default function KYCOrderForm({ classes, profile, history }) {
                     >
                         <Grid container spacing={24}>
                             <Grid item xs={12} md={4}>
-                                <TextField
-                                    id="customer-name"
-                                    label="Customer Name"
-                                    className={classes.textField}
+                                <InputField
+                                    id="customerName"
+                                    label={"Customer Name"}
                                     value={state.customerName}
+                                    className={classes.textField}
                                     onChange={evt =>
-                                        updateText("customerName", evt)
-                                    }
-                                    margin="normal"
+                                        updateText("customerName", evt)}
                                 />
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <TextField
-                                    id="registrations-number"
-                                    label="Registration Number"
-                                    className={classes.textField}
+                                <InputField
+                                    id="registrationNumber"
+                                    label={"Registration Number"}
                                     value={state.registrationNumber}
+                                    className={classes.textField}
                                     onChange={evt =>
-                                        updateText("registrationNumber", evt)
-                                    }
-                                    margin="normal"
+                                        updateText("registrationNumber", evt)}
                                 />
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <TextField
-                                    id="tin-number"
-                                    label="Tin Number"
-                                    className={classes.textField}
+                                <InputField
+                                    id="tinNumber"
+                                    label={"Tin Number"}
                                     value={state.tinNumber}
+                                    className={classes.textField}
                                     onChange={evt =>
-                                        updateText("tinNumber", evt)
-                                    }
-                                    margin="normal"
+                                        updateText("tinNumber", evt)}
                                 />
                             </Grid>
-                            {/* <Grid item xs={12} md={4}>
-								<TextField
-									id="address"
-									label="Address"
-									className={classes.textField}
-									value={state.address}
-									onChange={evt => updateText("address", evt)}
-									margin="normal"
-								/>
-							</Grid> */}
                             <Grid item xs={12} md={4}>
-                                <TextField
-                                    onChange={evt => updateText("country", evt)}
-                                    label="Country"
-                                    value={state.country}
-                                    fullWidth
-                                    select
-                                >
-                                    {countryList.map(country => (
-                                        <MenuItem
-                                            key={country}
-                                            value={country.toLowerCase()}
-                                        >
-                                            {country}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
+                                <Select options={
+                                    countryList.map(country =>({
+                                        value:country.toLowerCase(),
+                                        label:country
+                                    }))
+                                } />
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <TextField
+                                <InputField
                                     id="region"
-                                    label="Region (optional)"
-                                    className={classes.textField}
+                                    label={"Region (optional)"}
                                     value={state.region}
-                                    onChange={evt => updateText("region", evt)}
-                                    margin="normal"
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={4}>
-                                <TextField
-                                    id="district"
-                                    label="District (optional)"
                                     className={classes.textField}
-                                    value={state.district}
                                     onChange={evt =>
-                                        updateText("district", evt)
-                                    }
-                                    margin="normal"
+                                        updateText("region", evt)}
                                 />
                             </Grid>
                             <Grid item xs={12} md={4}>
-                                <TextField
-                                    id="pobox"
-                                    label="P.O.Box (optional)"
+                                <InputField
+                                    id="district"
+                                    label={"District (optional)"}
+                                    value={state.district}
                                     className={classes.textField}
+                                    onChange={evt =>
+                                        updateText("district", evt)}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <InputField
+                                    id="box"
+                                    label={"P.O.Box (optional)"}
                                     value={state.box}
-                                    onChange={evt => updateText("box", evt)}
-                                    margin="normal"
+                                    className={classes.textField}
+                                    onChange={evt =>
+                                        updateText("box", evt)}
                                 />
                             </Grid>
                             <Grid item xs={12} md={8}>
-                                <TextField
+                                <InputField
                                     id="notes"
-                                    label="Notes"
-                                    className={classes.textField}
+                                    label={"Notes (optional)"}
                                     value={state.notes}
-                                    onChange={evt => updateText("notes", evt)}
-                                    margin="normal"
+                                    className={classes.textField}
+                                    onChange={evt =>
+                                        updateText("notes", evt)}
                                 />
                             </Grid>
                         </Grid>

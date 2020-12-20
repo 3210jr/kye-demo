@@ -3,47 +3,17 @@
 import React from "react";
 import {
 	Grid,
-	TableHead,
 	TableRow,
 	TableCell,
 	TableBody,
 	Table,
 	Typography
 } from "@material-ui/core";
-
-import * as logoImg from "../../assets/mwema_logo.png";
 import "../ClientReport.css";
+import {borders, headers} from "../Styles";
+import {Logo} from "../helpers/HelpersComponents";
 
-const borders = {
-	left: {
-		borderLeft: "1px solid #ececec"
-	},
-	right: {
-		borderRight: "1px solid #ececec"
-	},
-	left_right: {
-		borderLeft: "1px solid #ececec",
-		borderRight: "1px solid #ececec"
-	},
-	top: {
-		borderTop: "1px solid #ececec"
-	}
-};
 
-const headers = {
-	marginTopBottom: {
-		marginTop: "40px",
-		marginBottom: "40px"
-	}
-};
-
-const Logo = () => (
-	<div className="center">
-		<div style={{ textAlign: "center" }}>
-			<img alt="" style={{}} src={logoImg} />
-		</div>
-	</div>
-);
 const ReportsHeader = ({ fullName }) => {
 	return (
 		<div>

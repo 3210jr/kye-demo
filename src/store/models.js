@@ -1,5 +1,6 @@
 // @ts-check
 import firebase from "firebase";
+import { object } from "prop-types";
 
 export const count = {
     state: {}, // initial state
@@ -221,3 +222,33 @@ export const snackbar = {
         }
     })
 };
+
+export const inputValidation = {
+    state: [],
+    reducers: {
+        pushError(state, errorObject) {
+            console.log(errorObject)
+            return [...state, errorObject]
+        },
+        popError(state, errorId) {
+            return state.filter(errorObject => errorObject.id !== errorId)
+        },
+        resetErrors(state, field) {
+            console.log(state.find(obj => obj.id === field))
+            return state.filter(obj => obj.id !== field)
+        },
+        hasErrorById(state = [], payload) {
+            return state.find(obj => obj.id === payload)
+        },
+        setErrors(state, errorsList) {
+            console.log(errorsList)
+            return [...errorsList]
+        },
+    },
+    // effects: dispatch => ({
+    //     async setErrors(payload, rootState) {
+    //         await new Promise(resolve => setTimeout(resolve, 1000))
+    //         dispatch.setErrors(payload)
+    //     }
+    // })
+}

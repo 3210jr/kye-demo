@@ -6,18 +6,12 @@ import PropTypes from "prop-types";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import {
     Paper,
-    IconButton,
-    Tooltip,
-    Toolbar,
     Typography,
     Table,
-    TableSortLabel,
     TablePagination,
-    TableHead,
     TableCell,
     TableBody,
     TableRow,
-    Collapse,
     Modal,
     Button,
     LinearProgress,
@@ -31,8 +25,6 @@ import { saveAs } from "file-saver";
 import { fullFormatDate, reverseFileName, isValidUUID } from "../utils";
 import {
     CloudDownload,
-    Delete as DeleteIcon,
-    FilterList as FilterListIcon
 } from "@material-ui/icons";
 
 import store from "../store";
@@ -47,6 +39,7 @@ import NewReport from "./client_reports/Report";
 import JSZip from "jszip";
 import firebase from "firebase";
 // const NewReport=React.lazy(() => import('./client_reports/Report'));
+import {viewOrderStyle as styles} from "./Styles";
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -99,18 +92,6 @@ const rows = [
     { id: "actions", numeric: false, disablePadding: false, label: "Actions" }
 ];
 
-const styles = theme => ({
-    root: {
-        width: "100%",
-        marginTop: theme.spacing.unit * 3
-    },
-    table: {
-        minWidth: 1020
-    },
-    tableWrapper: {
-        overflowX: "auto"
-    }
-});
 
 class ViewOrders extends React.Component {
     constructor(props) {
